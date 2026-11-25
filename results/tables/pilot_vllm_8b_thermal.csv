@@ -1,0 +1,5 @@
+block,file,n_samples,max_temp_c,median_sm_clock,min_sm_clock,max_power_w,peak_mem_mib
+vllm-A0-default-qwen3-8b,telemetry-20261125T210447.csv,1321,87.0000,1920.0000,1590.0000,176.6600,23602.0000
+vllm-A3-default-qwen3-8b,telemetry-20261125T212656.csv,1255,86.0000,2107.0000,1590.0000,178.4700,23104.0000
+vllm-A4-default-qwen3-8b,telemetry-20261125T214759.csv,1244,86.0000,2145.0000,1590.0000,175.5000,23149.0000
+vllm-A5-default-qwen3-8b,telemetry-20261125T220851.csv,1097,85.0000,1987.0000,1635.0000,177.3700,23091.0000

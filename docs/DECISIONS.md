@@ -204,3 +204,13 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   records the enforced power limit, Windows power plan, clocks and throttle reasons at start and per cell, and
   refuses to start below `min_enforced_power_w` (140 W in all configs). Owner keeps the laptop on the AC
   adapter in the performance mode for all measured runs.
+
+### D-019 (2026-11-25) Pilot complete; pre-registration frozen
+- **Evidence:** `results/raw/pilot_vllm_4b` (A0, A1, A5; 162 cells) and `results/raw/pilot_vllm_8b` (A0, A3, A4, A5;
+  144 cells), 0 failed requests, enforced power 175 W, max 87 °C. Noise tables: `results/tables/pilot_vllm_*_noise.csv`.
+- **Decision:** `docs/PREREG.md` frozen with 100 prompts × 3 repeats per cell, H1–H4 thresholds, gates G1–G3,
+  thermal/power/VRAM/failure rules and the draft-length tuning grid. It discloses that pilot effect sizes for all
+  languages were visible when margins were chosen; confirmatory analysis reads only the `report` split.
+- **Pilot observations (exploratory, not results):** A3 English 2.46 vs Dravidian 1.15–1.20; A4 Hindi 2.01,
+  English 1.49 (matches its card's self-report); A5 English ~3.0 vs Dravidian 1.27–1.74 (4B: 1.46–2.14) and
+  speed-up below 1.0 on Dravidian at 16 users (4B); A1 English 1.35 vs Dravidian 2.6–2.9.

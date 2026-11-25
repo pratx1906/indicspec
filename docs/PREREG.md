@@ -1,50 +1,102 @@
 # Pre-registration
 
-**Status: DRAFT — thresholds not yet set.** Numeric thresholds are filled in from the *pilot split only*
-(English plus a small Indic pilot slice that is disjoint from the reporting split), then this file is
-committed and frozen **before** any confirmatory experiment runs. After freezing, changes are appended as
-dated amendments with reasons; the original text is never edited (git history is the audit trail).
+**Status: FROZEN at the commit that introduced this version** (`git log -- docs/PREREG.md`). Changes after
+the freeze are appended as dated amendments with reasons; the frozen text is never edited.
 
-Freeze commit: _not yet frozen_
+## 0. Disclosure: what was seen before freezing
 
-## 1. Data subsets
+Thresholds were set after the pilot sweeps on the **pilot split only** (`results/raw/pilot_vllm_4b`,
+`results/raw/pilot_vllm_8b`; noise tables `results/tables/pilot_vllm_*_noise.csv`). The pilot split contains
+English **and** small Indic slices (12 parallel items per language), so pilot effect sizes for every language
+were visible when the margins below were chosen. Confirmatory tests run only on the disjoint `report` split,
+which no analysis has touched. Draft-length tuning uses the disjoint `tuning` split. Earlier smoke and probe runs
+used hand-written prompts and English pilot prompts only.
 
-| Split | Purpose | Contents | Used for thresholds? |
-| --- | --- | --- | --- |
-| `pilot` | noise estimation, threshold setting | TBD (WS2.7) | yes |
-| `tuning` | per-arm draft-length tuning | TBD, disjoint from `report` | no (tuning only) |
-| `report` | confirmatory results | TBD | no |
-| `heldout` | second-domain check | TBD | no |
+Pilot facts used to set the numbers (all pilot, exploratory):
+- Between-repeat SD of a cell's τ: ≤ 0.09 (4B), ≤ 0.02 (8B); between-repeat CV of per-request tokens/s ≤ 0.11.
+- Between-prompt SD of per-request τ: 0.03–0.97.
+- Thermal: max 87 °C; median SM clock 1.9–2.2 GHz; minimum 1.59 GHz; peak VRAM 23.88 GB (ceiling 23.95 GB).
+- Power: enforced limit 175 W throughout (after D-018).
 
-## 2. Hypotheses (from PROJECT_BRIEF §5)
+## 1. Data and design
 
-For each: statistic, data subset, analysis code path, threshold, decision rule.
+| Item | Value |
+|---|---|
+| Split | `report` (confirmatory), `tuning` (draft-length tuning only), `heldout` (IN22-Conv, if obtained; secondary) |
+| Languages | en, hi, ta, te, kn, ml |
+| Tasks | translation, qa, summarisation, chat (mixed per cell; same item ids in every language) |
+| Prompts per (arm, language, concurrency) cell | **100** parallel items (`max_prompts_per_cell: 100`, seed 1234). Prompts longer than `max_model_len − max_tokens` are excluded and counted (identically for every arm). |
+| Repeats | **3** per cell, cells in seeded shuffled order within each repeat (block randomisation) |
+| Decoding | greedy (temperature 0), `max_tokens` 256, unconstrained length (primary); fixed length (`ignore_eos`) secondary |
+| Models | Qwen3-4B: arms A0, A1, A5; concurrency 1, 2, 4, 8, 16, 32. Qwen3-8B: arms A0, A3, A4, A5; concurrency 1, 2, 4, 8 |
+| Engine | vLLM 0.34.0 primary (all arms); SGLang 0.5.23 secondary (A0, A1, A4, A5) |
 
-### H1 — pruned-vocabulary EAGLE-3 head collapses on Dravidian text
-- Statistic: TBD (planned: per-language mean τ over prompts, paired by item across languages; difference
-  `τ_en − τ_lang` with paired bootstrap 95% CI).
-- Falsified if: TBD.
-### H2 — full-vocabulary drafters do not collapse
-- Statistic / margin: TBD.
-### H3 — byte-fragment tokens are predictable
-- Statistic: TBD (planned: target top-1 probability and entropy on `BYTE_FRAGMENT_CONT` tokens vs other
-  classes; class acceptance from the validated replay harness).
-### H4 — speculation crossover concurrency differs by language
-- Statistic: TBD (planned: interpolated concurrency where paired speed-up CI crosses 1.0, per language).
+Rationale for 100 prompts: with the pilot's worst between-prompt SD (0.97) the 95% CI half-width of a language's
+mean τ is ≈ 0.19, and ≈ 0.12 at the median SD (0.6). The pre-registered margins below are 25% of English τ
+(≥ 0.3 in absolute terms for every arm), so 100 prompts resolve them; 3 repeats exceed the spec minimum and the
+between-repeat noise is an order of magnitude below the between-prompt noise.
 
-## 3. Gates (PROJECT_BRIEF §10)
-- G1 "clear language gap": TBD.
-- G2 "token class predicts acceptance": TBD.
-- G3 "fix beats strongest public arm": TBD (minimum number of languages, margin).
+## 2. Statistics (shared)
 
-## 4. Measurement rules
-- Minimum prompts per cell: TBD (from pilot variance).
-- Repeats per cell: ≥ 3 (spec minimum); final number TBD from pilot.
-- Block randomisation: cell order shuffled per repeat with recorded seed.
-- Thermal-abort rule: TBD — form: abort if max GPU temperature > `T_max` °C or 5th-percentile SM clock
-  < `r` × reference clock during the measured window (implemented in
-  `src/indicspec/harness/telemetry.py::summarise`).
-- Failed-request exclusion: TBD.
-- Replay-harness validation tolerance (WS3.5): TBD.
-- Multiple-comparison correction for confirmatory tests: Holm at family-wise α = 0.05
-  (`src/indicspec/analysis/stats.py::holm`).
+- **τ (acceptance length)** of a set of requests = (Σ accepted draft tokens + Σ verify steps) / Σ verify steps,
+  from per-request engine counters (`src/indicspec/analysis/metrics.py::acceptance_length`, harness fields
+  `spec_accepted_tokens`, `spec_verify_steps`).
+- **Per-prompt value** = mean over the 3 repeats.
+- **Language ratio** R_L = mean_items τ_L / mean_items τ_en, paired by item key (task:item_id) across languages;
+  95% CI by paired bootstrap over items, 10,000 resamples, seed 1234
+  (`src/indicspec/analysis/stats.py::paired_bootstrap_ci`).
+- **Speed-up** of an arm in a cell = mean_items(arm tokens/s per request) / mean_items(A0 tokens/s per request),
+  paired by item, same language and concurrency; paired bootstrap CI as above.
+- **Multiplicity:** within each hypothesis, Holm correction across the four Dravidian languages at family-wise
+  α = 0.05, implemented by testing each language's one-sided CI at level 1 − 0.05·(Holm step weight)
+  (`stats.py::holm` on bootstrap p-values = fraction of resamples on the wrong side of the threshold).
+- Confirmatory analysis code: `src/indicspec/analysis/confirm.py` (implemented before the first confirmatory
+  run; it may only read `report`-split logs).
+
+## 3. Hypotheses
+
+| | Hypothesis | Arms / cell | Confirmed for language L if | Falsified for L if |
+|---|---|---|---|---|
+| **H1** | Pruned-vocabulary EAGLE-3 heads collapse on Dravidian text | A3, A4 on Qwen3-8B, vLLM, concurrency 1 | upper 95% CI of τ_L < **1.5** | lower 95% CI of τ_L ≥ **0.9 × τ_en** of the same head |
+| **H2** | Full-vocabulary drafters do not collapse | A5 (4B and 8B), A1 (4B), vLLM, concurrency 1 | lower CI of R_L ≥ **0.75** | upper CI of R_L < **0.75** |
+| **H3** | Byte-fragment tokens are predictable | A1, A5 (4B), vLLM, concurrency 1, engine per-position traces | acceptance rate at evaluated positions whose target token is `BYTE_FRAGMENT_CONT` (pooled over ta/te/kn/ml) has lower CI ≥ English all-position acceptance rate − **0.05** | upper CI < English rate − 0.05 |
+| **H4** | The concurrency at which speculation stops paying differs by language | A1, A5 on 4B (grid 1–32) | crossover c*_L (smallest grid concurrency whose speed-up upper CI < 1.0; "> 32" if none) differs from c*_en by **≥ 2 grid steps** | c*_L within 1 grid step of c*_en |
+
+A hypothesis is **confirmed overall** when it is confirmed for ≥ 3 of the 4 Dravidian languages, **falsified
+overall** when falsified for ≥ 3, otherwise **inconclusive**. Per-position traces (H3) count only requests whose
+step alignment validates (`analysis/positions.py::align`); if < 99% of requests validate, H3 is reported as
+not testable.
+
+## 4. Gates (PROJECT_BRIEF §10)
+
+- **G1 (gap):** YES if any public drafter (A1, A3, A4, A5) has upper CI of R_L < 0.75 in ≥ 2 Dravidian languages
+  (Holm), or lower CI of R_L > 1.25 in ≥ 2 Dravidian languages (surprising advantage).
+- **G2 (mechanism):** YES if both hold for A5 and A1: (a) acceptance rates differ by token class (bootstrap CI
+  of the difference between `BYTE_FRAGMENT_LEAD` and `BYTE_FRAGMENT_CONT` acceptance excludes 0), and
+  (b) re-weighting Dravidian evaluated positions to the English token-class mix closes ≥ 50% of the English −
+  Dravidian acceptance-rate gap (class-standardised gap / raw gap ≤ 0.5). For A3/A4, (c) the acceptance rate at
+  in-vocabulary positions is reported per language (coverage-split test, D-010).
+- **G3 (fix value):** a new drafter beats the strongest public arm per language when the paired speed-up ratio
+  (new / strongest) has lower CI > **1.05** at concurrency 1 in ≥ 3 of 4 Dravidian languages, with English
+  regression reported and all correctness tests passing.
+
+## 5. Measurement and exclusion rules
+
+- **Power:** a sweep refuses to start unless the enforced GPU power limit is ≥ 140 W (D-018); enforced limit and
+  Windows power plan are recorded per cell. A cell whose recorded enforced limit is < 140 W is discarded and rerun.
+- **Thermal:** a cell is discarded and rerun if, during its window, GPU temperature exceeds **95 °C** or the 5th
+  percentile SM clock falls below **0.6 ×** the block's median SM clock (`harness/telemetry.py::summarise`).
+- **VRAM:** a cell is discarded if telemetry peak memory reaches total − 512 MiB (D-014).
+- **Failed requests:** requests with an error are excluded; a cell with > 5% failed requests is discarded and
+  rerun once; if it fails again it is reported as failed, never silently dropped.
+- **Draft-length tuning** (tuning split, concurrency 1, 1 repeat, 50 prompts per language): A1
+  `num_speculative_tokens` ∈ {2, 4, 8}; A5 ∈ {7, 15}; A3/A4 ∈ {3, 5}. The setting with the highest geometric-mean
+  speed-up over the six languages is used for every language; the full grid is reported.
+- **Correctness gate:** before confirmatory runs, every arm passes greedy equality vs A0 at batch size 1 on
+  20 report-split prompts per language. A mismatch whose target top-2 logit gap at the divergence is < 0.1 is a
+  near-tie; any other mismatch blocks the arm until explained.
+- **Engine definitions:** engines' own acceptance-length values are recorded but never used for statistics (C42).
+
+## Amendments
+
+_None yet._

@@ -1,0 +1,139 @@
+{
+  "schema_version": "1",
+  "run_id": "pilot_vllm_8b/vllm-A3-default-qwen3-8b",
+  "git_commit": "3d6af6cc400a80dde831fd7ba1403c6272acbc7e",
+  "git_dirty": true,
+  "command": [
+    "/mnt/c/Users/Pratyush Dixit/Desktop/Inference/src/indicspec/harness/sweep.py",
+    "--config",
+    "configs/pilot_vllm_8b.yaml"
+  ],
+  "config_hash": "979adca9619a0367f17ebabed337ef5206149f593b467fd4d06e8a9e0d923d9f",
+  "config": {
+    "run_name": "pilot_vllm_8b",
+    "engine": "vllm",
+    "model": "qwen3-8b",
+    "split": "pilot",
+    "languages": [
+      "en",
+      "hi",
+      "ta",
+      "te",
+      "kn",
+      "ml"
+    ],
+    "tasks": [
+      "chat",
+      "qa",
+      "summarisation",
+      "translation"
+    ],
+    "arms": [
+      {
+        "arm": "A0"
+      },
+      {
+        "arm": "A3"
+      },
+      {
+        "arm": "A4"
+      },
+      {
+        "arm": "A5"
+      }
+    ],
+    "concurrency": [
+      1,
+      4
+    ],
+    "repeats": 3,
+    "load_mode": "closed_loop",
+    "max_tokens": 256,
+    "ignore_eos": false,
+    "max_model_len": 4096,
+    "max_prompts_per_cell": 12,
+    "temperature": 0.0,
+    "seed": 1234,
+    "min_enforced_power_w": 140,
+    "arm_cfg": {
+      "arm": "A3"
+    },
+    "gpu_mem_util": 0.892
+  },
+  "engine": "vllm",
+  "engine_version": "0.34.0",
+  "engine_launch_cmd": [
+    "/home/pratyush/.cache/indicspec/venv-vllm/bin/vllm",
+    "serve",
+    "/home/pratyush/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+    "--served-model-name",
+    "qwen3-8b",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8100",
+    "--dtype",
+    "bfloat16",
+    "--max-model-len",
+    "4096",
+    "--gpu-memory-utilization",
+    "0.892",
+    "--seed",
+    "1234",
+    "--max-num-seqs",
+    "32",
+    "--speculative-config",
+    "{\"method\": \"eagle3\", \"model\": \"/home/pratyush/.cache/huggingface/hub/models--RedHatAI--Qwen3-8B-speculator.eagle3/snapshots/08610ffa01dd9f16731fe8f627b85905b6aa51c4\", \"num_speculative_tokens\": 3}",
+    "--per-request-spec-decode-metrics",
+    "detailed"
+  ],
+  "target": {
+    "repo": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "dtype": "bfloat16"
+  },
+  "drafter": {
+    "repo": "RedHatAI/Qwen3-8B-speculator.eagle3",
+    "revision": "08610ffa01dd9f16731fe8f627b85905b6aa51c4",
+    "method": "A3"
+  },
+  "dataset_manifest_sha256": "f9f075100cf6074c5970a5195261de61a83ee0a9eb3181e87b796f16ce76a3a0",
+  "gpu": {
+    "raw": {
+      "cmd": [
+        "nvidia-smi",
+        "--query-gpu=name,memory.total,driver_version,compute_cap,clocks.max.sm,clocks.max.mem,power.limit,power.max_limit,pcie.link.gen.max,pcie.link.width.max,persistence_mode",
+        "--format=csv,noheader"
+      ],
+      "ok": true,
+      "returncode": 0,
+      "stdout": "NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB, 610.88, 12.0, 3090 MHz, 14001 MHz, [N/A], 175.00 W, 5, 16, Enabled",
+      "stderr": ""
+    },
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5090 Laptop GPU",
+        "memory.total": "24463 MiB",
+        "driver_version": "610.88",
+        "compute_cap": "12.0",
+        "clocks.max.sm": "3090 MHz",
+        "clocks.max.mem": "14001 MHz",
+        "power.limit": "[N/A]",
+        "power.max_limit": "175.00 W",
+        "pcie.link.gen.max": "5",
+        "pcie.link.width.max": "16",
+        "persistence_mode": "Enabled"
+      }
+    ]
+  },
+  "telemetry_csv": null,
+  "thermal_summary": null,
+  "seeds": {
+    "engine": 1234,
+    "order": 3036316554,
+    "prompt_selection": 1234
+  },
+  "start_utc": "2026-11-25T15:56:56.278345+00:00",
+  "end_utc": "2026-11-25T16:17:58.387983+00:00",
+  "notes": "{\"excluded_long_prompts\": {\"te\": 1}, \"power_state_start\": {\"enforced_power_limit_w\": 175.0, \"default_power_limit_w\": 95.0, \"sm_clock_mhz\": 1605, \"max_sm_clock_mhz\": 3090, \"temperature_c\": 77, \"throttle_reasons_hex\": \"0x0\", \"windows_power_scheme\": \"Turbo\"}}"
+}
