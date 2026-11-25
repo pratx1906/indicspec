@@ -17,6 +17,7 @@ from __future__ import annotations
 import shutil
 import subprocess
 from dataclasses import dataclass
+from pathlib import Path
 
 DEFAULT_MARGIN_MIB = 512
 
@@ -96,7 +97,13 @@ def power_state(gpu_index: int = 0) -> dict[str, object]:
         state["throttle_reasons_hex"] = hex(pynvml.nvmlDeviceGetCurrentClocksEventReasons(h))
     except Exception as exc:  # recorded, never guessed
         state["nvml_error"] = repr(exc)
-    exe = shutil.which("powercfg.exe") or shutil.which("powercfg")
+    exe = (
+        shutil.which("powercfg.exe")
+        or shutil.which("powercfg")
+        or next(  # WSL non-login shells may lack the Windows PATH entries
+            (p for p in ("/mnt/c/Windows/System32/powercfg.exe",) if Path(p).exists()), None
+        )
+    )
     if exe:  # Windows, or WSL with interop
         try:
             out = subprocess.run(
