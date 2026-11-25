@@ -1,0 +1,31 @@
+{
+  "run_id": "smoke-vllm-A4-qwen3-8b-20261125T191718",
+  "engine": "vllm",
+  "arm": "A4",
+  "model": "qwen3-8b",
+  "vram_before": {
+    "total_mib": 24463,
+    "used_mib": 437
+  },
+  "peak_vram_mib": 21466.0,
+  "vram_ok": true,
+  "max_temp_c": 66.0,
+  "median_sm_clock": 1590.0,
+  "ok": true,
+  "errors": [],
+  "empty_outputs": [],
+  "spec_counter_delta": {
+    "vllm:spec_decode_num_drafts_total": 295.0,
+    "vllm:spec_decode_num_draft_tokens_total": 885.0,
+    "vllm:spec_decode_num_accepted_tokens_total": 70.0
+  },
+  "wall_s": 22.6226322120001,
+  "outputs": {
+    "en": "The monsoon is a seasonal wind pattern that brings heavy rainfall to many parts of South Asia, typically during the summer months. It plays a crucial role in agriculture and water supply, but can also",
+    "hi": "मानसून एक गर्म और आर्द्र वायु होती है जो भारत में गर्मी के महीनों में",
+    "ta": "பருவமழை ஒரு பெரிய மழை பருவம் ஆகும், இது பெரும்பாலும் காலா",
+    "te": "వర్షాకాలం వాతావరణాన్ని మార్చి ప్రకృతిని జీవ",
+    "kn": "ಮಳೆಗಾಲ ಕೃಷಿಗೆ ಅತ್ಯಗತ್ಯವಾದ ಸಮಯವಾಗಿದೆ. ಮಳೆಯಿಂದ ಮ",
+    "ml": "മഴക്കാലം പ്രകൃതിയെ പുതിയ ജീവിതത്തിന് തുടക്കം ക"
+  }
+}

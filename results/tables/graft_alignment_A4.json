@@ -1,0 +1,151 @@
+{
+  "schema": "indicspec.graft_check/1",
+  "draft": {
+    "repo": "SwitchXDDD/multilingual-eagle3-qwen3-8b",
+    "revision": "72072c4207ab5ee0aa0d65660107a7d52e46c80a",
+    "path": "/home/pratyush/.cache/huggingface/hub/models--SwitchXDDD--multilingual-eagle3-qwen3-8b/snapshots/72072c4207ab5ee0aa0d65660107a7d52e46c80a"
+  },
+  "target": {
+    "repo": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "lm_head_tensor": "lm_head.weight"
+  },
+  "draft_vocab_size": 32000,
+  "target_vocab_size": 151936,
+  "hidden": 4096,
+  "draft_tensors": {
+    "d2t": [
+      "I64",
+      [
+        32000
+      ]
+    ],
+    "fc.weight": [
+      "BF16",
+      [
+        4096,
+        12288
+      ]
+    ],
+    "lm_head.weight": [
+      "BF16",
+      [
+        32000,
+        4096
+      ]
+    ],
+    "midlayer.hidden_norm.weight": [
+      "BF16",
+      [
+        4096
+      ]
+    ],
+    "midlayer.input_layernorm.weight": [
+      "BF16",
+      [
+        4096
+      ]
+    ],
+    "midlayer.mlp.down_proj.weight": [
+      "BF16",
+      [
+        4096,
+        12288
+      ]
+    ],
+    "midlayer.mlp.gate_proj.weight": [
+      "BF16",
+      [
+        12288,
+        4096
+      ]
+    ],
+    "midlayer.mlp.up_proj.weight": [
+      "BF16",
+      [
+        12288,
+        4096
+      ]
+    ],
+    "midlayer.post_attention_layernorm.weight": [
+      "BF16",
+      [
+        4096
+      ]
+    ],
+    "midlayer.self_attn.k_proj.weight": [
+      "BF16",
+      [
+        1024,
+        8192
+      ]
+    ],
+    "midlayer.self_attn.o_proj.weight": [
+      "BF16",
+      [
+        4096,
+        4096
+      ]
+    ],
+    "midlayer.self_attn.q_proj.weight": [
+      "BF16",
+      [
+        4096,
+        8192
+      ]
+    ],
+    "midlayer.self_attn.v_proj.weight": [
+      "BF16",
+      [
+        1024,
+        8192
+      ]
+    ],
+    "norm.weight": [
+      "BF16",
+      [
+        4096
+      ]
+    ],
+    "t2d": [
+      "BOOL",
+      [
+        151936
+      ]
+    ]
+  },
+  "cosine_matched": {
+    "mean": -0.0006003377493470907,
+    "p05": -0.02618418727070093,
+    "p25": -0.01110488548874855,
+    "median": -0.0006303115224000067,
+    "p75": 0.009876553434878588,
+    "p95": 0.02487742099910973
+  },
+  "cosine_null_permuted": {
+    "mean": -0.0007378387963399291,
+    "p05": -0.026258140057325362,
+    "p25": -0.011214026482775807,
+    "median": -0.0007792213000357151,
+    "p75": 0.00974401761777699,
+    "p95": 0.024852221552282568
+  },
+  "relative_row_norm": {
+    "mean": 0.4935758709907532,
+    "p05": 0.40645135194063187,
+    "p25": 0.4469453990459442,
+    "median": 0.47931918501853943,
+    "p75": 0.5264114886522293,
+    "p95": 0.6214126080274582
+  },
+  "max_abs_diff_matched": 0.37548828125,
+  "identical_rows_fraction": 0.0,
+  "final_norm": {
+    "draft_norm_tensor": "norm.weight",
+    "cosine": 0.9797409176826477,
+    "max_abs_diff": 9.3046875,
+    "draft_mean": 1.0667610168457031,
+    "target_mean": 2.0107059478759766
+  },
+  "seed": 1234
+}

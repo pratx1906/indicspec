@@ -1,0 +1,32 @@
+# Arm definitions (spec §8.1). Draft parameters here are *smoke-test defaults*, not tuned values;
+# tuning happens on the `tuning` split (WS4.3). Revisions pinned from the HF API on 2026-11-25.
+drafters:
+  A3: {repo: RedHatAI/Qwen3-8B-speculator.eagle3, revision: 08610ffa01dd9f16731fe8f627b85905b6aa51c4, target: qwen3-8b}
+  A4: {repo: SwitchXDDD/multilingual-eagle3-qwen3-8b, revision: 72072c4207ab5ee0aa0d65660107a7d52e46c80a, target: qwen3-8b}
+  A5-8b: {repo: z-lab/Qwen3-8B-DFlash-b16, revision: 9b41424b7109f9c5413454f481b09a82b85333f4, target: qwen3-8b}
+  A5-4b: {repo: z-lab/Qwen3-4B-DFlash-b16, revision: b74e3a329c4d963783143b1e970d95b002be72bd, target: qwen3-4b}
+
+arms:
+  A0:
+    vllm: null
+    sglang: []
+  A1:
+    vllm: {method: ngram, num_speculative_tokens: 4, prompt_lookup_min: 2, prompt_lookup_max: 5}
+    sglang: ["--speculative-algorithm", "NGRAM", "--speculative-num-draft-tokens", "8"]
+  A3:
+    drafter: A3
+    vllm: {method: eagle3, model: "{drafter_path}", num_speculative_tokens: 3}
+    sglang: ["--speculative-algorithm", "EAGLE3", "--speculative-draft-model-path", "{drafter_path}",
+             "--speculative-num-steps", "3", "--speculative-eagle-topk", "1",
+             "--speculative-num-draft-tokens", "4"]
+  A4:
+    drafter: A4
+    vllm: {method: eagle3, model: "{drafter_path}", num_speculative_tokens: 3}
+    sglang: ["--speculative-algorithm", "EAGLE3", "--speculative-draft-model-path", "{drafter_path}",
+             "--speculative-num-steps", "3", "--speculative-eagle-topk", "1",
+             "--speculative-num-draft-tokens", "4"]
+  A5:
+    drafter: A5-{size}
+    vllm: {method: dflash, model: "{drafter_path}", num_speculative_tokens: 15}
+    sglang: ["--speculative-algorithm", "DFLASH", "--speculative-draft-model-path", "{drafter_path}",
+             "--speculative-num-draft-tokens", "16", "--speculative-draft-attention-backend", "triton"]

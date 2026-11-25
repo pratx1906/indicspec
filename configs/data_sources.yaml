@@ -1,0 +1,135 @@
+# IndicSpec-Bench source definitions (WS2).  Read by `python -m indicspec.data.build`.
+# Revisions resolved with huggingface_hub HfApi().dataset_info(repo).sha on 2026-11-25.
+# Licences are re-checked on every build against the `license:` field of the README.md
+# front matter downloaded at the pinned revision (see `licence_check` below).
+# Field names / language codes below were read from the downloaded files (D-013).
+
+seed: 20261125
+languages: [en, hi, ta, te, kn, ml]
+indic_languages: [hi, ta, te, kn, ml]
+language_names: {en: English, hi: Hindi, ta: Tamil, te: Telugu, kn: Kannada, ml: Malayalam}
+
+# Prompt instructions are written in English for every language (D-013): we have no
+# human-made in-language instruction templates, and machine-translating them ourselves
+# would add translationese we cannot check. Content (passage, question, source) is in-language.
+prompt_instruction_language: en
+
+tokenizer:
+  model_key: qwen3-8b          # configs/models.yaml targets.<key> gives repo + revision
+  chat_template_kwargs: {add_generation_prompt: true, enable_thinking: false}
+
+splits:
+  # Item-level, seeded, deterministic: items are ranked by sha256("<seed>:<item_id>"),
+  # the first round(0.10 n) go to pilot, the next round(0.20 n) to tuning, the rest to report.
+  pilot_frac: 0.10
+  tuning_frac: 0.20
+  report_cap: 200              # report items per task; extra items are dropped (counted in MANIFEST)
+  heldout: reserved            # IN22-Conv only (TODO: gated, needs owner's HF token)
+
+# Generation-time variants (WS2 task 3). The same prompts serve both; nothing is duplicated.
+generation_variants:
+  unconstrained: {max_tokens: 1024, ignore_eos: false}
+  fixed_length: {fixed_output_tokens: 256, ignore_eos: true}
+
+sources:
+  flores_in:
+    repo: google/IndicGenBench_flores_in
+    revision: f8650438298df086750ff4973661bb58a201a5ee
+    url: https://huggingface.co/datasets/google/IndicGenBench_flores_in
+    licence: cc-by-sa-4.0
+    licence_verified_at: >-
+      README.md front matter `license: cc-by-sa-4.0` at the pinned revision (checked by the builder);
+      HF API cardData.license; GitHub README of google-research-datasets/indic-gen-bench
+    notes: >-
+      FLORES-200 dev/devtest ("dev"/"test" files). No row ids; each file has its own order.
+      Canary: "do not include the data ... for LLM pre-training".
+    files_per_lang: ["flores_en_{lang}_test.json", "flores_{lang}_en_test.json"]
+  xquad_in:
+    repo: google/IndicGenBench_xquad_in
+    revision: 32026f0bcb0eed9aea0418694448c143c98acb0a
+    url: https://huggingface.co/datasets/google/IndicGenBench_xquad_in
+    licence: cc-by-sa-4.0
+    licence_verified_at: >-
+      README.md front matter `license: cc-by-sa-4.0` at the pinned revision (checked by the builder);
+      HF API cardData.license
+    notes: Professional human translations of XQuAD; ids shared across languages.
+    files_per_lang: ["xquad_{lang}_test.json"]
+  belebele:
+    repo: facebook/belebele
+    revision: 7899cdfa4e1e0d733fd77c848e2c273cb1d32be2
+    url: https://huggingface.co/datasets/facebook/belebele
+    licence: cc-by-sa-4.0
+    licence_verified_at: >-
+      README.md front matter `license: cc-by-sa-4.0` at the pinned revision (checked by the builder);
+      data/README points to LICENSE_CC-BY-SA4.0; HF API cardData.license
+    notes: >-
+      Card: "intended to be used only as a test set, and not for training or validation".
+      data/README mentions a `split` column that the HF jsonl files do not contain; `link` is
+      unique per passage in the six files we use.
+    lang_codes: {en: eng_Latn, hi: hin_Deva, ta: tam_Taml, te: tel_Telu, kn: kan_Knda, ml: mal_Mlym}
+  aya_dolly_mt:
+    repo: CohereLabs/aya_evaluation_suite
+    revision: e69f652e99144bf9e5019caa6c940fa1e9a24ba3
+    config: dolly_machine_translated
+    url: https://huggingface.co/datasets/CohereLabs/aya_evaluation_suite
+    licence: apache-2.0
+    licence_verified_at: >-
+      README.md front matter `license: apache-2.0` at the pinned revision (checked by the builder);
+      README "Licensing Information"; upstream databricks/databricks-dolly-15k is CC-BY-SA-3.0
+    notes: Indic rows are NLLB machine translations of English Dolly prompts (translationese).
+    file: dolly_machine_translated/test-00000-of-00001.parquet
+    lang_codes: {en: eng, hi: hin, ta: tam, te: tel, kn: kan, ml: mal}
+  in22_conv:
+    repo: ai4bharat/IN22-Conv
+    url: https://huggingface.co/datasets/ai4bharat/IN22-Conv
+    licence: cc-by-4.0
+    enabled: false   # TODO(owner): gated; accept terms on HF and set HF_TOKEN in .env (D-013)
+    planned_split: heldout
+
+# Task definitions. `langs` lists the languages each task must be parallel across.
+tasks:
+  translation:
+    source: flores_in
+    langs: [en, hi, ta, te, kn, ml]
+    flores_derived: true
+    translationese: false
+    template: |-
+      Translate the following {src_name} text into {tgt_name}. Output only the translation.
+
+      {src_text}
+  translation_xx2en:
+    source: flores_in
+    langs: [hi, ta, te, kn, ml]
+    flores_derived: true
+    translationese: false
+    template: |-
+      Translate the following {src_name} text into {tgt_name}. Output only the translation.
+
+      {src_text}
+  qa:
+    source: xquad_in
+    langs: [en, hi, ta, te, kn, ml]
+    flores_derived: false
+    translationese: false
+    template: |-
+      Read the passage and answer the question in {lang_name}. Give the answer first, then explain it in 2-4 sentences using only information from the passage.
+
+      Passage:
+      {context}
+
+      Question: {question}
+  summarisation:
+    source: belebele
+    langs: [en, hi, ta, te, kn, ml]
+    flores_derived: true
+    translationese: false
+    template: |-
+      Summarise the following passage in {lang_name} in 2-3 sentences.
+
+      {passage}
+  chat:
+    source: aya_dolly_mt
+    langs: [en, hi, ta, te, kn, ml]
+    flores_derived: false
+    translationese_indic: true   # en rows are the Dolly originals
+    template: "{inputs}"

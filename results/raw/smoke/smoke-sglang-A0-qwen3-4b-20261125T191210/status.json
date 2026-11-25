@@ -1,0 +1,31 @@
+{
+  "run_id": "smoke-sglang-A0-qwen3-4b-20261125T191210",
+  "engine": "sglang",
+  "arm": "A0",
+  "model": "qwen3-4b",
+  "vram_before": {
+    "total_mib": 24463,
+    "used_mib": 468
+  },
+  "peak_vram_mib": 24092.0,
+  "vram_ok": false,
+  "max_temp_c": 67.0,
+  "median_sm_clock": 907.0,
+  "ok": false,
+  "errors": [],
+  "empty_outputs": [],
+  "spec_counter_delta": {
+    "sglang:spec_accept_length": 0.0,
+    "sglang:spec_accept_rate": 0.0,
+    "sglang:spec_verify_calls_total": 0.0
+  },
+  "wall_s": 16.005541941000047,
+  "outputs": {
+    "en": "The monsoon is a seasonal wind pattern that brings heavy rainfall to many regions, particularly in South Asia. It plays a crucial role in agriculture and weather patterns, influencing the climate and ",
+    "hi": "1. मानसून एक विशेष आकाशीय धारा होती है जो बारिश के लिए अहम भूमिका",
+    "ta": "பருவமழை மழை மழை மழை மழை மழை மழை மழை மழை மழை மழை.  \nபருவ",
+    "te": "వర్షాకాలం ప్రాణాల కోసం ప్రధాన సమయం అగును. ద�",
+    "kn": "ಮಳೆಗಾಲ ದೇಶದ ಜನತೆಗೆ ಒಂದು ಸ್ವಚ್ಛ, ಜೀವನಶೈಲಿಯನ್ನು ನೀ",
+    "ml": "മഴക്കാലത്ത് കുട്ടികളുടെ ആസ്വാദനം നിലവിലാക്കുന്നതി"
+  }
+}

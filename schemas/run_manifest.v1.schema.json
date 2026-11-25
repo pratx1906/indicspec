@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "indicspec/run_manifest/v1",
+  "title": "IndicSpec run manifest (results/raw/<run>/run_manifest.json)",
+  "type": "object",
+  "required": [
+    "schema_version", "run_id", "git_commit", "git_dirty", "command", "config_hash",
+    "engine", "engine_version", "target", "drafter", "dataset_manifest_sha256",
+    "gpu", "seeds", "start_utc"
+  ],
+  "properties": {
+    "schema_version": {"const": "1"},
+    "run_id": {"type": "string"},
+    "git_commit": {"type": "string"},
+    "git_dirty": {"type": "boolean"},
+    "command": {"type": "array", "items": {"type": "string"}},
+    "config_hash": {"type": "string"},
+    "config": {"type": "object"},
+    "engine": {"enum": ["vllm", "sglang", "replay"]},
+    "engine_version": {"type": "string"},
+    "engine_launch_cmd": {"type": ["array", "null"], "items": {"type": "string"}},
+    "target": {
+      "type": "object",
+      "required": ["repo", "revision", "dtype"],
+      "properties": {"repo": {"type": "string"}, "revision": {"type": "string"}, "dtype": {"type": "string"}}
+    },
+    "drafter": {
+      "type": ["object", "null"],
+      "properties": {"repo": {"type": ["string", "null"]}, "revision": {"type": ["string", "null"]}, "method": {"type": "string"}}
+    },
+    "dataset_manifest_sha256": {"type": "string"},
+    "gpu": {"type": "object"},
+    "telemetry_csv": {"type": ["string", "null"]},
+    "thermal_summary": {"type": ["object", "null"]},
+    "seeds": {"type": "object"},
+    "start_utc": {"type": "string"},
+    "end_utc": {"type": ["string", "null"]},
+    "notes": {"type": ["string", "null"]}
+  }
+}

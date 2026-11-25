@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+dist/
+build/
+
+# Secrets
+.env
+*.token
+
+# Large / downloaded data (builders reproduce them; MANIFEST.json records checksums)
+data/raw/
+!data/raw/.gitkeep
+# Frozen bench text is rebuilt by `make data` (licences: ship builders + MANIFEST, D-013)
+data/bench/*.jsonl
+
+# Profiler traces are large; summaries go to results/
+*.nsys-rep
+*.qdrep
+*.sqlite
+results/profiles/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Original prompt file (PROJECT_PROMPT.md is the tracked copy)
+INDICSPEC_CLAUDE_CODE_PROMPT.md

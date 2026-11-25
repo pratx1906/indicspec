@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use IndicSpec, please cite it as below."
+title: "IndicSpec: Speculative decoding for Indic LLM serving"
+authors:
+  - family-names: Dixit
+    given-names: Pratyush
+repository-code: "https://github.com/pratx1906/indicspec"
+version: 0.1.0.dev0
+date-released: 2026-11-25
+keywords:
+  - speculative decoding
+  - LLM inference
+  - vLLM
+  - SGLang
+  - Indic languages
+  - Dravidian languages
+  - tokenization

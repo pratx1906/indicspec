@@ -1,0 +1,66 @@
+[project]
+name = "indicspec"
+version = "0.1.0.dev0"
+description = "IndicSpec: measuring speculative-decoding drafters on Dravidian languages, Hindi and English on one consumer Blackwell GPU"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+# CPU-side analysis environment only. vLLM / SGLang live in separate engine
+# environments (see env/ENGINES.md) because their dependency pins conflict.
+dependencies = [
+    "numpy>=1.26",
+    "pyyaml>=6.0",
+    "jsonschema>=4.21",
+    "tokenizers>=0.20",
+    "huggingface_hub>=0.25",
+    "psutil>=5.9",
+    "httpx>=0.27",
+    "nvidia-ml-py>=12",
+]
+
+[project.optional-dependencies]
+analysis = ["matplotlib>=3.8", "pandas>=2.2", "scipy>=1.12"]
+# WS2 benchmark builders: Qwen3 chat template (transformers + jinja2) and parquet reading.
+data = ["transformers>=4.51", "jinja2>=3.1", "pyarrow>=15"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "hypothesis>=6.100",
+    "ruff>=0.6",
+    "mypy>=1.10",
+    "types-PyYAML",
+    "types-jsonschema",
+    "types-psutil",
+]
+
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/indicspec"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "gpu: needs a CUDA GPU and a running/startable inference engine",
+    "slow: takes more than ~30 s",
+    "data: needs downloaded artefacts (tokenizers, datasets) from the network or HF cache",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]  # Indic/Unicode literals are intentional
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src/indicspec"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+check_untyped_defs = true

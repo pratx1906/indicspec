@@ -1,0 +1,472 @@
+{
+  "builder": "python -m indicspec.data.build",
+  "files": {
+    "bench/chat.jsonl": {
+      "bytes": 12488744,
+      "items_per_split": {
+        "pilot": 20,
+        "report": 140,
+        "tuning": 40
+      },
+      "rows": 1200,
+      "rows_per_lang_split": {
+        "en": {
+          "pilot": 20,
+          "report": 140,
+          "tuning": 40
+        },
+        "hi": {
+          "pilot": 20,
+          "report": 140,
+          "tuning": 40
+        },
+        "kn": {
+          "pilot": 20,
+          "report": 140,
+          "tuning": 40
+        },
+        "ml": {
+          "pilot": 20,
+          "report": 140,
+          "tuning": 40
+        },
+        "ta": {
+          "pilot": 20,
+          "report": 140,
+          "tuning": 40
+        },
+        "te": {
+          "pilot": 20,
+          "report": 140,
+          "tuning": 40
+        }
+      },
+      "sha256": "a529c9d87df8cb1b0303675f559b6d9326f25d887eac66f99bee8506be9edfbf"
+    },
+    "bench/qa.jsonl": {
+      "bytes": 23121792,
+      "items_per_split": {
+        "pilot": 24,
+        "report": 168,
+        "tuning": 48
+      },
+      "rows": 1440,
+      "rows_per_lang_split": {
+        "en": {
+          "pilot": 24,
+          "report": 168,
+          "tuning": 48
+        },
+        "hi": {
+          "pilot": 24,
+          "report": 168,
+          "tuning": 48
+        },
+        "kn": {
+          "pilot": 24,
+          "report": 168,
+          "tuning": 48
+        },
+        "ml": {
+          "pilot": 24,
+          "report": 168,
+          "tuning": 48
+        },
+        "ta": {
+          "pilot": 24,
+          "report": 168,
+          "tuning": 48
+        },
+        "te": {
+          "pilot": 24,
+          "report": 168,
+          "tuning": 48
+        }
+      },
+      "sha256": "3a181fae3734098c7603b0e3ec7e5fcb3a8ee80234feb2b34447ee82184932cd"
+    },
+    "bench/summarisation.jsonl": {
+      "bytes": 13985401,
+      "items_per_split": {
+        "pilot": 27,
+        "report": 187,
+        "tuning": 53
+      },
+      "rows": 1602,
+      "rows_per_lang_split": {
+        "en": {
+          "pilot": 27,
+          "report": 187,
+          "tuning": 53
+        },
+        "hi": {
+          "pilot": 27,
+          "report": 187,
+          "tuning": 53
+        },
+        "kn": {
+          "pilot": 27,
+          "report": 187,
+          "tuning": 53
+        },
+        "ml": {
+          "pilot": 27,
+          "report": 187,
+          "tuning": 53
+        },
+        "ta": {
+          "pilot": 27,
+          "report": 187,
+          "tuning": 53
+        },
+        "te": {
+          "pilot": 27,
+          "report": 187,
+          "tuning": 53
+        }
+      },
+      "sha256": "78d8ba9c9791bc92b1fa315a978fe30d1c8256efbce285af62699c4e274f0056"
+    },
+    "bench/translation.jsonl": {
+      "bytes": 8430800,
+      "items_per_split": {
+        "pilot": 22,
+        "report": 154,
+        "tuning": 44
+      },
+      "rows": 1320,
+      "rows_per_lang_split": {
+        "en": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "hi": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "kn": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "ml": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "ta": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "te": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        }
+      },
+      "sha256": "e5ce7575efc6daa5e94b988b1135abc771a3f63d310946bf45a3d04b2481b536"
+    },
+    "bench/translation_xx2en.jsonl": {
+      "bytes": 11098794,
+      "items_per_split": {
+        "pilot": 22,
+        "report": 154,
+        "tuning": 44
+      },
+      "rows": 1100,
+      "rows_per_lang_split": {
+        "hi": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "kn": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "ml": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "ta": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        },
+        "te": {
+          "pilot": 22,
+          "report": 154,
+          "tuning": 44
+        }
+      },
+      "sha256": "4612073a1d808e7149dc570513d4fa1e52bac38e6e0952cf1d568b927baccfc0"
+    }
+  },
+  "generation_variants": {
+    "fixed_length": {
+      "fixed_output_tokens": 256,
+      "ignore_eos": true
+    },
+    "unconstrained": {
+      "ignore_eos": false,
+      "max_tokens": 1024
+    }
+  },
+  "prompt_instruction_language": "en",
+  "schema_version": 1,
+  "seed": 20261125,
+  "sources": {
+    "aya_dolly_mt": {
+      "config": "dolly_machine_translated",
+      "files_sha256": {
+        "README.md": "4763991a846e90c4313f05739721777af8767933e6ff4737c69aa94b47afcd40",
+        "dolly_machine_translated/test-00000-of-00001.parquet": "293c351a612b2ba53830ca2e528f57eb37d56b229d9d0ad116ed32ad60bb2363"
+      },
+      "licence": "apache-2.0",
+      "licence_verified_at": "README.md front matter `license: apache-2.0` at the pinned revision (checked by the builder); README \"Licensing Information\"; upstream databricks/databricks-dolly-15k is CC-BY-SA-3.0",
+      "repo": "CohereLabs/aya_evaluation_suite",
+      "revision": "e69f652e99144bf9e5019caa6c940fa1e9a24ba3",
+      "url": "https://huggingface.co/datasets/CohereLabs/aya_evaluation_suite"
+    },
+    "belebele": {
+      "files_sha256": {
+        "README.md": "311c1a2dc30595eb6c7788c0c20548ea00169eef93dc5b0436c7ccdacaf84231",
+        "data/eng_Latn.jsonl": "15af884c2b5994fdc71199e79d553a1864b08ce1b31894aa87f6be925a064a31",
+        "data/hin_Deva.jsonl": "41d34aab7f8fc4d57dc5d61fb36c3ce6ce230fe8e1c156c4d3cff0ba4710ed8f",
+        "data/kan_Knda.jsonl": "de094c4415ae4bf59f848dbcfdb6e7dab49e4a1eb90a8475e390192e4baff5f5",
+        "data/mal_Mlym.jsonl": "13dfe860efadb2ff9a080e2b191a6b3bbd478786ac2c67fe7f32d56192e4dbf0",
+        "data/tam_Taml.jsonl": "f950eb23a6e7001087d0dbc3ebc892f1b92a99cfc35b929b4cdfb07288037044",
+        "data/tel_Telu.jsonl": "10403c5d76edf5112b0703217836e15857119a58f431052eb47b7874d9fc419e"
+      },
+      "licence": "cc-by-sa-4.0",
+      "licence_verified_at": "README.md front matter `license: cc-by-sa-4.0` at the pinned revision (checked by the builder); data/README points to LICENSE_CC-BY-SA4.0; HF API cardData.license",
+      "repo": "facebook/belebele",
+      "revision": "7899cdfa4e1e0d733fd77c848e2c273cb1d32be2",
+      "url": "https://huggingface.co/datasets/facebook/belebele"
+    },
+    "flores_in": {
+      "files_sha256": {
+        "README.md": "3156c65f9ad1bcad7b679ad834299a154adf197155e339ce7f59cc0cd40863ce",
+        "flores_en_hi_dev.json": "b46f118aa2d4b91330f8f73fedbb67481e0644e31df2686cfd23eca58577307d",
+        "flores_en_hi_test.json": "ab4eead1bdf54f7d8e6a266b9dd058be862e40337b57dbb7432986def2e11c91",
+        "flores_en_kn_test.json": "70fec5b6f0639e2b609485823deba4575c4c108c5004263adda56b61f1b69e69",
+        "flores_en_ml_test.json": "c02f64f997f23b90c5025d330875ace66bb3b6420232675eaa1258ca5f0cfd24",
+        "flores_en_ta_test.json": "3d95c5d5dca248c7fd782ca7363d84f46e26d05aa56325133deff9a65133e96a",
+        "flores_en_te_test.json": "212ae03fc8485ca93ef3fd4629410252cdb83dc9dded05e98ec48fe38bb2f209",
+        "flores_hi_en_test.json": "d3699b7a8b86681b30051bd5b4d5e27b4d407f7af85596d5767fa76b8d4adbc1",
+        "flores_kn_en_test.json": "a6b5c39c5ffc3a5f4e823de64a66154fcf8aaae16ba272d3c8e157aa1b74b3d5",
+        "flores_ml_en_test.json": "ed3a2955b56e0cc3e8051eb73fb4dbfd725d81ddff49fea6e9805beae02e924c",
+        "flores_ta_en_test.json": "a20354aaed7de468567c08780cb96f175ae479f336e26280c0bc1da185f75f55",
+        "flores_te_en_test.json": "dbe9f71ffce906d0e9ae19da71a2e0154bcfc6e395739a4b464107ca582cbbbc"
+      },
+      "licence": "cc-by-sa-4.0",
+      "licence_verified_at": "README.md front matter `license: cc-by-sa-4.0` at the pinned revision (checked by the builder); HF API cardData.license; GitHub README of google-research-datasets/indic-gen-bench",
+      "repo": "google/IndicGenBench_flores_in",
+      "revision": "f8650438298df086750ff4973661bb58a201a5ee",
+      "url": "https://huggingface.co/datasets/google/IndicGenBench_flores_in"
+    },
+    "in22_conv": {
+      "licence": "cc-by-4.0",
+      "repo": "ai4bharat/IN22-Conv",
+      "status": "TODO: gated, not downloaded (needs owner's HF token)",
+      "url": "https://huggingface.co/datasets/ai4bharat/IN22-Conv"
+    },
+    "xquad_in": {
+      "files_sha256": {
+        "README.md": "1ca86287a53ff627a8420848e79ca1222f8ca7607c9fc72760034cb960d23411",
+        "xquad_en_test.json": "500dabb0d9581ecc6bb993ce8de4f4bea01bd07eda3aaeb0b02057b4a115a6be",
+        "xquad_hi_test.json": "effd199c7f8f4a9de9420127bee0b09e70f77f5a37f10293559c1f2328528b51",
+        "xquad_kn_test.json": "67fbd8d92a718ab24cf2ebec2f903ab3976e6a88932fb55903fe71708d931ecb",
+        "xquad_ml_test.json": "469ee842aa90ff16962b6eb9ecf5bb07e8f590ab58d3e597156b88a6d502e825",
+        "xquad_ta_test.json": "a5d61d068e803953c0dad18d65b2b5b2a0dc9b135e55c61660d9be8c5a4cc2ea",
+        "xquad_te_test.json": "fabf1ad5ac27df35fedad241e17ab3b3aca37a59efee8bfafcd1957b292d8d67"
+      },
+      "licence": "cc-by-sa-4.0",
+      "licence_verified_at": "README.md front matter `license: cc-by-sa-4.0` at the pinned revision (checked by the builder); HF API cardData.license",
+      "repo": "google/IndicGenBench_xquad_in",
+      "revision": "32026f0bcb0eed9aea0418694448c143c98acb0a",
+      "url": "https://huggingface.co/datasets/google/IndicGenBench_xquad_in"
+    }
+  },
+  "splits": {
+    "heldout": "reserved",
+    "pilot_frac": 0.1,
+    "report_cap": 200,
+    "tuning_frac": 0.2
+  },
+  "tasks": {
+    "chat": {
+      "dropped_by_report_cap": 0,
+      "dropped_not_in_all_langs": 0,
+      "items_total_before_split": 200,
+      "langs": [
+        "en",
+        "hi",
+        "ta",
+        "te",
+        "kn",
+        "ml"
+      ],
+      "rows_changed_by_nfc": 0,
+      "rows_per_lang": {
+        "en": 200,
+        "hi": 200,
+        "kn": 200,
+        "ml": 200,
+        "ta": 200,
+        "te": 200
+      },
+      "source": "aya_dolly_mt"
+    },
+    "qa": {
+      "dropped_by_report_cap": 0,
+      "dropped_not_in_all_langs": 0,
+      "items_total_before_split": 240,
+      "langs": [
+        "en",
+        "hi",
+        "ta",
+        "te",
+        "kn",
+        "ml"
+      ],
+      "passages": 240,
+      "questions_per_item": 1,
+      "questions_per_lang": {
+        "en": 1190,
+        "hi": 1190,
+        "kn": 1190,
+        "ml": 1190,
+        "ta": 1190,
+        "te": 1190
+      },
+      "rows_changed_by_nfc": 122,
+      "source": "xquad_in"
+    },
+    "summarisation": {
+      "belebele_passages_by_flores_split": {
+        "dev": 267,
+        "devtest": 220,
+        "none": 1
+      },
+      "belebele_passages_per_lang": {
+        "en": 488,
+        "hi": 488,
+        "kn": 488,
+        "ml": 488,
+        "ta": 488,
+        "te": 488
+      },
+      "dropped_by_report_cap": 0,
+      "dropped_not_in_all_langs": 0,
+      "items_total_before_split": 267,
+      "kept_dev_passages": 267,
+      "langs": [
+        "en",
+        "hi",
+        "ta",
+        "te",
+        "kn",
+        "ml"
+      ],
+      "rows_changed_by_nfc": 100,
+      "source": "belebele"
+    },
+    "translation": {
+      "belebele_passages_by_flores_split": {
+        "dev": 267,
+        "devtest": 220,
+        "none": 1
+      },
+      "devtest_sentences_common": 1012,
+      "devtest_sentences_per_file": [
+        1012
+      ],
+      "devtest_sentences_unused_not_in_belebele": 245,
+      "devtest_sentences_used": 767,
+      "direction_text_mismatch": {
+        "hi": 0,
+        "kn": 0,
+        "ml": 0,
+        "ta": 0,
+        "te": 0
+      },
+      "dropped_by_report_cap": 0,
+      "en_source_lang_rotation": {
+        "hi": 44,
+        "kn": 44,
+        "ml": 44,
+        "ta": 44,
+        "te": 44
+      },
+      "items_total_before_split": 220,
+      "langs": [
+        "en",
+        "hi",
+        "ta",
+        "te",
+        "kn",
+        "ml"
+      ],
+      "rows_changed_by_nfc": 77,
+      "sentences_in_two_passages": 0,
+      "source": "flores_in"
+    },
+    "translation_xx2en": {
+      "belebele_passages_by_flores_split": {
+        "dev": 267,
+        "devtest": 220,
+        "none": 1
+      },
+      "devtest_sentences_common": 1012,
+      "devtest_sentences_per_file": [
+        1012
+      ],
+      "devtest_sentences_unused_not_in_belebele": 245,
+      "devtest_sentences_used": 767,
+      "direction_text_mismatch": {
+        "hi": 0,
+        "kn": 0,
+        "ml": 0,
+        "ta": 0,
+        "te": 0
+      },
+      "dropped_by_report_cap": 0,
+      "en_source_lang_rotation": {
+        "hi": 44,
+        "kn": 44,
+        "ml": 44,
+        "ta": 44,
+        "te": 44
+      },
+      "items_total_before_split": 220,
+      "langs": [
+        "hi",
+        "ta",
+        "te",
+        "kn",
+        "ml"
+      ],
+      "rows_changed_by_nfc": 66,
+      "sentences_in_two_passages": 0,
+      "source": "flores_in"
+    }
+  },
+  "tokenizer": {
+    "chat_template_kwargs": {
+      "add_generation_prompt": true,
+      "enable_thinking": false
+    },
+    "chat_template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+    "repo": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "tokenizer_json_sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+    "tokenizers_version": "0.23.3",
+    "transformers_version": "5.24.1"
+  }
+}

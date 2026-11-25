@@ -1,0 +1,35 @@
+/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py:71: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+[2026-11-25 18:52:59] kill_process_tree called: parent_pid=4973, include_parent=False, pid=4973
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py", line 84, in <module>
+    run_server(server_args)
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/launch_server.py", line 29, in run_server
+    server_args.resolve_once()
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/srt/server_args.py", line 277, in resolve_once
+    run_resolution_pipeline(self)
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/pipeline.py", line 306, in run_resolution_pipeline
+    run_hook(handle_speculative_decoding, server_args)
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/resolution_hooks.py", line 139, in run_hook
+    step(server_args)
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/speculative_hook.py", line 154, in handle_speculative_decoding
+    speculative_algorithm=_resolve_speculative_algorithm_alias(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/srt/arg_groups/speculative_hook.py", line 93, in _resolve_speculative_algorithm_alias
+    cfg = get_config(
+          ^^^^^^^^^^^
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/srt/utils/common.py", line 4570, in wrapper
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/srt/utils/hf_transformers/config.py", line 379, in get_config
+    config = parser.parse(
+             ^^^^^^^^^^^^^
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/sglang/srt/utils/hf_transformers/config.py", line 228, in parse
+    config = AutoConfig.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pratyush/.cache/indicspec/venv-sglang/lib/python3.12/site-packages/transformers/models/auto/configuration_auto.py", line 442, in from_pretrained
+    raise ValueError(
+ValueError: Unrecognized model in /home/pratyush/.cache/huggingface/hub/models--RedHatAI--Qwen3-8B-speculator.eagle3/snapshots/08610ffa01dd9f16731fe8f627b85905b6aa51c4. Should have a `model_type` key in its config.json.

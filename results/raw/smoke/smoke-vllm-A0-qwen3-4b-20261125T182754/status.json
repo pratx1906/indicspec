@@ -1,0 +1,12 @@
+{
+  "run_id": "smoke-vllm-A0-qwen3-4b-20261125T182754",
+  "engine": "vllm",
+  "arm": "A0",
+  "model": "qwen3-4b",
+  "vram_before": {
+    "total_mib": 24463,
+    "used_mib": 1636
+  },
+  "ok": false,
+  "exception": "KeyError('clocks.sm')"
+}

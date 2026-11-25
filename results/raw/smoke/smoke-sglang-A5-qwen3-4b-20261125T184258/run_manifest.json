@@ -1,0 +1,109 @@
+{
+  "schema_version": "1",
+  "run_id": "smoke-sglang-A5-qwen3-4b-20261125T184258",
+  "git_commit": "0fa4f32406e1600482293630d96993487c2cb972",
+  "git_dirty": true,
+  "command": [
+    "/mnt/c/Users/Pratyush Dixit/Desktop/Inference/src/indicspec/harness/smoke.py",
+    "--engine",
+    "sglang",
+    "--arm",
+    "A5",
+    "--model",
+    "qwen3-4b"
+  ],
+  "config_hash": "0381d1eaef068ca7220681421f656794ab9c48a29b2c3778ab7726d905501b44",
+  "config": {
+    "engine": "sglang",
+    "arm": "A5",
+    "model": "qwen3-4b",
+    "port": 8100,
+    "max_tokens": 64,
+    "max_model_len": 4096,
+    "gpu_mem_util": 0.899
+  },
+  "engine": "sglang",
+  "engine_version": "0.5.23",
+  "engine_launch_cmd": [
+    "/home/pratyush/.cache/indicspec/venv-sglang/bin/python",
+    "-m",
+    "sglang.launch_server",
+    "--model-path",
+    "/home/pratyush/.cache/huggingface/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c",
+    "--served-model-name",
+    "qwen3-4b",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8100",
+    "--dtype",
+    "bfloat16",
+    "--context-length",
+    "4096",
+    "--mem-fraction-static",
+    "0.899",
+    "--random-seed",
+    "1234",
+    "--attention-backend",
+    "flashinfer",
+    "--enable-metrics",
+    "--max-running-requests",
+    "32",
+    "--speculative-algorithm",
+    "DFLASH",
+    "--speculative-draft-model-path",
+    "/home/pratyush/.cache/huggingface/hub/models--z-lab--Qwen3-4B-DFlash-b16/snapshots/b74e3a329c4d963783143b1e970d95b002be72bd",
+    "--speculative-num-draft-tokens",
+    "16",
+    "--speculative-draft-attention-backend",
+    "triton"
+  ],
+  "target": {
+    "repo": "Qwen/Qwen3-4B",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "dtype": "bfloat16"
+  },
+  "drafter": {
+    "repo": "z-lab/Qwen3-4B-DFlash-b16",
+    "revision": "b74e3a329c4d963783143b1e970d95b002be72bd",
+    "method": "A5"
+  },
+  "dataset_manifest_sha256": "f9f075100cf6074c5970a5195261de61a83ee0a9eb3181e87b796f16ce76a3a0",
+  "gpu": {
+    "raw": {
+      "cmd": [
+        "nvidia-smi",
+        "--query-gpu=name,memory.total,driver_version,compute_cap,clocks.max.sm,clocks.max.mem,power.limit,power.max_limit,pcie.link.gen.max,pcie.link.width.max,persistence_mode",
+        "--format=csv,noheader"
+      ],
+      "ok": true,
+      "returncode": 0,
+      "stdout": "NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB, 610.88, 12.0, 3090 MHz, 14001 MHz, [N/A], 175.00 W, 5, 16, Enabled",
+      "stderr": ""
+    },
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5090 Laptop GPU",
+        "memory.total": "24463 MiB",
+        "driver_version": "610.88",
+        "compute_cap": "12.0",
+        "clocks.max.sm": "3090 MHz",
+        "clocks.max.mem": "14001 MHz",
+        "power.limit": "[N/A]",
+        "power.max_limit": "175.00 W",
+        "pcie.link.gen.max": "5",
+        "pcie.link.width.max": "16",
+        "persistence_mode": "Enabled"
+      }
+    ]
+  },
+  "telemetry_csv": "results/raw/smoke/smoke-sglang-A5-qwen3-4b-20261125T184258/telemetry.csv",
+  "thermal_summary": null,
+  "seeds": {
+    "engine": 1234,
+    "request": 1234
+  },
+  "start_utc": "2026-11-25T13:12:58.350817+00:00",
+  "end_utc": "2026-11-25T13:16:07.812993+00:00",
+  "notes": null
+}

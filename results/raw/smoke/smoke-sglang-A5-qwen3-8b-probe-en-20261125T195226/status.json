@@ -1,0 +1,26 @@
+{
+  "run_id": "smoke-sglang-A5-qwen3-8b-probe-en-20261125T195226",
+  "engine": "sglang",
+  "arm": "A5",
+  "model": "qwen3-8b",
+  "vram_before": {
+    "total_mib": 24463,
+    "used_mib": 694
+  },
+  "peak_vram_mib": 23659.0,
+  "vram_ok": true,
+  "max_temp_c": 69.0,
+  "median_sm_clock": 795.0,
+  "ok": true,
+  "errors": [],
+  "empty_outputs": [],
+  "spec_counter_delta": {
+    "sglang:spec_accept_length": 8.525,
+    "sglang:spec_accept_rate": 0.5016666666666667,
+    "sglang:spec_verify_calls_total": 369.0
+  },
+  "wall_s": 33.502062604,
+  "outputs": {
+    "en": "Here's a Python function that returns the n-th Fibonacci number iteratively, complete with a docstring and three doctest examples:\n\n```python\ndef fibonacci(n):\n    \"\"\"\n    Return the n-th Fibonacci nu"
+  }
+}

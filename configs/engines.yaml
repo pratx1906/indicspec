@@ -1,0 +1,43 @@
+# Engine launch templates and metric names (WS1). Source: docs/research/engine_research.md
+# (release tags read 2026-11-25). Every entry is UNVERIFIED until a smoke test on this machine
+# confirms it; verified entries get `verified: <date> <commit>` and docs/ENGINE_STATUS.md is updated.
+vllm:
+  version: "0.34.0"
+  venv: ~/.cache/indicspec/venv-vllm
+  mem_fraction_headroom: 0.01   # vLLM's fraction covers weights+activations+graphs+KV
+  env:
+    VLLM_WSL2_ENABLE_PIN_MEMORY: "1"   # v2 model runner needs pinned memory; off by default on WSL2
+  serve: ["{venv}/bin/vllm", "serve", "{target_path}", "--served-model-name", "{model}",
+          "--host", "127.0.0.1", "--port", "{port}", "--dtype", "bfloat16",
+          "--max-model-len", "{max_model_len}", "--gpu-memory-utilization", "{gpu_mem_util}",
+          "--seed", "{seed}", "--max-num-seqs", "{max_num_seqs}"]
+  health: /health
+  spec_arg: ["--speculative-config", "{spec_json}"]
+  per_request_spec_metrics_arg: ["--per-request-spec-decode-metrics", "detailed"]
+  request_extras: {return_token_ids: true}   # streamed per-chunk output token ids
+  metrics:
+    drafts: "vllm:spec_decode_num_drafts_total"
+    draft_tokens: "vllm:spec_decode_num_draft_tokens_total"
+    accepted_tokens: "vllm:spec_decode_num_accepted_tokens_total"
+  verified: null
+
+sglang:
+  version: "0.5.23"
+  venv: ~/.cache/indicspec/venv-sglang
+  env: {}
+  # SGLang's --mem-fraction-static covers weights+KV only; CUDA graphs/activations come on top.
+  # At (max safe - 0.01) peaks reached 24.1 GB of 24.5 GB (D-016), so leave more room.
+  mem_fraction_headroom: 0.13   # 0.10 left SGLang DFlash 6 MiB under the guard ceiling
+  request_extras: {return_spec_tokens_details: true}
+  serve: ["{venv}/bin/python", "-m", "sglang.launch_server", "--model-path", "{target_path}",
+          "--served-model-name", "{model}", "--host", "127.0.0.1", "--port", "{port}",
+          "--dtype", "bfloat16", "--context-length", "{max_model_len}",
+          "--mem-fraction-static", "{gpu_mem_util}", "--random-seed", "{seed}",
+          "--attention-backend", "flashinfer", "--enable-metrics",   # never fa3 on sm_120
+          "--max-running-requests", "{max_num_seqs}"]
+  health: /health
+  metrics:
+    accept_length: "sglang:spec_accept_length"
+    accept_rate: "sglang:spec_accept_rate"
+    verify_calls: "sglang:spec_verify_calls_total"
+  verified: null
