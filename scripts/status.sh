@@ -2,8 +2,8 @@
 # Progress of running sweeps (WSL): cells done per block, failures, GPU state.
 cd "/mnt/c/Users/Pratyush Dixit/Desktop/Inference"
 date +%T
-grep -E "^===" "$HOME/.cache/indicspec/logs/pilots.log" 2>/dev/null
-for run in results/raw/pilot_*; do
+cat $HOME/.cache/indicspec/logs/pilots.log $HOME/.cache/indicspec/logs/tuning.log 2>/dev/null | grep -E "^===" 2>/dev/null
+for run in results/raw/pilot_* results/raw/tune_*; do
   [ -d "$run" ] || continue
   for f in "$run"/*/cells.jsonl; do
     [ -f "$f" ] && echo "$(basename "$run")/$(basename "$(dirname "$f")"): $(wc -l < "$f") cells"

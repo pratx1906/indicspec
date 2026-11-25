@@ -1,0 +1,25 @@
+# Draft-length tuning (PREREG §5): tuning split, concurrency 1, 1 repeat, 50 prompts per language.
+run_name: tune_vllm_8b
+engine: vllm
+model: qwen3-8b
+split: tuning
+languages: [en, hi, ta, te, kn, ml]
+tasks: [chat, qa, summarisation, translation]
+arms:
+  - {arm: A0}
+  - {arm: A3, label: k3, spec_override: {num_speculative_tokens: 3}}
+  - {arm: A3, label: k5, spec_override: {num_speculative_tokens: 5}}
+  - {arm: A4, label: k3, spec_override: {num_speculative_tokens: 3}}
+  - {arm: A4, label: k5, spec_override: {num_speculative_tokens: 5}}
+  - {arm: A5, label: k7, spec_override: {num_speculative_tokens: 7}}
+  - {arm: A5, label: k15, spec_override: {num_speculative_tokens: 15}}
+concurrency: [1]
+repeats: 1
+load_mode: closed_loop
+max_tokens: 256
+ignore_eos: false
+max_model_len: 4096
+max_prompts_per_cell: 50
+temperature: 0.0
+seed: 1234
+min_enforced_power_w: 140
