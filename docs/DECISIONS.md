@@ -190,3 +190,7 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
      any comparison, so DFlash is not run mis-configured.
 - **Smoke τ by language (one prompt each — not results):** A3 en 2.82 / hi 1.33 / ta 1.07 / te 1.03 /
   kn 1.02 / ml 1.05; A4 en 1.50 / hi 1.86 / Dravidian 1.05–1.19; A5-8B en 2.38 / hi 1.57 / Dravidian 1.15–1.64.
+
+### D-017 (2026-11-25) Licence: Apache-2.0 (owner decision)
+- Code under Apache-2.0 (official text from the GitHub licences API). Third-party benchmark text is not
+  redistributed; builders + checksums only (D-009). Contributor-facing files removed: single-maintainer project.

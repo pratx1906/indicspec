@@ -3,6 +3,8 @@ name = "indicspec"
 version = "0.1.0.dev0"
 description = "IndicSpec: measuring speculative-decoding drafters on Dravidian languages, Hindi and English on one consumer Blackwell GPU"
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.11,<3.14"
 # CPU-side analysis environment only. vLLM / SGLang live in separate engine
 # environments (see env/ENGINES.md) because their dependency pins conflict.

@@ -5,6 +5,7 @@ authors:
   - family-names: Dixit
     given-names: Pratyush
 repository-code: "https://github.com/pratx1906/indicspec"
+license: Apache-2.0
 version: 0.1.0.dev0
 date-released: 2026-11-25
 keywords:

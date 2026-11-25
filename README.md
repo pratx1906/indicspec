@@ -14,8 +14,9 @@ EAGLE-3 · DFlash · n-gram drafters &nbsp;·&nbsp; vLLM · SGLang &nbsp;·&nbsp
 ![vLLM](https://img.shields.io/badge/vLLM-0.34.0-2a78d6)
 ![SGLang](https://img.shields.io/badge/SGLang-0.5.23-2a78d6)
 ![GPU](https://img.shields.io/badge/GPU-RTX%205090%20Laptop%20%C2%B7%20sm__120-1baf7a)
+[![License](https://img.shields.io/badge/license-Apache--2.0-52514e)](LICENSE)
 
-[Findings](#findings-so-far) · [Engineering](#engineering) · [Status](#engine--drafter-status) · [Reproduce](#quickstart) · [Roadmap](#roadmap) · [Docs](docs/README.md) · [Contributing](CONTRIBUTING.md)
+[Findings](#findings-so-far) · [Engineering](#engineering) · [Status](#engine--drafter-status) · [Reproduce](#quickstart) · [Roadmap](#roadmap) · [Docs](docs/README.md)
 
 </div>
 
@@ -218,9 +219,8 @@ One GPU class (a power-capped consumer Blackwell laptop), one model family (Qwen
 only, and early findings computed on reference text rather than model generations. Machine-translated chat prompts
 carry translationese risk and await native-speaker review.
 
-## Contributing · licence · citation
+## Licence and citation
 
-Contributions are welcome, especially new drafters, new languages and native-speaker review: see
-[CONTRIBUTING.md](CONTRIBUTING.md). A licence will be added shortly; until then default copyright applies. Benchmark
-sources keep their own licences (CC-BY-SA-4.0, Apache-2.0); this repo ships builders and checksums, not their text.
-Cite via [`CITATION.cff`](CITATION.cff).
+Code is released under the [Apache License 2.0](LICENSE). Benchmark sources keep their own licences
+(CC-BY-SA-4.0, Apache-2.0); this repo ships builders and checksums, not their text. Cite via
+[`CITATION.cff`](CITATION.cff).
