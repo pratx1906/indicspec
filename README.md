@@ -23,8 +23,9 @@ EAGLE-3 · DFlash · n-gram drafters &nbsp;·&nbsp; vLLM · SGLang &nbsp;·&nbsp
 ---
 
 > [!NOTE]
-> **Work in progress (November 2026).** Infrastructure, mechanism analysis and engine bring-up are done; the
-> pre-registered confirmatory runs have not happened yet. Every number below says what it is and traces to a raw
+> **Work in progress (November 2026).** Infrastructure, mechanism analysis, engine bring-up and the pilot are
+> done and the [pre-registration is frozen](docs/PREREG.md); draft-length tuning is running and the confirmatory
+> runs come next. Every number below says what it is and traces to a raw
 > log or script ([claim ledger](docs/CLAIMS.md)). Speed and acceptance only: **answer quality is not measured.**
 
 ## Why this matters
@@ -102,8 +103,54 @@ A drafter only counts once it reproduces its authors' English behaviour on this 
 | DFlash on Qwen3-8B, SGLang 0.5.23 | **5.51** | 4.9 mean |
 | Red Hat EAGLE-3 head, 3 draft tokens | **2.68** | 2.13–2.48 |
 
-Smoke runs on Indic prompts point to a large gap even for full-vocabulary DFlash; that is what the confirmatory
-runs will test.
+
+### 5 · Pilot: three drafter families, three different behaviours (exploratory)
+
+> [!IMPORTANT]
+> Pilot split only: 12 parallel prompts per language × 3 repeats, used to set the
+> [frozen pre-registration](docs/PREREG.md). These are **not** confirmatory results; the report-split runs
+> (100 prompts × 3 repeats per cell, tuned draft lengths) decide them.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/pilot-speedup-dark.svg">
+  <img alt="Pilot speed-up for one user. n-gram copier: English 1.46×, Dravidian 2.64–2.70×. DFlash: English 2.39×, Dravidian 1.05–1.57×. English EAGLE-3 head: English 2.11×, Dravidian 0.99–1.03×" src="docs/assets/pilot-speedup-light.svg" width="100%">
+</picture>
+
+- **The English EAGLE-3 head gives no speed-up on Dravidian text** (0.99–1.03×; acceptance 1.15–1.20), sitting
+  under the coverage ceiling it was predicted to hit. The Hindi/Gujarati head reproduces its own model card
+  (Hindi 2.01, English 1.49).
+- **DFlash, the strongest full-vocabulary drafter, loses most of its benefit** (English 2.39×, Dravidian
+  1.05–1.57×), so vocabulary coverage is not the whole story.
+- **A model-free n-gram copier does best on Dravidian text** (2.64–2.70×, acceptance 2.6–2.9) and worst on English.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/pilot-load-dark.svg">
+  <img alt="DFlash speed-up under load. At 16 concurrent users English keeps 1.29×, while Hindi 0.96×, Tamil 0.85×, Telugu 0.75×, Kannada 0.73×, Malayalam 0.53× are slower than no speculation" src="docs/assets/pilot-load-light.svg" width="100%">
+</picture>
+
+Under load the gap widens: at 16 concurrent users **DFlash makes every Indic language slower than not
+speculating** (Malayalam 0.53×) while English still gains 1.29×; the n-gram copier keeps 2.0–2.3× on Dravidian
+text. Energy follows: with no speculation, 100 words of Malayalam cost ~10× the GPU energy of 100 English words
+(2,495 J vs 260 J, one user); the n-gram copier cuts Dravidian energy per word by 55–60%.
+
+<details><summary>Table view (pilot, Qwen3-4B unless noted)</summary>
+
+| Speed-up vs no speculation | en | hi | ta | te | kn | ml |
+|---|---|---|---|---|---|---|
+| n-gram, 1 user | 1.46 | 2.14 | 2.67 | 2.70 | 2.70 | 2.64 |
+| n-gram, 16 users | 1.24 | 1.61 | 2.30 | 2.19 | 2.07 | 2.03 |
+| DFlash, 1 user | 2.39 | 1.80 | 1.57 | 1.49 | 1.34 | 1.05 |
+| DFlash, 4 users | 1.97 | 1.76 | 1.34 | 1.29 | 1.17 | 0.95 |
+| DFlash, 16 users | 1.29 | 0.96 | 0.85 | 0.75 | 0.73 | 0.53 |
+| English EAGLE-3 (8B), 1 user | 2.11 | 1.20 | 0.99 | 1.03 | 1.02 | 1.00 |
+| Hindi/Gujarati EAGLE-3 (8B), 1 user | 1.26 | 1.65 | 0.95 | 1.09 | 1.01 | 0.93 |
+| DFlash (8B), 1 user | 2.22 | 1.84 | 1.32 | 1.11 | 1.27 | 0.96 |
+
+Sources: [`pilot_vllm_4b_noise.csv`](results/tables/pilot_vllm_4b_noise.csv),
+[`pilot_vllm_8b_noise.csv`](results/tables/pilot_vllm_8b_noise.csv) (paired bootstrap CIs per cell);
+raw logs under [`results/raw/pilot_vllm_4b`](results/raw/pilot_vllm_4b) and
+[`results/raw/pilot_vllm_8b`](results/raw/pilot_vllm_8b).
+</details>
 
 ## Engineering
 
@@ -179,7 +226,8 @@ indicspec/
 ├── src/indicspec/
 │   ├── tokens/      byte-level BPE decoding · token classes · EAGLE-3 draft-vocab maps · safetensors reader
 │   ├── harness/     server launcher · VRAM guard · load generator · sweep runner · telemetry · equality checks
-│   ├── analysis/    token tax · coverage · oracle ceiling · per-position acceptance · pilot noise · figures
+│   ├── analysis/    token tax · coverage · oracle ceiling · per-position acceptance · pilot noise ·
+│   │                tuning · confirmatory tests · figures
 │   └── data/        IndicSpec-Bench builders (FLORES via IndicGenBench · XQuAD-IN · Belebele · Aya)
 ├── configs/         pinned models, arms, engines, data sources, sweep configs
 ├── schemas/         JSON Schemas for request logs and run manifests

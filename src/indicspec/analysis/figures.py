@@ -314,6 +314,125 @@ def ceiling(theme: Theme) -> Path:
     return _save(fig, "ceiling", theme)
 
 
+def _noise(run: str) -> list[dict[str, str]]:
+    return _csv(f"{run}_noise.csv")
+
+
+def _g(rows: list[dict[str, str]], arm: str, lang: str, conc: int, key: str) -> float | None:
+    for r in rows:
+        if r["arm"] == arm and r["language"] == lang and r["concurrency"] == str(conc):
+            return float(r[key]) if r.get(key) else None
+    return None
+
+
+def pilot_speedup(theme: Theme) -> Path:
+    """Pilot (exploratory): speed-up vs no speculation, one user, three drafters."""
+    p4, p8 = _noise("pilot_vllm_4b"), _noise("pilot_vllm_8b")
+    series = [
+        ("n-gram copier (4B)", lambda lang: _g(p4, "A1", lang, 1, "speedup")),
+        ("DFlash, full vocabulary (4B)", lambda lang: _g(p4, "A5", lang, 1, "speedup")),
+        ("English EAGLE-3 head (8B)", lambda lang: _g(p8, "A3", lang, 1, "speedup")),
+    ]
+    order = ["en", "hi", "ta", "te", "kn", "ml"]
+    fig, ax = _setup(theme, 8.0, 5.2)
+    fig.subplots_adjust(left=0.13, right=0.93, top=0.78, bottom=0.09)
+    ax.set_xlim(0, 3.2)
+    ax.set_ylim(len(order) - 0.45, -0.6)
+    ax.set_yticks(range(len(order)), [LANG_NAMES[x] for x in order])
+    ax.tick_params(axis="y", colors=theme.ink2, labelsize=10)
+    ax.set_xticks([0, 0.5, 1, 1.5, 2, 2.5, 3], ["0", "0.5×", "1×", "1.5×", "2×", "2.5×", "3×"])
+    ax.axvline(1, color=theme.axis, linewidth=1)
+    h = 0.24
+    for i, lang in enumerate(order):
+        for k, (_, fn) in enumerate(series):
+            v = fn(lang)
+            if v is None:
+                continue
+            y = i + (k - 1) * (h + 0.02)
+            _hbar(ax, y, 0, v, h, theme.series[k])
+            ax.text(v + 0.04, y, f"{v:.2f}×", va="center", ha="left", fontsize=8.5, color=theme.ink)
+    from matplotlib.patches import Patch
+
+    handles = [Patch(facecolor=c, edgecolor="none") for c in theme.series]
+    leg = fig.legend(
+        handles,
+        [n for n, _ in series],
+        loc="upper left",
+        bbox_to_anchor=(0.115, 0.865),
+        ncol=3,
+        frameon=False,
+        fontsize=9,
+        handlelength=1.0,
+        handleheight=1.0,
+        columnspacing=1.2,
+    )
+    for t in leg.get_texts():
+        t.set_color(theme.ink2)
+    _title(
+        fig,
+        theme,
+        "Pilot: speed-up vs no speculation, one user",
+        "Exploratory · pilot split, 12 prompts × 3 repeats per language · vLLM 0.34 · 1× = no gain",
+    )
+    return _save(fig, "pilot-speedup", theme)
+
+
+ORDINAL = {  # sequential blue ramp, ordinal-safe steps (palette reference)
+    "light": ("#86b6ef", "#2a78d6", "#104281"),
+    "dark": ("#184f95", "#3987e5", "#9ec5f4"),
+}
+
+
+def pilot_load(theme: Theme) -> Path:
+    """Pilot (exploratory): DFlash speed-up at 1, 4, 16 concurrent users per language."""
+    p4 = _noise("pilot_vllm_4b")
+    order = ["en", "hi", "ta", "te", "kn", "ml"]
+    conc = [1, 4, 16]
+    cols = ORDINAL[theme.name]
+    fig, ax = _setup(theme, 8.0, 5.2)
+    fig.subplots_adjust(left=0.13, right=0.93, top=0.78, bottom=0.09)
+    ax.set_xlim(0, 2.8)
+    ax.set_ylim(len(order) - 0.45, -0.6)
+    ax.set_yticks(range(len(order)), [LANG_NAMES[x] for x in order])
+    ax.tick_params(axis="y", colors=theme.ink2, labelsize=10)
+    ax.set_xticks([0, 0.5, 1, 1.5, 2, 2.5], ["0", "0.5×", "1×", "1.5×", "2×", "2.5×"])
+    ax.axvline(1, color=theme.axis, linewidth=1)
+    h = 0.24
+    for i, lang in enumerate(order):
+        for k, c in enumerate(conc):
+            v = _g(p4, "A5", lang, c, "speedup")
+            if v is None:
+                continue
+            y = i + (k - 1) * (h + 0.02)
+            _hbar(ax, y, 0, v, h, cols[k])
+            ax.text(v + 0.04, y, f"{v:.2f}×", va="center", ha="left", fontsize=8.5, color=theme.ink)
+    from matplotlib.patches import Patch
+
+    handles = [Patch(facecolor=c, edgecolor="none") for c in cols]
+    leg = fig.legend(
+        handles,
+        ["1 user", "4 users", "16 users"],
+        loc="upper left",
+        bbox_to_anchor=(0.115, 0.865),
+        ncol=3,
+        frameon=False,
+        fontsize=9.5,
+        handlelength=1.0,
+        handleheight=1.0,
+        columnspacing=1.6,
+    )
+    for t in leg.get_texts():
+        t.set_color(theme.ink2)
+    _title(
+        fig,
+        theme,
+        "Pilot: DFlash under load, by language",
+        "Exploratory · Qwen3-4B · vs no speculation at the same load · "
+        "below 1× = slower",
+    )
+    return _save(fig, "pilot-load", theme)
+
+
 # --------------------------------------------------------------------------- banner
 
 BANNER_TOKENS = [  # Qwen3 tokenization of తెలుగు (measured; see README "Findings")
@@ -417,7 +536,7 @@ def banner(theme: Theme) -> Path:
 
 def main() -> int:
     for theme in (LIGHT, DARK):
-        for fn in (banner, token_tax, fragmentation, ceiling):
+        for fn in (banner, token_tax, fragmentation, ceiling, pilot_speedup, pilot_load):
             print(fn(theme).relative_to(REPO))
     return 0
 
