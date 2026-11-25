@@ -99,4 +99,20 @@ not testable.
 
 ## Amendments
 
-_None yet._
+### Amendment 1 (2026-11-25, before any report-split data exists)
+
+**Reason:** implementing `src/indicspec/analysis/confirm.py` required resolving clauses the frozen text leaves
+open. Each was resolved toward the **stricter / more conservative** reading. No report-split request has been
+run at the time of this amendment (`results/raw/` contains only pilot, tuning, smoke and probe runs). The frozen
+text above is unchanged; these readings are the binding interpretation. They are also written into every
+verdicts file (`INTERPRETATIONS` in `confirm.py`).
+
+- **holm_plus_ci:** A per-language confirm/falsify requires BOTH the plain 95% CI condition and rejection under Holm (family-wise alpha 0.05 across ta/te/kn/ml) of the one-sided bootstrap p-value (fraction of resamples on the wrong side of the threshold).
+- **h1_falsify_tau_en:** H1 falsification compares tau_L's lower CI with 0.9 x the point estimate of tau_en for the same head (as written).
+- **multi_arm_overall:** For hypotheses covering several (arm, model) pairs, the overall verdict is 'confirmed' only if every pair is confirmed, 'falsified' only if every pair is falsified, otherwise 'inconclusive'.
+- **h3_pooled:** H3 pools ta/te/kn/ml into one test per (arm, model), so the 3-of-4 language rule does not apply; verdict per pair, overall by the multi-arm rule. CI by cluster bootstrap over requests.
+- **h4_bonferroni:** H4 crossover uses one-sided speed-up upper bounds at level 0.05/4 (Bonferroni across the four Dravidian languages), stricter than Holm.
+- **g2b_upper_ci:** G2(b) requires the upper 95% CI of (class-standardised gap / raw gap) to be <= 0.5, and a positive raw gap; classes absent from Dravidian positions are dropped and the English weights renormalised.
+- **thermal_busy_samples:** Thermal clock rule uses busy samples (utilisation > 50%): the cell's 5th-percentile SM clock vs the block's busy-sample median.
+- **power_missing:** A cell without a recorded enforced power limit is excluded (power unknown).
+- **telemetry_time:** nvidia-smi timestamps are local wall time; they are converted with the analysing machine's local time zone (or --telemetry-utc-offset).

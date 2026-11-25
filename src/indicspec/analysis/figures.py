@@ -427,8 +427,7 @@ def pilot_load(theme: Theme) -> Path:
         fig,
         theme,
         "Pilot: DFlash under load, by language",
-        "Exploratory · Qwen3-4B · vs no speculation at the same load · "
-        "below 1× = slower",
+        "Exploratory · Qwen3-4B · vs no speculation at the same load · below 1× = slower",
     )
     return _save(fig, "pilot-load", theme)
 
