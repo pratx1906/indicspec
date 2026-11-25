@@ -1,4 +1,4 @@
-"""Bootstrap confidence intervals and Holm correction (PROJECT_PROMPT.md §8.4, App. A)."""
+"""Bootstrap confidence intervals and Holm correction (docs/PROJECT_BRIEF.md §8.4, App. A)."""
 
 from __future__ import annotations
 

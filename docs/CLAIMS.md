@@ -1,7 +1,7 @@
 # Claim ledger
 
 Every factual claim, number or citation used in code comments, docs, results or the report must have a
-row here (PROJECT_PROMPT.md §4.2). Statuses: `OPENED`, `EXCERPT-ONLY`, `SELF-REPORTED`, `MEASURED`,
+row here (docs/PROJECT_BRIEF.md §4.2). Statuses: `OPENED`, `EXCERPT-ONLY`, `SELF-REPORTED`, `MEASURED`,
 `HYPOTHESIS`, `NEGATIVE-SEARCH`, `FALSIFIED`, `CONFIRMED`. Reference IDs resolve in
 [REFERENCES.md](REFERENCES.md).
 
@@ -30,7 +30,7 @@ evidence; the history is in git. Verification notes from this repository live in
 | C17 | LK losses improve acceptance length by up to 8–10% and handle truncated draft vocabularies | [R-LK] https://arxiv.org/html/2602.23881v2 §4.4, §5.2 | OPENED; gains SELF-REPORTED | research agent 2026-11-25, [claim_verification.md](research/claim_verification.md) | No Qwen3-4B/8B or multilingual data in the paper |
 | C18 | Qwen3-8B in bf16 needs about 17 GB; online EAGLE-3 training fits one 48 GB card | [R-UNION] | OPENED (prompt author) | — | VRAM to be measured in WS1 |
 | C19 | Qwen tokenizers fragment Indic scripts into single-byte tokens when merges are missing | [R-TAX] (mechanism), own tokenizer files | OPENED (R-TAX) + MEASURE | — | Measurement: WS3.2 |
-| C20 | H1–H4 (PROJECT_PROMPT §5) | own experiments | HYPOTHESIS | — | See [PREREG.md](PREREG.md) |
+| C20 | H1–H4 (PROJECT_BRIEF §5) | own experiments | HYPOTHESIS | — | See [PREREG.md](PREREG.md) |
 | C21 | Unicode blocks: Devanagari U+0900–097F, Tamil U+0B80–0BFF, Telugu U+0C00–0C7F, Kannada U+0C80–0CFF, Malayalam U+0D00–0D7F | Unicode Character Database as bundled in CPython `unicodedata` | MEASURED | `tests/unit/test_token_classes.py::test_script_blocks_match_unicodedata` | Every assigned code point in each range carries the script's name; neighbours do not |
 | C22 | Qwen3 tokens-per-character / tokens-per-word and parity ratios per language | own measurement (WS2.5) | HYPOTHESIS (not yet measured) | — | Do not assume equal to Qwen2.5 |
 | C23 | Hardware: NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB, compute capability 12.0, driver 610.88; Intel Core Ultra 9 275HX (24 cores); 63.4 GB RAM (WSL sees ~39 GB) | `env/probe.json` | MEASURED | `make env-report` | |

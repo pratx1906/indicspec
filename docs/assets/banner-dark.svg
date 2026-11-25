@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="IndicSpec: the word Telugu is 2 tokens in English and 9 tokens in Telugu script for Qwen3">
+<rect width="1200" height="300" rx="14" fill="#1a1a19"/>
+<rect x="0.5" y="0.5" width="1199" height="299" rx="14" fill="none" stroke="#2c2c2a"/>
+<text x="48" y="78" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="44" font-weight="700" fill="#f0efec">IndicSpec</text>
+<text x="48" y="112" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" fill="#c3c2b7">Speculative decoding for Indic LLM serving · vLLM · SGLang · one 24 GB laptop GPU</text>
+<text x="48" y="176" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" fill="#c3c2b7">“Telugu”</text>
+<rect x="200" y="152" width="64" height="34" rx="4" fill="#199e70"/>
+<text x="232.0" y="176" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="16" fill="#ffffff">Tel</text>
+<rect x="268" y="152" width="64" height="34" rx="4" fill="#199e70"/>
+<text x="300.0" y="176" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="16" fill="#ffffff">ugu</text>
+<text x="350" y="176" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" fill="#f0efec">2 tokens</text>
+<text x="48" y="244" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="20" fill="#c3c2b7">తెలుగు</text>
+<rect x="200" y="220" width="84" height="34" rx="4" fill="#d95926"/>
+<text x="242.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">E0 B0 A4</text>
+<rect x="288" y="220" width="62" height="34" rx="4" fill="#3987e5"/>
+<text x="319.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">E0 B1</text>
+<rect x="354" y="220" width="40" height="34" rx="4" fill="#3987e5"/>
+<text x="374.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">86</text>
+<rect x="398" y="220" width="84" height="34" rx="4" fill="#d95926"/>
+<text x="440.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">E0 B0 B2</text>
+<rect x="486" y="220" width="62" height="34" rx="4" fill="#3987e5"/>
+<text x="517.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">E0 B1</text>
+<rect x="552" y="220" width="40" height="34" rx="4" fill="#3987e5"/>
+<text x="572.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">81</text>
+<rect x="596" y="220" width="84" height="34" rx="4" fill="#d95926"/>
+<text x="638.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">E0 B0 97</text>
+<rect x="684" y="220" width="62" height="34" rx="4" fill="#3987e5"/>
+<text x="715.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">E0 B1</text>
+<rect x="750" y="220" width="40" height="34" rx="4" fill="#3987e5"/>
+<text x="770.0" y="243" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="12.5" fill="#ffffff">81</text>
+<text x="808" y="244" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" fill="#f0efec">9 tokens</text>
+<rect x="200" y="272" width="12" height="12" rx="2" fill="#d95926"/>
+<text x="218" y="283" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" fill="#c3c2b7">whole character</text>
+<rect x="350" y="272" width="12" height="12" rx="2" fill="#3987e5"/>
+<text x="368" y="283" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" fill="#c3c2b7">fragment of a character</text>
+<rect x="564" y="272" width="12" height="12" rx="2" fill="#199e70"/>
+<text x="582" y="283" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" fill="#c3c2b7">English subword</text>
+<text x="1152" y="283" text-anchor="end" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" fill="#898781">Qwen3 tokenizer · UTF-8 bytes shown in hex</text>
+</svg>

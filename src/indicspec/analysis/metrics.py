@@ -1,4 +1,4 @@
-"""Metric definitions (PROJECT_PROMPT.md §8.3 and Appendix A).
+"""Metric definitions (docs/PROJECT_BRIEF.md §8.3 and Appendix A).
 
 The code must match the spec's definitions exactly; any deviation is
 documented in docs/DECISIONS.md.  All functions are pure.

@@ -32,5 +32,5 @@ results/profiles/
 .DS_Store
 Thumbs.db
 
-# Original prompt file (PROJECT_PROMPT.md is the tracked copy)
+# Original prompt file (docs/PROJECT_BRIEF.md is the tracked copy)
 INDICSPEC_CLAUDE_CODE_PROMPT.md

@@ -1,7 +1,7 @@
 # IndicSpec — End-to-End Project Prompt for Claude Code
 
-> **How to use this file.** Save it in the root of an empty repository as `PROJECT_PROMPT.md`, open Claude Code there, and say:
-> *"Read PROJECT_PROMPT.md completely, then execute it. Follow its operating rules and ask me only at the checkpoints it defines."*
+> **How to use this file.** Save it in the root of an empty repository as `docs/PROJECT_BRIEF.md`, open Claude Code there, and say:
+> *"Read docs/PROJECT_BRIEF.md completely, then execute it. Follow its operating rules and ask me only at the checkpoints it defines."*
 > The file contains no schedule on purpose. You (Claude Code) decide the order of work, subject to the dependencies and decision gates described below.
 
 ---
@@ -185,7 +185,7 @@ If an experiment is exploratory, label it so in the report. Do not tune analysis
 
 ```
 indicspec/
-├── PROJECT_PROMPT.md            # this file (read-only reference)
+├── docs/PROJECT_BRIEF.md            # this file (read-only reference)
 ├── README.md                    # quickstart, hardware notes, how to reproduce
 ├── LICENSE                      # choose after checking dependency/data licences; ask the owner
 ├── CITATION.cff

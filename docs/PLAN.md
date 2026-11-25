@@ -1,6 +1,6 @@
 # IndicSpec working plan
 
-Ordered by dependency, not by date (PROJECT_PROMPT has no schedule on purpose). Each phase has an exit
+Ordered by dependency, not by date (PROJECT_BRIEF has no schedule on purpose). Each phase has an exit
 criterion; nothing confirmatory runs before `docs/PREREG.md` is frozen. Ask-first items (spec §0 rule 6,
 §13.1) are marked **[ASK]**. Revised 2026-11-25 after owner feedback (D-010).
 

@@ -1,7 +1,7 @@
 # Engine environments
 
 vLLM and SGLang are installed in **separate** uv virtual environments inside WSL2 Ubuntu 24.04, on the ext4
-filesystem (not `/mnt/c`), because their dependency pins conflict (PROJECT_PROMPT §6.2):
+filesystem (not `/mnt/c`), because their dependency pins conflict (PROJECT_BRIEF §6.2):
 
 | Env | Path (WSL) | Version | Lock / requirements |
 | --- | --- | --- | --- |

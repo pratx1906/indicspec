@@ -16,7 +16,7 @@ Freeze commit: _not yet frozen_
 | `report` | confirmatory results | TBD | no |
 | `heldout` | second-domain check | TBD | no |
 
-## 2. Hypotheses (from PROJECT_PROMPT §5)
+## 2. Hypotheses (from PROJECT_BRIEF §5)
 
 For each: statistic, data subset, analysis code path, threshold, decision rule.
 
@@ -32,7 +32,7 @@ For each: statistic, data subset, analysis code path, threshold, decision rule.
 ### H4 — speculation crossover concurrency differs by language
 - Statistic: TBD (planned: interpolated concurrency where paired speed-up CI crosses 1.0, per language).
 
-## 3. Gates (PROJECT_PROMPT §10)
+## 3. Gates (PROJECT_BRIEF §10)
 - G1 "clear language gap": TBD.
 - G2 "token class predicts acceptance": TBD.
 - G3 "fix beats strongest public arm": TBD (minimum number of languages, margin).

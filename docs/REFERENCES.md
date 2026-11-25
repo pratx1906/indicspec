@@ -1,7 +1,7 @@
 # References
 
 The base reference list (IDs `R-*`, URLs, status at project start) is
-[PROJECT_PROMPT.md §14](../PROJECT_PROMPT.md#14-references). This file extends it using the same fields
+[docs/PROJECT_BRIEF.md §14](PROJECT_BRIEF.md#14-references). This file extends it using the same fields
 (ID · reference · URL · status · note) and records licences. Statuses here reflect what *this repository*
 verified; see [CLAIMS.md](CLAIMS.md) and [research/](research/).
 

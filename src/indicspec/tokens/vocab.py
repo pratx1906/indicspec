@@ -73,7 +73,7 @@ def class_counts(info: Mapping[int, TokenInfo]) -> Counter[str]:
 def coverage(token_ids: Iterable[int], draft_vocab: set[int]) -> tuple[float, float, int, int]:
     """Frequency-weighted and unique-token coverage of ``token_ids`` by ``draft_vocab``.
 
-    Frequency-weighted: sum_{v in V_draft} f(v) / sum_{v in V} f(v)  (PROJECT_PROMPT App. A).
+    Frequency-weighted: sum_{v in V_draft} f(v) / sum_{v in V} f(v)  (PROJECT_BRIEF App. A).
     Returns (weighted, unique, n_tokens, n_unique).  Empty input -> (nan, nan, 0, 0).
     """
     freq = Counter(token_ids)

@@ -2,7 +2,7 @@
 
 Each vocabulary entry is classified from its raw bytes *in isolation*.
 
-Classes (proposal from PROJECT_PROMPT.md §WS3.1, refined; see docs/DECISIONS.md D-006):
+Classes (proposal from docs/PROJECT_BRIEF.md §WS3.1, refined; see docs/DECISIONS.md D-006):
 
 ``SPECIAL``             special / added tokens (not byte-level strings).
 ``WHITESPACE``          valid UTF-8, every scalar is whitespace.

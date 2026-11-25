@@ -1,6 +1,6 @@
 # Novelty log
 
-Required by PROJECT_PROMPT Section 4.1. Each row records one query. A negative search is a negative *search result*, not proof of absence.
+Required by PROJECT_BRIEF Section 4.1. Each row records one query. A negative search is a negative *search result*, not proof of absence.
 
 Conventions:
 - **Engine/site:** `WebSearch` = the agent's general web search tool (US index); `HF API` = `https://huggingface.co/api/models?search=<q>` or `/api/datasets?search=<q>` (substring match on repo id, max 40 results).

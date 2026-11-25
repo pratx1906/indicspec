@@ -1,0 +1,33 @@
+name: Bug report
+description: Something fails, or a number does not reproduce
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the exact command and the error or the number you got.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: For a number, link the table, figure or claim ID (docs/CLAIMS.md) you compared against.
+  - type: input
+    id: commit
+    attributes:
+      label: Commit
+      placeholder: git rev-parse HEAD
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Paste `env/probe.json` (from `make env-report`) or GPU, driver, OS, engine version.
+      render: json
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant lines from server.log / status.json (results/raw/...).
+      render: text

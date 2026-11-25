@@ -7,7 +7,7 @@ export UV_PROJECT_ENVIRONMENT ?= $(if $(findstring /mnt/,$(CURDIR)),$(HOME)/.cac
 UV ?= uv
 PY := $(UV) run python
 
-.PHONY: help sync env-report test test-data test-all lint typecheck data smoke sweep analyze reproduce clean-pyc
+.PHONY: help sync env-report test test-data test-all lint typecheck data figures smoke sweep analyze reproduce clean-pyc
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*## "}{printf "  %-14s %s\n",$$1,$$2}'
@@ -34,6 +34,10 @@ lint: sync ## ruff lint + format check + mypy
 
 data: sync ## build the frozen IndicSpec-Bench and verify checksums (WS2)
 	$(PY) -m indicspec.data.build --verify
+
+figures: sync ## regenerate docs/assets/*.svg from results/tables
+	$(UV) sync --extra analysis --extra data
+	$(PY) -m indicspec.analysis.figures
 
 smoke: ## [GPU] short generation per working arm (WS1)
 	$(PY) -m indicspec.harness.smoke

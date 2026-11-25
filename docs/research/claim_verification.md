@@ -1,6 +1,6 @@
 # Claim verification (2026-11-25)
 
-Scope: seed-ledger claims C8, C9, C10, C11, C14, C15, C16 and C17 (PROJECT_PROMPT Section 4.2), plus four Hugging Face repositories.
+Scope: seed-ledger claims C8, C9, C10, C11, C14, C15, C16 and C17 (PROJECT_BRIEF Section 4.2), plus four Hugging Face repositories.
 
 Method:
 - Papers and blogs were fetched with WebFetch, which returns a model-written digest of the page. Quotes below are the digest's quotes and should be spot-checked against the PDF before they go into the paper.
