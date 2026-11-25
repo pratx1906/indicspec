@@ -196,7 +196,8 @@ indicspec/
 - [x] IndicSpec-Bench: 6 languages × 4 tasks, parallel items, pilot / tuning / report splits, checksummed
 - [x] Token tax, fragmentation, draft-vocab coverage, oracle ceiling
 - [x] Engine bring-up on `sm_120`, smoke matrix, English configuration checks (Gate G0 passed)
-- [ ] Pilot → freeze pre-registered thresholds &nbsp;*(running)*
+- [x] Pilot sweeps (pilot split) → [pre-registration frozen](docs/PREREG.md) before any confirmatory run
+- [ ] Draft-length tuning per drafter on the tuning split &nbsp;*(running)*
 - [ ] Confirmatory sweeps: acceptance and speed-up per language, concurrency 1–32, closed-loop + Poisson
 - [ ] Coverage-split and class-level acceptance from engine traces (H1–H3)
 - [ ] Load crossover per language (H4) · Nsight-backed cost model
