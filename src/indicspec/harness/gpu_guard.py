@@ -71,3 +71,55 @@ def max_safe_fraction(state: VramState, margin_mib: int = DEFAULT_MARGIN_MIB) ->
 
 def in_run_ok(peak_used_mib: float, total_mib: int, margin_mib: int = DEFAULT_MARGIN_MIB) -> bool:
     return peak_used_mib < total_mib - margin_mib
+
+
+# --------------------------------------------------------------------------- power state (D-018)
+
+
+def power_state(gpu_index: int = 0) -> dict[str, object]:
+    """Enforced power limit (NVML), current clocks and throttle reasons, and the Windows power plan.
+
+    On a laptop the OS power mode can silently cap the GPU (e.g. 55 W in "Silent"), which changes
+    every speed and energy number. This is recorded with every run and checked before launching.
+    """
+    state: dict[str, object] = {}
+    try:
+        import pynvml
+
+        pynvml.nvmlInit()
+        h = pynvml.nvmlDeviceGetHandleByIndex(gpu_index)
+        state["enforced_power_limit_w"] = pynvml.nvmlDeviceGetEnforcedPowerLimit(h) / 1000
+        state["default_power_limit_w"] = pynvml.nvmlDeviceGetPowerManagementDefaultLimit(h) / 1000
+        state["sm_clock_mhz"] = pynvml.nvmlDeviceGetClockInfo(h, pynvml.NVML_CLOCK_SM)
+        state["max_sm_clock_mhz"] = pynvml.nvmlDeviceGetMaxClockInfo(h, pynvml.NVML_CLOCK_SM)
+        state["temperature_c"] = pynvml.nvmlDeviceGetTemperature(h, pynvml.NVML_TEMPERATURE_GPU)
+        state["throttle_reasons_hex"] = hex(pynvml.nvmlDeviceGetCurrentClocksEventReasons(h))
+    except Exception as exc:  # recorded, never guessed
+        state["nvml_error"] = repr(exc)
+    exe = shutil.which("powercfg.exe") or shutil.which("powercfg")
+    if exe:  # Windows, or WSL with interop
+        try:
+            out = subprocess.run(
+                [exe, "/getactivescheme"], capture_output=True, text=True, timeout=10
+            ).stdout.strip()
+            state["windows_power_scheme"] = (
+                out.split("(")[-1].rstrip(")").strip() if "(" in out else out
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            state["windows_power_scheme_error"] = repr(exc)
+    return state
+
+
+def power_preflight(state: dict[str, object], min_enforced_w: float | None) -> None:
+    """Raise if the enforced GPU power limit is below the configured minimum."""
+    if min_enforced_w is None:
+        return
+    lim = state.get("enforced_power_limit_w")
+    if not isinstance(lim, (int, float)):
+        raise RuntimeError(f"power pre-flight: enforced power limit unknown ({state})")
+    if lim < min_enforced_w:
+        raise RuntimeError(
+            f"power pre-flight failed: enforced GPU power limit {lim:.0f} W < required "
+            f"{min_enforced_w:.0f} W (Windows power plan: {state.get('windows_power_scheme')}). "
+            "Switch the laptop to its performance power mode on AC power."
+        )

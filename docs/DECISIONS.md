@@ -194,3 +194,13 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
 ### D-017 (2026-11-25) Licence: Apache-2.0 (owner decision)
 - Code under Apache-2.0 (official text from the GitHub licences API). Third-party benchmark text is not
   redistributed; builders + checksums only (D-009). Contributor-facing files removed: single-maintainer project.
+
+### D-018 (2026-11-25) Laptop power mode: discard throttled pilot, add a power guard
+- **Finding:** with Armoury Crate / Windows plan "Silent" the enforced GPU power limit was 55 W; under load the
+  SM clock median was 277 MHz of 3,090 (`sw_power_cap` on every busy sample). The limit changed to 150 W during
+  the pilot, so arms would have run under different power states. After the owner switched modes, a 20 s bf16
+  matmul load reached the GPU's 175 W maximum at 2.14–2.30 GHz (`scripts/gpu_load_test.sh`).
+- **Decision:** the partial pilot is archived under `results/raw/_discarded/` (never used). Every sweep now
+  records the enforced power limit, Windows power plan, clocks and throttle reasons at start and per cell, and
+  refuses to start below `min_enforced_power_w` (140 W in all configs). Owner keeps the laptop on the AC
+  adapter in the performance mode for all measured runs.

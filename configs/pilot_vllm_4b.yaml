@@ -18,3 +18,4 @@ max_model_len: 4096
 max_prompts_per_cell: 12
 temperature: 0.0
 seed: 1234
+min_enforced_power_w: 140   # D-018: refuse to run on a power-capped laptop

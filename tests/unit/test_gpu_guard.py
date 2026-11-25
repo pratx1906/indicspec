@@ -25,3 +25,14 @@ def test_max_safe_fraction_is_consistent_with_preflight():
 def test_in_run_ceiling():
     assert in_run_ok(22000, 24463)
     assert not in_run_ok(24000, 24463)
+
+
+def test_power_preflight():
+    from indicspec.harness.gpu_guard import power_preflight
+
+    power_preflight({"enforced_power_limit_w": 150.0}, 140)
+    power_preflight({}, None)  # no requirement configured
+    with pytest.raises(RuntimeError, match="55 W"):
+        power_preflight({"enforced_power_limit_w": 55.0, "windows_power_scheme": "Silent"}, 140)
+    with pytest.raises(RuntimeError, match="unknown"):
+        power_preflight({"nvml_error": "x"}, 140)

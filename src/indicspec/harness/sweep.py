@@ -186,6 +186,8 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
         3,
     )
     gpu_guard.preflight(frac, vram)
+    power = gpu_guard.power_state()
+    gpu_guard.power_preflight(power, cfg.get("min_enforced_power_w"))
     plan = build_plan(
         engine,
         arm,
@@ -213,7 +215,7 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
         seeds={"engine": seed, "order": order_seed, "prompt_selection": seed},
         start_utc=now_utc(),
     )
-    manifest["notes"] = json.dumps({"excluded_long_prompts": excluded})
+    manifest["notes"] = json.dumps({"excluded_long_prompts": excluded, "power_state_start": power})
     stamp = time.strftime("%Y%m%dT%H%M%S")
     with (
         TelemetrySampler(block_dir / f"telemetry-{stamp}.csv"),
@@ -240,6 +242,7 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
                 request_rate=cfg.get("request_rate"),
                 extra_body=dict(engines[engine].get("request_extras") or {}),
             )
+            p0 = gpu_guard.power_state()
             e0, t0 = _energy_mj(), time.time()
             results, wall = asyncio.run(run_load(spec, prompts[cell.language], rng_seed=seed))
             e1, t1 = _energy_mj(), time.time()
@@ -272,6 +275,8 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
                             "n_prompts": len(results),
                             "n_errors": sum(1 for r in results if r.error),
                             "total_output_tokens": sum(r.output_tokens for r in results),
+                            "enforced_power_limit_w": p0.get("enforced_power_limit_w"),
+                            "windows_power_scheme": p0.get("windows_power_scheme"),
                         }
                     )
                     + "\n"
