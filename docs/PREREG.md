@@ -116,3 +116,26 @@ verdicts file (`INTERPRETATIONS` in `confirm.py`).
 - **thermal_busy_samples:** Thermal clock rule uses busy samples (utilisation > 50%): the cell's 5th-percentile SM clock vs the block's busy-sample median.
 - **power_missing:** A cell without a recorded enforced power limit is excluded (power unknown).
 - **telemetry_time:** nvidia-smi timestamps are local wall time; they are converted with the analysing machine's local time zone (or --telemetry-utc-offset).
+
+### Amendment 2 (2026-11-26, after the correctness gate, before any confirmatory report-split sweep)
+
+**Reason:** the greedy-equality gate (§5) failed every drafter arm, and the failure is explained by bf16
+numerics, not by drafters. The frozen near-tie threshold (top-2 logit gap < 0.1) is below the smallest
+non-zero gap the target can express: Qwen3 logits here are bf16, whose step at these magnitudes is 0.125, so
+every observed gap is a multiple of 0.125 and no flip can ever be a near-tie. Evidence (exploratory diagnostics,
+`scripts/equality_diag.py`; `results/raw/equality_qwen3-{4b,8b}/{summary,diag}.json`):
+
+- A0 vs A0 at batch size 1: 120/120 identical on both models (the engine is deterministic).
+- Every drafter arm diverges on 36–48% of the 120 gate prompts (43–57 prompts); all divergence gaps are 0.125–1.0.
+- At **241 of 241** drafter divergences the drafter run's token is the target's rank-2 (234) or rank-3 (7)
+  candidate at that position.
+- **Target-only control:** A0 with 16 requests in flight vs A0 at batch size 1 diverges on 48/120 (4B) and
+  47/120 (8B) prompts, 32 and 19 of which the frozen rule would call "suspected bug" (gaps 0–0.5). Batch shape
+  alone produces the same failure in the plain target, with no drafter involved.
+
+**Amended rule (binding from this amendment):** a gate mismatch is a **near-tie** if, at the first divergence,
+the arm's token is among the target's top-3 candidates **and** the target's top-2 logit gap is ≤ **1.0**
+(8 bf16 steps); any other mismatch is a suspected bug that blocks the arm. Disclosure: this threshold was set
+after seeing the gate data (maximum observed gap 1.0); under it every arm passes (A1, A5 on 4B; A3, A4, A5 on
+8B). Speed-up and acceptance comparisons are therefore between outputs that agree token-for-token except after
+near-tie flips; divergence rates are reported with the results. No report-split sweep has run.

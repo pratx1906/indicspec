@@ -1,0 +1,155 @@
+{
+  "engine": "vllm",
+  "model": "qwen3-8b",
+  "near_tie": 0.1,
+  "A0": {
+    "n": 120,
+    "counts": {
+      "equal": 120
+    },
+    "by_language": {
+      "en": {
+        "equal": 20
+      },
+      "hi": {
+        "equal": 20
+      },
+      "kn": {
+        "equal": 20
+      },
+      "ml": {
+        "equal": 20
+      },
+      "ta": {
+        "equal": 20
+      },
+      "te": {
+        "equal": 20
+      }
+    },
+    "pass": true
+  },
+  "A3": {
+    "n": 120,
+    "counts": {
+      "near_tie": 25,
+      "equal": 70,
+      "suspected_bug": 25
+    },
+    "by_language": {
+      "en": {
+        "near_tie": 2,
+        "equal": 12,
+        "suspected_bug": 6
+      },
+      "hi": {
+        "suspected_bug": 3,
+        "equal": 16,
+        "near_tie": 1
+      },
+      "kn": {
+        "near_tie": 7,
+        "equal": 12,
+        "suspected_bug": 1
+      },
+      "ml": {
+        "near_tie": 7,
+        "equal": 8,
+        "suspected_bug": 5
+      },
+      "ta": {
+        "equal": 11,
+        "near_tie": 5,
+        "suspected_bug": 4
+      },
+      "te": {
+        "equal": 11,
+        "suspected_bug": 6,
+        "near_tie": 3
+      }
+    },
+    "pass": false
+  },
+  "A4": {
+    "n": 120,
+    "counts": {
+      "near_tie": 27,
+      "equal": 74,
+      "suspected_bug": 19
+    },
+    "by_language": {
+      "en": {
+        "near_tie": 3,
+        "equal": 13,
+        "suspected_bug": 4
+      },
+      "hi": {
+        "suspected_bug": 6,
+        "near_tie": 5,
+        "equal": 9
+      },
+      "kn": {
+        "equal": 15,
+        "near_tie": 4,
+        "suspected_bug": 1
+      },
+      "ml": {
+        "near_tie": 4,
+        "equal": 14,
+        "suspected_bug": 2
+      },
+      "ta": {
+        "equal": 11,
+        "near_tie": 6,
+        "suspected_bug": 3
+      },
+      "te": {
+        "near_tie": 5,
+        "equal": 12,
+        "suspected_bug": 3
+      }
+    },
+    "pass": false
+  },
+  "A5": {
+    "n": 120,
+    "counts": {
+      "near_tie": 23,
+      "equal": 75,
+      "suspected_bug": 22
+    },
+    "by_language": {
+      "en": {
+        "near_tie": 4,
+        "equal": 14,
+        "suspected_bug": 2
+      },
+      "hi": {
+        "equal": 14,
+        "near_tie": 3,
+        "suspected_bug": 3
+      },
+      "kn": {
+        "near_tie": 3,
+        "equal": 12,
+        "suspected_bug": 5
+      },
+      "ml": {
+        "near_tie": 6,
+        "suspected_bug": 5,
+        "equal": 9
+      },
+      "ta": {
+        "equal": 12,
+        "near_tie": 3,
+        "suspected_bug": 5
+      },
+      "te": {
+        "equal": 14,
+        "suspected_bug": 2,
+        "near_tie": 4
+      }
+    },
+    "pass": false
+  }
+}

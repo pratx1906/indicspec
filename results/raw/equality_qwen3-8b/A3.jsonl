@@ -1,0 +1,120 @@
+{"prompt_id": "en|chat:dolly_mt:030", "language": "en", "status": "near_tie", "position": 44, "baseline_token": 36, "arm_token": 51, "baseline_len": 235, "arm_len": 229, "top2_logit_gap": 0.0}
+{"prompt_id": "en|chat:dolly_mt:053", "language": "en", "status": "equal"}
+{"prompt_id": "en|chat:dolly_mt:077", "language": "en", "status": "suspected_bug", "position": 128, "baseline_token": 7044, "arm_token": 1, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}
+{"prompt_id": "en|chat:dolly_mt:145", "language": "en", "status": "suspected_bug", "position": 10, "baseline_token": 3897, "arm_token": 1467, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "en|chat:dolly_mt:173", "language": "en", "status": "suspected_bug", "position": 98, "baseline_token": 27756, "arm_token": 11406, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.2500000596046448}
+{"prompt_id": "en|qa:xquad_test:5725b81b271a42140099d09b", "language": "en", "status": "suspected_bug", "position": 48, "baseline_token": 50655, "arm_token": 1324, "baseline_len": 56, "arm_len": 56, "top2_logit_gap": 0.25}
+{"prompt_id": "en|qa:xquad_test:57269698dd62a815002e8a70", "language": "en", "status": "equal"}
+{"prompt_id": "en|qa:xquad_test:5726ea985951b619008f8264", "language": "en", "status": "equal"}
+{"prompt_id": "en|qa:xquad_test:5729feaf6aef051400155188", "language": "en", "status": "equal"}
+{"prompt_id": "en|qa:xquad_test:57308f6b8ab72b1400f9c584", "language": "en", "status": "equal"}
+{"prompt_id": "en|qa:xquad_test:57373d0cc3c5551400e51e88", "language": "en", "status": "equal"}
+{"prompt_id": "en|summarisation:belebele:2baf6acd17a2", "language": "en", "status": "suspected_bug", "position": 38, "baseline_token": 14900, "arm_token": 304, "baseline_len": 58, "arm_len": 59, "top2_logit_gap": 0.25}
+{"prompt_id": "en|summarisation:belebele:42de8c920be0", "language": "en", "status": "equal"}
+{"prompt_id": "en|summarisation:belebele:76228c90173d", "language": "en", "status": "equal"}
+{"prompt_id": "en|summarisation:belebele:83e2796550fb", "language": "en", "status": "equal"}
+{"prompt_id": "en|summarisation:belebele:b4deb31153d6", "language": "en", "status": "equal"}
+{"prompt_id": "en|summarisation:belebele:de8332e42bcc", "language": "en", "status": "equal"}
+{"prompt_id": "en|translation:flores_devtest:72a3bd7b0501", "language": "en", "status": "equal"}
+{"prompt_id": "en|translation:flores_devtest:c691557cfa92", "language": "en", "status": "suspected_bug", "position": 43, "baseline_token": 47869, "arm_token": 1822, "baseline_len": 80, "arm_len": 85, "top2_logit_gap": 0.25}
+{"prompt_id": "en|translation:flores_devtest:ec47fb210cae", "language": "en", "status": "near_tie", "position": 113, "baseline_token": 883, "arm_token": 1697, "baseline_len": 139, "arm_len": 139, "top2_logit_gap": 0.0}
+{"prompt_id": "hi|chat:dolly_mt:030", "language": "hi", "status": "suspected_bug", "position": 213, "baseline_token": 91217, "arm_token": 14925, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}
+{"prompt_id": "hi|chat:dolly_mt:053", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|chat:dolly_mt:077", "language": "hi", "status": "near_tie", "position": 103, "baseline_token": 14925, "arm_token": 91217, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "hi|chat:dolly_mt:145", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|chat:dolly_mt:173", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|qa:xquad_test:5725b81b271a42140099d09b", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|qa:xquad_test:57269698dd62a815002e8a70", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|qa:xquad_test:5726ea985951b619008f8264", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|qa:xquad_test:5729feaf6aef051400155188", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|qa:xquad_test:57308f6b8ab72b1400f9c584", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|qa:xquad_test:57373d0cc3c5551400e51e88", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|summarisation:belebele:2baf6acd17a2", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|summarisation:belebele:42de8c920be0", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|summarisation:belebele:76228c90173d", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|summarisation:belebele:83e2796550fb", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|summarisation:belebele:b4deb31153d6", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|summarisation:belebele:de8332e42bcc", "language": "hi", "status": "suspected_bug", "position": 166, "baseline_token": 237, "arm_token": 113, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "hi|translation:flores_devtest:72a3bd7b0501", "language": "hi", "status": "equal"}
+{"prompt_id": "hi|translation:flores_devtest:c691557cfa92", "language": "hi", "status": "suspected_bug", "position": 169, "baseline_token": 245, "arm_token": 114, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "hi|translation:flores_devtest:ec47fb210cae", "language": "hi", "status": "equal"}
+{"prompt_id": "kn|chat:dolly_mt:030", "language": "kn", "status": "near_tie", "position": 26, "baseline_token": 227, "arm_token": 228, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "kn|chat:dolly_mt:053", "language": "kn", "status": "near_tie", "position": 104, "baseline_token": 113, "arm_token": 117, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "kn|chat:dolly_mt:077", "language": "kn", "status": "near_tie", "position": 194, "baseline_token": 117, "arm_token": 243, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "kn|chat:dolly_mt:145", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|chat:dolly_mt:173", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|qa:xquad_test:5725b81b271a42140099d09b", "language": "kn", "status": "suspected_bug", "position": 225, "baseline_token": 148414, "arm_token": 55890, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "kn|qa:xquad_test:57269698dd62a815002e8a70", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|qa:xquad_test:5726ea985951b619008f8264", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|qa:xquad_test:5729feaf6aef051400155188", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|qa:xquad_test:57308f6b8ab72b1400f9c584", "language": "kn", "status": "near_tie", "position": 204, "baseline_token": 103, "arm_token": 229, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "kn|qa:xquad_test:57373d0cc3c5551400e51e88", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|summarisation:belebele:2baf6acd17a2", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|summarisation:belebele:42de8c920be0", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|summarisation:belebele:76228c90173d", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|summarisation:belebele:83e2796550fb", "language": "kn", "status": "near_tie", "position": 149, "baseline_token": 150119, "arm_token": 150437, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "kn|summarisation:belebele:b4deb31153d6", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|summarisation:belebele:de8332e42bcc", "language": "kn", "status": "near_tie", "position": 102, "baseline_token": 89434, "arm_token": 150441, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "kn|translation:flores_devtest:72a3bd7b0501", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|translation:flores_devtest:c691557cfa92", "language": "kn", "status": "equal"}
+{"prompt_id": "kn|translation:flores_devtest:ec47fb210cae", "language": "kn", "status": "near_tie", "position": 11, "baseline_token": 150438, "arm_token": 150439, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ml|chat:dolly_mt:030", "language": "ml", "status": "near_tie", "position": 93, "baseline_token": 147984, "arm_token": 148199, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ml|chat:dolly_mt:053", "language": "ml", "status": "near_tie", "position": 121, "baseline_token": 13, "arm_token": 382, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ml|chat:dolly_mt:077", "language": "ml", "status": "near_tie", "position": 112, "baseline_token": 147813, "arm_token": 147984, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ml|chat:dolly_mt:145", "language": "ml", "status": "equal"}
+{"prompt_id": "ml|chat:dolly_mt:173", "language": "ml", "status": "near_tie", "position": 77, "baseline_token": 33739, "arm_token": 148199, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ml|qa:xquad_test:5725b81b271a42140099d09b", "language": "ml", "status": "suspected_bug", "position": 73, "baseline_token": 148478, "arm_token": 150442, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.75}
+{"prompt_id": "ml|qa:xquad_test:57269698dd62a815002e8a70", "language": "ml", "status": "equal"}
+{"prompt_id": "ml|qa:xquad_test:5726ea985951b619008f8264", "language": "ml", "status": "suspected_bug", "position": 215, "baseline_token": 50111, "arm_token": 33739, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "ml|qa:xquad_test:5729feaf6aef051400155188", "language": "ml", "status": "equal"}
+{"prompt_id": "ml|qa:xquad_test:57308f6b8ab72b1400f9c584", "language": "ml", "status": "equal"}
+{"prompt_id": "ml|qa:xquad_test:57373d0cc3c5551400e51e88", "language": "ml", "status": "equal"}
+{"prompt_id": "ml|summarisation:belebele:2baf6acd17a2", "language": "ml", "status": "equal"}
+{"prompt_id": "ml|summarisation:belebele:42de8c920be0", "language": "ml", "status": "near_tie", "position": 180, "baseline_token": 103, "arm_token": 250, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ml|summarisation:belebele:76228c90173d", "language": "ml", "status": "equal"}
+{"prompt_id": "ml|summarisation:belebele:83e2796550fb", "language": "ml", "status": "suspected_bug", "position": 231, "baseline_token": 27982, "arm_token": 11, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "ml|summarisation:belebele:b4deb31153d6", "language": "ml", "status": "equal"}
+{"prompt_id": "ml|summarisation:belebele:de8332e42bcc", "language": "ml", "status": "near_tie", "position": 87, "baseline_token": 227, "arm_token": 229, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ml|translation:flores_devtest:72a3bd7b0501", "language": "ml", "status": "suspected_bug", "position": 62, "baseline_token": 146367, "arm_token": 146363, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "ml|translation:flores_devtest:c691557cfa92", "language": "ml", "status": "near_tie", "position": 56, "baseline_token": 148197, "arm_token": 148979, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ml|translation:flores_devtest:ec47fb210cae", "language": "ml", "status": "suspected_bug", "position": 67, "baseline_token": 147809, "arm_token": 33739, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}
+{"prompt_id": "ta|chat:dolly_mt:030", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|chat:dolly_mt:053", "language": "ta", "status": "near_tie", "position": 128, "baseline_token": 220, "arm_token": 3070, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ta|chat:dolly_mt:077", "language": "ta", "status": "near_tie", "position": 62, "baseline_token": 103, "arm_token": 243, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ta|chat:dolly_mt:145", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|chat:dolly_mt:173", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|qa:xquad_test:5725b81b271a42140099d09b", "language": "ta", "status": "suspected_bug", "position": 62, "baseline_token": 382, "arm_token": 13, "baseline_len": 256, "arm_len": 184, "top2_logit_gap": 0.25}
+{"prompt_id": "ta|qa:xquad_test:57269698dd62a815002e8a70", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|qa:xquad_test:5726ea985951b619008f8264", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|qa:xquad_test:5729feaf6aef051400155188", "language": "ta", "status": "suspected_bug", "position": 205, "baseline_token": 243, "arm_token": 227, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}
+{"prompt_id": "ta|qa:xquad_test:57308f6b8ab72b1400f9c584", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|qa:xquad_test:57373d0cc3c5551400e51e88", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|summarisation:belebele:2baf6acd17a2", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|summarisation:belebele:42de8c920be0", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|summarisation:belebele:76228c90173d", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|summarisation:belebele:83e2796550fb", "language": "ta", "status": "suspected_bug", "position": 146, "baseline_token": 113, "arm_token": 97, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}
+{"prompt_id": "ta|summarisation:belebele:b4deb31153d6", "language": "ta", "status": "equal"}
+{"prompt_id": "ta|summarisation:belebele:de8332e42bcc", "language": "ta", "status": "near_tie", "position": 153, "baseline_token": 31501, "arm_token": 83198, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ta|translation:flores_devtest:72a3bd7b0501", "language": "ta", "status": "near_tie", "position": 192, "baseline_token": 103, "arm_token": 106, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ta|translation:flores_devtest:c691557cfa92", "language": "ta", "status": "near_tie", "position": 27, "baseline_token": 20026, "arm_token": 99012, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "ta|translation:flores_devtest:ec47fb210cae", "language": "ta", "status": "suspected_bug", "position": 41, "baseline_token": 31501, "arm_token": 20026, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "te|chat:dolly_mt:030", "language": "te", "status": "equal"}
+{"prompt_id": "te|chat:dolly_mt:053", "language": "te", "status": "suspected_bug", "position": 253, "baseline_token": 150430, "arm_token": 31305, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "te|chat:dolly_mt:077", "language": "te", "status": "equal"}
+{"prompt_id": "te|chat:dolly_mt:145", "language": "te", "status": "equal"}
+{"prompt_id": "te|chat:dolly_mt:173", "language": "te", "status": "suspected_bug", "position": 40, "baseline_token": 243, "arm_token": 227, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}
+{"prompt_id": "te|qa:xquad_test:5725b81b271a42140099d09b", "language": "te", "status": "equal"}
+{"prompt_id": "te|qa:xquad_test:57269698dd62a815002e8a70", "language": "te", "status": "equal"}
+{"prompt_id": "te|qa:xquad_test:5726ea985951b619008f8264", "language": "te", "status": "equal"}
+{"prompt_id": "te|qa:xquad_test:5729feaf6aef051400155188", "language": "te", "status": "equal"}
+{"prompt_id": "te|qa:xquad_test:57308f6b8ab72b1400f9c584", "language": "te", "status": "equal"}
+{"prompt_id": "te|qa:xquad_test:57373d0cc3c5551400e51e88", "language": "te", "status": "equal"}
+{"prompt_id": "te|summarisation:belebele:2baf6acd17a2", "language": "te", "status": "suspected_bug", "position": 27, "baseline_token": 117, "arm_token": 255, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}
+{"prompt_id": "te|summarisation:belebele:42de8c920be0", "language": "te", "status": "equal"}
+{"prompt_id": "te|summarisation:belebele:76228c90173d", "language": "te", "status": "suspected_bug", "position": 199, "baseline_token": 149532, "arm_token": 147635, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.25}
+{"prompt_id": "te|summarisation:belebele:83e2796550fb", "language": "te", "status": "near_tie", "position": 105, "baseline_token": 223, "arm_token": 235, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "te|summarisation:belebele:b4deb31153d6", "language": "te", "status": "near_tie", "position": 175, "baseline_token": 31305, "arm_token": 52798, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "te|summarisation:belebele:de8332e42bcc", "language": "te", "status": "equal"}
+{"prompt_id": "te|translation:flores_devtest:72a3bd7b0501", "language": "te", "status": "suspected_bug", "position": 75, "baseline_token": 148435, "arm_token": 31305, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}
+{"prompt_id": "te|translation:flores_devtest:c691557cfa92", "language": "te", "status": "near_tie", "position": 82, "baseline_token": 52798, "arm_token": 93255, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.0}
+{"prompt_id": "te|translation:flores_devtest:ec47fb210cae", "language": "te", "status": "suspected_bug", "position": 24, "baseline_token": 150430, "arm_token": 52798, "baseline_len": 256, "arm_len": 256, "top2_logit_gap": 0.125}

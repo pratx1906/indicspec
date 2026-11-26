@@ -24,8 +24,9 @@ EAGLE-3 · DFlash · n-gram drafters &nbsp;·&nbsp; vLLM · SGLang &nbsp;·&nbsp
 
 > [!NOTE]
 > **Work in progress (November 2026).** Infrastructure, mechanism analysis, engine bring-up and the pilot are
-> done and the [pre-registration is frozen](docs/PREREG.md); draft-length tuning is running and the confirmatory
-> runs come next. Every number below says what it is and traces to a raw
+> done and the [pre-registration is frozen](docs/PREREG.md); draft-length tuning is done, the correctness gate is
+> [explained and amended](docs/PREREG.md#amendment-2-2026-11-26-after-the-correctness-gate-before-any-confirmatory-report-split-sweep),
+> and the confirmatory runs come next. Every number below says what it is and traces to a raw
 > log or script ([claim ledger](docs/CLAIMS.md)). Speed and acceptance only: **answer quality is not measured.**
 
 ## Why this matters
@@ -245,11 +246,13 @@ indicspec/
 - [x] Token tax, fragmentation, draft-vocab coverage, oracle ceiling
 - [x] Engine bring-up on `sm_120`, smoke matrix, English configuration checks (Gate G0 passed)
 - [x] Pilot sweeps (pilot split) → [pre-registration frozen](docs/PREREG.md) before any confirmatory run
-- [ ] Draft-length tuning per drafter on the tuning split &nbsp;*(running)*
+- [x] Draft-length tuning per drafter on the tuning split ([D-020](docs/DECISIONS.md))
+- [x] Greedy-equality gate: failures traced to bf16 near-tie flips (the plain model shows them too under a
+      different batch shape); rule amended before any confirmatory data ([D-021](docs/DECISIONS.md))
 - [ ] Confirmatory sweeps: acceptance and speed-up per language, concurrency 1–32, closed-loop + Poisson
 - [ ] Coverage-split and class-level acceptance from engine traces (H1–H3)
 - [ ] Load crossover per language (H4) · Nsight-backed cost model
-- [ ] Greedy-equality and sampling-distribution correctness suite for every reported arm
+- [ ] Sampling-distribution correctness suite for every reported arm
 - [ ] If the gates justify it: byte-aware n-gram drafter · UTF-8-validity draft mask
 
 ## Related work

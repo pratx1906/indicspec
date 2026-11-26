@@ -1,0 +1,114 @@
+{
+  "engine": "vllm",
+  "model": "qwen3-4b",
+  "near_tie": 0.1,
+  "A0": {
+    "n": 120,
+    "counts": {
+      "equal": 120
+    },
+    "by_language": {
+      "en": {
+        "equal": 20
+      },
+      "hi": {
+        "equal": 20
+      },
+      "kn": {
+        "equal": 20
+      },
+      "ml": {
+        "equal": 20
+      },
+      "ta": {
+        "equal": 20
+      },
+      "te": {
+        "equal": 20
+      }
+    },
+    "pass": true
+  },
+  "A1": {
+    "n": 120,
+    "counts": {
+      "suspected_bug": 37,
+      "equal": 63,
+      "near_tie": 20
+    },
+    "by_language": {
+      "en": {
+        "suspected_bug": 7,
+        "equal": 11,
+        "near_tie": 2
+      },
+      "hi": {
+        "suspected_bug": 6,
+        "equal": 11,
+        "near_tie": 3
+      },
+      "kn": {
+        "near_tie": 4,
+        "equal": 14,
+        "suspected_bug": 2
+      },
+      "ml": {
+        "equal": 11,
+        "near_tie": 5,
+        "suspected_bug": 4
+      },
+      "ta": {
+        "suspected_bug": 9,
+        "equal": 8,
+        "near_tie": 3
+      },
+      "te": {
+        "suspected_bug": 9,
+        "equal": 8,
+        "near_tie": 3
+      }
+    },
+    "pass": false
+  },
+  "A5": {
+    "n": 120,
+    "counts": {
+      "equal": 77,
+      "suspected_bug": 23,
+      "near_tie": 20
+    },
+    "by_language": {
+      "en": {
+        "equal": 12,
+        "suspected_bug": 4,
+        "near_tie": 4
+      },
+      "hi": {
+        "suspected_bug": 5,
+        "equal": 9,
+        "near_tie": 6
+      },
+      "kn": {
+        "equal": 13,
+        "near_tie": 4,
+        "suspected_bug": 3
+      },
+      "ml": {
+        "near_tie": 3,
+        "equal": 15,
+        "suspected_bug": 2
+      },
+      "ta": {
+        "equal": 14,
+        "suspected_bug": 5,
+        "near_tie": 1
+      },
+      "te": {
+        "suspected_bug": 4,
+        "equal": 14,
+        "near_tie": 2
+      }
+    },
+    "pass": false
+  }
+}
