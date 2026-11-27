@@ -432,6 +432,103 @@ def pilot_load(theme: Theme) -> Path:
     return _save(fig, "pilot-load", theme)
 
 
+def _confirm(run: str) -> list[dict[str, str]]:
+    return _csv(f"{run}_confirm.csv")
+
+
+def _legend(fig, theme: Theme, colors, labels, fontsize: float = 9.5) -> None:
+    from matplotlib.patches import Patch
+
+    handles = [Patch(facecolor=c, edgecolor="none") for c in colors]
+    leg = fig.legend(
+        handles,
+        labels,
+        loc="upper left",
+        bbox_to_anchor=(0.115, 0.865),
+        ncol=len(labels),
+        frameon=False,
+        fontsize=fontsize,
+        handlelength=1.0,
+        handleheight=1.0,
+        columnspacing=1.6,
+    )
+    for t in leg.get_texts():
+        t.set_color(theme.ink2)
+
+
+def confirm_speedup(theme: Theme) -> Path:
+    """Confirmatory (report split): speed-up at one user, n-gram vs DFlash, with 95% CIs."""
+    rows = _confirm("confirm_vllm_4b")
+    series = [("n-gram copier, k=8", "A1.k8"), ("DFlash, full vocabulary, k=15", "A5.k15")]
+    order = ["en", "hi", "ta", "te", "kn", "ml"]
+    fig, ax = _setup(theme, 8.0, 5.0)
+    fig.subplots_adjust(left=0.13, right=0.93, top=0.78, bottom=0.09)
+    ax.set_xlim(0, 3.8)
+    ax.set_ylim(len(order) - 0.5, -0.6)
+    ax.set_yticks(range(len(order)), [LANG_NAMES[x] for x in order])
+    ax.tick_params(axis="y", colors=theme.ink2, labelsize=10)
+    ax.set_xticks([0, 1, 2, 3], ["0", "1×", "2×", "3×"])
+    ax.axvline(1, color=theme.axis, linewidth=1, zorder=0.8)
+    h = 0.32
+    for i, lang in enumerate(order):
+        for k, (_, arm) in enumerate(series):
+            v = _g(rows, arm, lang, 1, "speedup")
+            lo, hi = (
+                _g(rows, arm, lang, 1, "speedup_ci_lo"),
+                _g(rows, arm, lang, 1, "speedup_ci_hi"),
+            )
+            if v is None:
+                continue
+            y = i + (k - 0.5) * (h + 0.03)
+            _hbar(ax, y, 0, v, h, theme.series[k])
+            if lo is not None and hi is not None:
+                ax.plot([lo, hi], [y, y], color=theme.ink, linewidth=1.2, solid_capstyle="butt")
+            x_lab = max(v, hi or v) + 0.05
+            ax.text(x_lab, y, f"{v:.2f}×", va="center", ha="left", fontsize=8.5, color=theme.ink)
+    _legend(fig, theme, theme.series[:2], [n for n, _ in series])
+    _title(
+        fig,
+        theme,
+        "The fastest drafter for English is the slowest for Dravidian",
+        "Confirmatory · Qwen3-4B · vLLM 0.34 · one user · 100 prompts × 3 repeats · "
+        "line = 95% CI · 1× = no gain",
+    )
+    return _save(fig, "confirm-speedup", theme)
+
+
+def confirm_load(theme: Theme) -> Path:
+    """Confirmatory: DFlash speed-up at 1, 8 and 32 concurrent users per language."""
+    rows = _confirm("confirm_vllm_4b")
+    order = ["en", "hi", "ta", "te", "kn", "ml"]
+    conc = [1, 8, 32]
+    cols = ORDINAL[theme.name]
+    fig, ax = _setup(theme, 8.0, 5.2)
+    fig.subplots_adjust(left=0.13, right=0.93, top=0.78, bottom=0.09)
+    ax.set_xlim(0, 2.8)
+    ax.set_ylim(len(order) - 0.45, -0.6)
+    ax.set_yticks(range(len(order)), [LANG_NAMES[x] for x in order])
+    ax.tick_params(axis="y", colors=theme.ink2, labelsize=10)
+    ax.set_xticks([0, 0.5, 1, 1.5, 2, 2.5], ["0", "0.5×", "1×", "1.5×", "2×", "2.5×"])
+    ax.axvline(1, color=theme.axis, linewidth=1, zorder=0.8)
+    h = 0.24
+    for i, lang in enumerate(order):
+        for k, c in enumerate(conc):
+            v = _g(rows, "A5.k15", lang, c, "speedup")
+            if v is None:
+                continue
+            y = i + (k - 1) * (h + 0.02)
+            _hbar(ax, y, 0, v, h, cols[k])
+            ax.text(v + 0.04, y, f"{v:.2f}×", va="center", ha="left", fontsize=8.5, color=theme.ink)
+    _legend(fig, theme, cols, ["1 user", "8 users", "32 users"])
+    _title(
+        fig,
+        theme,
+        "Under load, DFlash stops paying off sooner for Dravidian",
+        "Confirmatory · Qwen3-4B · vs no speculation at the same load · below 1× = slower",
+    )
+    return _save(fig, "confirm-load", theme)
+
+
 # --------------------------------------------------------------------------- banner
 
 BANNER_TOKENS = [  # Qwen3 tokenization of తెలుగు (measured; see README "Findings")
@@ -535,7 +632,16 @@ def banner(theme: Theme) -> Path:
 
 def main() -> int:
     for theme in (LIGHT, DARK):
-        for fn in (banner, token_tax, fragmentation, ceiling, pilot_speedup, pilot_load):
+        for fn in (
+            banner,
+            token_tax,
+            fragmentation,
+            ceiling,
+            pilot_speedup,
+            pilot_load,
+            confirm_speedup,
+            confirm_load,
+        ):
             print(fn(theme).relative_to(REPO))
     return 0
 

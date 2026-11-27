@@ -1,0 +1,22 @@
+# Cross-engine check (exploratory, D-022): SGLang on the tuning split, same items as tune_vllm_4b.
+# SGLang defaults in arms.yaml already equal the tuned settings (NGRAM 8 draft tokens; DFLASH 16 = 15 + 1).
+run_name: xengine_sglang_4b
+engine: sglang
+model: qwen3-4b
+split: tuning
+languages: [en, hi, ta, te, kn, ml]
+tasks: [chat, qa, summarisation, translation]
+arms:
+  - {arm: A0}
+  - {arm: A1}
+  - {arm: A5}
+concurrency: [1, 16]
+repeats: 1
+load_mode: closed_loop
+max_tokens: 256
+ignore_eos: false
+max_model_len: 4096
+max_prompts_per_cell: 50
+temperature: 0.0
+seed: 1234
+min_enforced_power_w: 140

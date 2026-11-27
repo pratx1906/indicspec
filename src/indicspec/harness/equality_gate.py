@@ -1,11 +1,15 @@
 """Greedy-equality correctness gate (docs/PREREG.md §5; brief §9). Linux/WSL only for the CLI.
 
 For each arm, launch its server, send 20 report-split prompts per language one at a time (batch size
-1, greedy, max_tokens 256) and collect output token ids. A0 additionally returns the top-2 log-probs
-per generated position. Each arm's ids are compared with A0's: at the first divergence the target's
+1, greedy, max_tokens 256) and collect output token ids. A0 additionally returns the top-5 log-probs
+per generated position. Each arm's ids are compared with A0's: at the first divergence, the target's
 top-2 logit gap (difference of the two largest log-probs; equal to the logit gap because both share
-the softmax normaliser) classifies the mismatch as a near-tie (< 0.1) or a suspected bug, which
-blocks the arm until explained.
+the softmax normaliser) and the rank of the arm's token among the target's candidates classify the
+mismatch.
+
+Rule (PREREG Amendment 2, D-021): near-tie if the arm's token is among the target's top-3 and the
+gap is <= 1.0 (8 bf16 logit steps); otherwise a suspected bug, which blocks the arm until explained.
+The frozen rule (gap < 0.1, below one bf16 step) is still recorded as ``frozen_status``.
 
 vLLM 0.34.0 fields used (verified in the installed package):
 * request ``logprobs`` (int) and ``return_tokens_as_token_ids`` (bool),
@@ -32,7 +36,9 @@ from typing import Any
 
 from indicspec.harness.equality import classify, compare
 
-NEAR_TIE = 0.1
+NEAR_TIE = 0.1  # frozen rule (PREREG §5); recorded, no longer binding
+NEAR_TIE_GAP = 1.0  # PREREG Amendment 2
+NEAR_TIE_TOPK = 3
 REPO = Path(__file__).resolve().parents[3]
 
 
@@ -42,6 +48,22 @@ def top2_gap(top_logprobs_at_pos: Mapping[str, float] | None) -> float:
         return math.inf
     vals = sorted((float(v) for v in top_logprobs_at_pos.values()), reverse=True)
     return vals[0] - vals[1] if len(vals) >= 2 else math.inf
+
+
+def token_rank(top_logprobs_at_pos: Mapping[str, float] | None, token: int | None) -> int | None:
+    """1-based rank of ``token`` among candidates keyed ``"token_id:<id>"`` (None if absent)."""
+    if not top_logprobs_at_pos or token is None:
+        return None
+    order = sorted(top_logprobs_at_pos.items(), key=lambda kv: -float(kv[1]))
+    ids = [int(k.rsplit(":", 1)[1]) for k, _ in order]
+    return ids.index(token) + 1 if token in ids else None
+
+
+def amended_status(gap: float, rank: int | None) -> str:
+    """PREREG Amendment 2: near-tie iff the arm token is in the target's top-3 and gap <= 1.0."""
+    if rank is not None and rank <= NEAR_TIE_TOPK and gap <= NEAR_TIE_GAP:
+        return "near_tie"
+    return "suspected_bug"
 
 
 def compare_arm(
@@ -59,12 +81,16 @@ def compare_arm(
         if d is None:
             rows.append({"prompt_id": pid, "language": languages.get(pid), "status": "equal"})
             continue
-        gap = top2_gap(base_top[d.position] if d.position < len(base_top) else None)
+        top = base_top[d.position] if d.position < len(base_top) else None
+        gap = top2_gap(top)
+        rank = token_rank(top, d.arm_token)
         rows.append(
             {
                 "prompt_id": pid,
                 "language": languages.get(pid),
-                "status": classify(gap, NEAR_TIE),
+                "status": amended_status(gap, rank),
+                "frozen_status": classify(gap, NEAR_TIE),
+                "arm_token_rank": rank,
                 "position": d.position,
                 "baseline_token": d.baseline_token,
                 "arm_token": d.arm_token,
@@ -154,7 +180,7 @@ def _run_arm(engine: str, model: str, arm: str, n_per_lang: int, seed: int) -> d
                     "return_token_ids": True,
                 }
                 if arm == "A0":
-                    body.update(logprobs=2, return_tokens_as_token_ids=True)
+                    body.update(logprobs=5, return_tokens_as_token_ids=True)
                 r = client.post(f"{srv.base_url}/v1/completions", json=body)
                 r.raise_for_status()
                 ids, top = parse_completion(r.json())
@@ -175,7 +201,12 @@ def main(argv: list[str] | None = None) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     base = _run_arm(a.engine, a.model, "A0", a.n_per_lang, a.seed)
     baseline = {k: (base["ids"][k], base["top"][k]) for k in base["ids"]}
-    summary: dict[str, Any] = {"engine": a.engine, "model": a.model, "near_tie": NEAR_TIE}
+    summary: dict[str, Any] = {
+        "engine": a.engine,
+        "model": a.model,
+        "rule": f"PREREG Amendment 2: top-{NEAR_TIE_TOPK} and gap <= {NEAR_TIE_GAP}",
+        "frozen_near_tie": NEAR_TIE,
+    }
     for arm in a.arms:
         res = _run_arm(a.engine, a.model, arm, a.n_per_lang, a.seed)
         rows = compare_arm(baseline, res["ids"], base["lang"])

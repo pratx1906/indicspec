@@ -26,7 +26,8 @@ EAGLE-3 · DFlash · n-gram drafters &nbsp;·&nbsp; vLLM · SGLang &nbsp;·&nbsp
 > **Work in progress (November 2026).** Infrastructure, mechanism analysis, engine bring-up and the pilot are
 > done and the [pre-registration is frozen](docs/PREREG.md); draft-length tuning is done, the correctness gate is
 > [explained and amended](docs/PREREG.md#amendment-2-2026-11-26-after-the-correctness-gate-before-any-confirmatory-report-split-sweep),
-> and the confirmatory runs come next. Every number below says what it is and traces to a raw
+> and the **Qwen3-4B confirmatory sweep is done** (results below); the Qwen3-8B sweep is in progress. Every number
+> below says what it is and traces to a raw
 > log or script ([claim ledger](docs/CLAIMS.md)). Speed and acceptance only: **answer quality is not measured.**
 
 ## Why this matters
@@ -38,6 +39,60 @@ how many guesses get accepted. IndicSpec measures whether that holds for Indic s
 under real load, and explains the answer down to the byte.
 
 ## Findings so far
+
+### Headline · confirmatory results, Qwen3-4B
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/confirm-speedup-dark.svg">
+  <img alt="Confirmatory speed-up for one user on Qwen3-4B. n-gram copier: English 1.40×, Hindi 2.31×, Tamil 3.11×, Telugu 3.00×, Kannada 3.11×, Malayalam 2.97×. DFlash: English 2.26×, Hindi 1.82×, Tamil 1.56×, Telugu 1.50×, Kannada 1.30×, Malayalam 1.11×" src="docs/assets/confirm-speedup-light.svg" width="100%">
+</picture>
+
+Pre-registered tests on the held-out report split (100 parallel prompts × 3 repeats per cell, 32,400 requests,
+0 cells excluded; [verdicts](results/tables/confirm_vllm_4b_verdicts.json)):
+
+- **The ranking of drafters flips with the language.** DFlash, the strongest learned drafter, is best on English
+  (2.26×) but keeps only **46–66% of its English acceptance** on Tamil, Telugu, Kannada and Malayalam (H2
+  falsified for DFlash). A model-free **n-gram copier gives ~3× on every Dravidian language**, more than twice
+  its English gain (acceptance ratio vs English 2.46–2.59, H2 confirmed for n-gram).
+- **Where speculation stops paying depends on the language (H4 confirmed).** DFlash stops helping at 8 concurrent
+  users on Telugu, Kannada and Malayalam (16 on Tamil) but only at 32 on English. The n-gram copier never stops
+  on Dravidian text up to 32 users; on English it stops at 8.
+- **Gate G1 (a real language gap): YES.** **Gate G2 (mechanism): NO under the strict pre-registered rule**: for
+  DFlash, re-weighting Dravidian positions to the English token-class mix explains essentially all of the gap;
+  for the n-gram copier there is no gap to explain (Dravidian beats English), so the joint rule fails.
+- Hypothesis H1 (pruned EAGLE-3 heads collapse) needs the Qwen3-8B sweep, which is in progress.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/confirm-load-dark.svg">
+  <img alt="DFlash speed-up at 1, 8 and 32 users. English 2.26, 1.33, 0.73; Hindi 1.82, 1.16, 0.69; Tamil 1.56, 1.00, 0.51; Telugu 1.50, 0.96, 0.53; Kannada 1.30, 0.88, 0.51; Malayalam 1.11, 0.76, 0.40" src="docs/assets/confirm-load-light.svg" width="100%">
+</picture>
+
+<details><summary>Table view and exploratory breakdowns</summary>
+
+| Speed-up vs no speculation (95% CI) | en | hi | ta | te | kn | ml |
+|---|---|---|---|---|---|---|
+| n-gram k=8, 1 user | 1.40 [1.31, 1.48] | 2.31 [2.14, 2.47] | 3.11 [2.85, 3.36] | 3.00 [2.75, 3.25] | 3.11 [2.85, 3.38] | 2.97 [2.73, 3.21] |
+| n-gram k=8, 8 users | 0.93 | 1.69 | 1.99 | 1.95 | 2.17 | 2.07 |
+| n-gram k=8, 32 users | 0.65 | 1.04 | 1.19 | 1.22 | 1.52 | 1.22 |
+| DFlash k=15, 1 user | 2.26 [2.11, 2.42] | 1.82 [1.74, 1.91] | 1.56 [1.49, 1.62] | 1.50 [1.46, 1.54] | 1.30 [1.26, 1.34] | 1.11 [1.09, 1.13] |
+| DFlash k=15, 8 users | 1.33 | 1.16 | 1.00 | 0.96 | 0.88 | 0.76 |
+| DFlash k=15, 32 users | 0.73 | 0.69 | 0.51 | 0.53 | 0.51 | 0.40 |
+| Acceptance length, n-gram | 1.47 | 2.61 | 3.71 | 3.64 | 3.81 | 3.62 |
+| Acceptance length, DFlash | 3.19 | 2.48 | 2.09 | 2.02 | 1.74 | 1.46 |
+
+Exploratory (not pre-registered), from the same logs via `python -m indicspec.analysis.breakdown`:
+
+- **By task:** the n-gram copier's Dravidian gain comes from tasks whose answers copy the prompt: QA 3.8–4.1×,
+  summarisation 3.8–4.1×, chat 2.2–2.4×, translation only 1.3–1.6× (English translation 0.97×).
+- **Energy:** at 16 users DFlash spends 1.4–1.9× the GPU energy per Dravidian word of no speculation, while the
+  n-gram copier saves 17–28%. At one user, 100 Malayalam words cost 2,502 J without speculation vs 274 J for English.
+- **Token classes:** DFlash accepts only 15% of whole-character tokens and ~33% of fragments in Malayalam (65% of
+  English positions overall); the n-gram copier accepts 64–71% of Dravidian positions of every class.
+
+Sources: [`confirm_vllm_4b_confirm.csv`](results/tables/confirm_vllm_4b_confirm.csv),
+[`_by_task.csv`](results/tables/confirm_vllm_4b_by_task.csv), [`_energy.csv`](results/tables/confirm_vllm_4b_energy.csv),
+[`_class_acceptance.csv`](results/tables/confirm_vllm_4b_class_acceptance.csv) · claims C52–C56
+</details>
 
 ### 1 · The token tax
 
@@ -249,7 +304,9 @@ indicspec/
 - [x] Draft-length tuning per drafter on the tuning split ([D-020](docs/DECISIONS.md))
 - [x] Greedy-equality gate: failures traced to bf16 near-tie flips (the plain model shows them too under a
       different batch shape); rule amended before any confirmatory data ([D-021](docs/DECISIONS.md))
-- [ ] Confirmatory sweeps: acceptance and speed-up per language, concurrency 1–32, closed-loop + Poisson
+- [x] Confirmatory sweep, Qwen3-4B (vLLM): H2, H3, H4, G1, G2 ([verdicts](results/tables/confirm_vllm_4b_verdicts.json))
+- [ ] Confirmatory sweep, Qwen3-8B (vLLM): H1 and the second model size &nbsp;*(in progress)*
+- [ ] SGLang confirmatory sweeps (secondary engine) · Poisson arrivals
 - [ ] Coverage-split and class-level acceptance from engine traces (H1–H3)
 - [ ] Load crossover per language (H4) · Nsight-backed cost model
 - [ ] Sampling-distribution correctness suite for every reported arm

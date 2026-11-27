@@ -230,3 +230,14 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
 - **Decision (owner-approved):** PREREG Amendment 2 replaces the near-tie rule (top-3 and gap ≤ 1.0). All arms
   pass under it. Confirmatory sweeps may start; divergence rates are reported beside every speed-up. Follow-up:
   make `harness/equality_gate.py` record top-k and apply the amended rule directly.
+
+### D-022 (2026-11-27) Qwen3-4B confirmatory sweep complete; verdicts recorded as computed
+- **Evidence:** `results/raw/confirm_vllm_4b` (324 cells, 32,400 requests, 0 excluded, enforced power 175 W),
+  run 03:26–10:16; verdicts `results/tables/confirm_vllm_4b_verdicts.json` (claims C52–C55).
+- **Verdicts:** H2 inconclusive (n-gram confirmed, DFlash falsified), H3 inconclusive (same split), H4 confirmed,
+  G1 YES, G2 NO. Verdicts are reported exactly as the frozen rules produce them, including G2's joint rule
+  failing because the n-gram arm has no gap to explain; no rule is changed after seeing these data.
+- **Operational:** the 11:00 hard stop fired at 11:10 because one long `sleep` drifted under WSL2;
+  `scripts/run_until.sh` replaces it with a wall-clock check every 20 s. `confirm_vllm_8b` was stopped after 16
+  of its 288 cells and resumes by cell (rows are written only when a cell completes).
+- **Exploratory additions:** `analysis/breakdown.py` (by task, energy, token class; C56) and two README figures.
