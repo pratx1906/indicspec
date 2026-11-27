@@ -1,0 +1,43 @@
+# EXPLORATORY (not pre-registered; D-026). Sampled decoding with Qwen3's recommended non-thinking settings
+# (temperature 0.7, top_p 0.8, top_k 20), same report-split prompts and tuned draft lengths as
+# confirm_vllm_4b, so the greedy confirmatory speed-ups have a paired sampled counterpart.
+# Smaller than the confirmatory sweep: 50 prompts per cell, 1 and 8 users, 1 repeat.
+run_name: explore_sampled_vllm_4b
+engine: vllm
+model: qwen3-4b
+split: report
+languages:
+- en
+- hi
+- ta
+- te
+- kn
+- ml
+tasks:
+- chat
+- qa
+- summarisation
+- translation
+arms:
+- arm: A0
+- arm: A1
+  label: k8
+  spec_override:
+    num_speculative_tokens: 8
+- arm: A5
+  label: k15
+  spec_override:
+    num_speculative_tokens: 15
+concurrency:
+- 1
+- 8
+repeats: 1
+load_mode: closed_loop
+max_tokens: 256
+ignore_eos: false
+max_model_len: 4096
+max_prompts_per_cell: 50
+temperature: 0.7
+request_extras: {top_p: 0.8, top_k: 20}
+seed: 1234
+min_enforced_power_w: 140

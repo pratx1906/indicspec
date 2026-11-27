@@ -250,7 +250,11 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
                 concurrency=cell.concurrency,
                 load_mode=cfg.get("load_mode", "closed_loop"),
                 request_rate=cfg.get("request_rate"),
-                extra_body=dict(engines[engine].get("request_extras") or {}),
+                # Engine-level extras, then run-level ones (e.g. top_p / top_k for a sampled run).
+                extra_body={
+                    **(engines[engine].get("request_extras") or {}),
+                    **(cfg.get("request_extras") or {}),
+                },
             )
             p0 = gpu_guard.power_state()
             e0, t0 = _energy_mj(), time.time()

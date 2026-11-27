@@ -318,3 +318,15 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   Dravidian-vs-English n-gram advantage 2.16 -> 1.67 -> 1.07); Lumma's tokenizer result (C60) stands, its
   speed result (C62) does not without a fix to its answers.
 - **Scope:** 10–20 items per language, one GPU, short outputs: a direction, not a confirmatory result.
+
+### D-026 (2026-11-28) Exploratory sampled-decoding and long-answer sweeps (Qwen3-4B), set before the data
+- **Why:** the confirmatory design is greedy with 256 new tokens (PREREG). Production serving usually samples,
+  and 256 tokens is ~200 English words but only ~20 Dravidian words, so the confirmatory speed-ups may
+  describe only the start of Indic answers. Both gaps are listed in the README limitations.
+- **What:** two exploratory runs on the report split with the tuned confirmatory arms (A0, A1 k8, A5 k15),
+  1 and 8 users, 1 repeat. `explore_sampled_vllm_4b`: temperature 0.7, top_p 0.8, top_k 20 (Qwen3's
+  non-thinking recommendation), 256 tokens, 50 prompts per cell. `explore_long_vllm_4b`: greedy, 1,024 tokens,
+  25 prompts per cell. `sweep.py` now merges a run-level `request_extras` into the request body (needed
+  for top_p/top_k). Analysis: `indicspec.analysis.pilot` (paired bootstrap CIs).
+- **Status:** exploratory; cannot change any PREREG verdict. Queued after the 8B run
+  (`scripts/explore_after_8b.sh`, graceful deadline 23:30).
