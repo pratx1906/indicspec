@@ -280,3 +280,41 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   now waits for the running cell to finish (new line in any `cells.jsonl`; cap +20 min), then stops;
   `stop_after_cell.sh` does the same for an already-running sweep. Used at 20:15 (cell finished 29 s later; 69/288
   cells) and verified with a dummy sweep.
+
+### D-025 (2026-11-28) Cross-model quick test (exploratory): the tokenizer drives the n-gram language pattern
+
+- **Why:** every result so far used one tokenizer (Qwen3 = Qwen2.5). The owner asked whether the pattern
+  holds for other open models, including Indian-built ones, and for FrontiersMind's Lumma/Nandi.
+- **Protocol (not pre-registered; never used for verdicts):** tuning split; the same items in every
+  language (first 10 per language that fit the model's context); greedy; 128 new tokens; one user;
+  no speculation vs vLLM's n-gram drafter (k=8, lookup 2–5, as tuned arm A1.k8); a repetition score
+  (share of repeated 4-grams) to flag looping models. Tokens per word on tuning-split reference texts.
+  Answer quality (C63): 20 items per language, up to 1,024 new tokens, QA accuracy, chrF vs
+  references, share of output in the expected script, truncation. Scripts `scripts/quick_models.py`,
+  `quick_models_hf.py`, `quick_quality.py`, `crossmodel_summary.py`; raw rows `results/raw/quick_models/`.
+- **Kept (8):** Qwen3-4B and Qwen3-0.6B (reference), Gemma 4 E4B, Sarvam-1, Navarasa-2.0 (Gemma-7B +
+  Indic data), Tamil-LLaMA-7B, OpenHathi-7B, FrontiersMind Lumma-0.6B; Sarvam-105B/30B tokenizer only.
+- **Excluded, with reasons** (raw rows kept; cached weights deleted): Bharat-Tiny-LLM-v2 (repetition
+  0.54–0.95, so its speed-ups measure looping), Pragna-1B, Project Indus, Llama-2-7B base and
+  Malayalam-LLaMA (repetition 0.3–0.7 in several languages), Ganga-2-1B (5x speed-up with tau 6.7: the
+  output echoes the prompt), Gemma 4 E2B (same tokenizer as E4B), Qwen2.5-1.5B (its twin Bharat-Tiny
+  is unusable, so the data-only comparison is lost), Nandi-Mini-150M (same tokenizer as Lumma, 150M),
+  Krutrim-1 (its MPT config fails validation in transformers 5.22), BharatGen Param-1, Airavata and
+  Gemma-7B (licence not accepted on the account).
+- **FrontiersMind:** Lumma/Nandi do not load in vLLM 0.34 (its Transformers backend has no factorised
+  output head `lm_head_proj`; SGLang's fallback is the same design). They ran in transformers with
+  prompt-lookup decoding (draft 8, n-grams up to 5), with Qwen3-0.6B through the same path as the
+  reference; only ratios within that engine are compared. Their remote code was read before running
+  (imports torch and transformers only). Their public claim (Lumma 2.21 tokens per word vs
+  Sarvam-105B 2.35 on 11 languages) is consistent with ours on 5 (2.12 vs 2.40).
+- **Findings** (C60–C63): tokens per Dravidian word range from 2.3 (Lumma) to 15.7 (OpenHathi), with
+  Qwen3 at 11.7; the n-gram drafter's Dravidian advantage over English shrinks as the tokenizer
+  improves, including within single models (Tamil-LLaMA gains least on Tamil, OpenHathi least on
+  Hindi). So the confirmatory n-gram result (C53) is largely a property of the Qwen tokenizer.
+- **Answer quality changes what can be read from the speeds** (C63): only Qwen3-4B, Gemma 4 and Navarasa
+  answer reliably in the right language. Lumma, Sarvam-1 (base), OpenHathi (base) and Tamil-LLaMA (outside
+  Tamil) often echo the English prompt or switch script, which also inflates n-gram speed-ups. The
+  tokenizer conclusion rests on the three reliable models (monotone: 11.7 -> 5.1 -> 3.0 tokens per word,
+  Dravidian-vs-English n-gram advantage 2.16 -> 1.67 -> 1.07); Lumma's tokenizer result (C60) stands, its
+  speed result (C62) does not without a fix to its answers.
+- **Scope:** 10–20 items per language, one GPU, short outputs: a direction, not a confirmatory result.

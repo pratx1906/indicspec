@@ -110,6 +110,41 @@ Sources: [`confirm_vllm_4b_confirm.csv`](results/tables/confirm_vllm_4b_confirm.
 </picture>
 </details>
 
+### Beyond Qwen: the tokenizer decides (exploratory)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/crossmodel-tokens-dark.svg">
+  <img alt="Tokens per Dravidian word by tokenizer: FrontiersMind Lumma/Nandi 2.3, Sarvam-1 2.5, Sarvam-105B/30B 2.6, Gemma 4 3.0, Gemma 1 (Navarasa) 5.1, Tamil-LLaMA 7.2, Qwen3 11.7, OpenHathi 15.7. English is 1.3 to 1.5 for every tokenizer" src="docs/assets/crossmodel-tokens-light.svg" width="100%">
+</picture>
+
+A quick test of 18 open models (17 ran; Indian-built ones included) asked whether the confirmatory n-gram result is
+a Qwen quirk ([D-025](docs/DECISIONS.md); 10–20 items per language, so a direction, not a verdict):
+
+- **The token tax is a tokenizer choice.** One Dravidian word costs 2.3 tokens with FrontiersMind's Lumma,
+  2.5–2.6 with Sarvam's, 3.0 with Gemma 4 and 11.7 with Qwen3 ([C60](docs/CLAIMS.md)).
+- **The n-gram drafter's Dravidian advantage follows it.** Among models that answer reliably, its gain on
+  Dravidian text relative to English falls from 2.2 (Qwen3-4B) to 1.7 (Navarasa) to 1.1 (Gemma 4) as words
+  get cheaper ([C61](docs/CLAIMS.md)). The confirmatory n-gram result is largely a property of the Qwen
+  tokenizer.
+- **Cheap tokens are not the same as good answers.** Gemma 4 E4B gives the best Indian-language answers
+  here (QA 0.6–1.0, never cut off). Qwen3-4B answers well but hits a 1,024-token limit in 15–30% of Indian
+  answers. Lumma-0.6B has the most efficient tokenizer but repeats the English prompt in 60% of
+  Indian-language translations ([C63](docs/CLAIMS.md)).
+
+<details><summary>Table view</summary>
+
+| Model | Tokens per Dravidian word | n-gram gain, Dravidian ÷ English | Indian-language answers |
+|---|---|---|---|
+| Qwen3-4B | 11.7 | 2.16 | reliable; 15–30% cut off at 1,024 tokens |
+| Navarasa-2.0 (Gemma-7B + Indic data) | 5.1 | 1.67 | reliable |
+| Gemma 4 E4B | 3.0 | 1.07 | reliable, best quality |
+| Sarvam-1 (base) | 2.5 | 1.21 | 36% of translations untranslated |
+| Lumma-0.6B (FrontiersMind) | 2.3 | 1.46 (transformers) | 60% of translations untranslated |
+
+Sources: [`crossmodel_tokens.csv`](results/tables/crossmodel_tokens.csv),
+[`crossmodel_summary.csv`](results/tables/crossmodel_summary.csv) · claims C60–C63
+</details>
+
 ### 1 · The token tax
 
 <picture>

@@ -201,6 +201,30 @@ def token_tax(theme: Theme) -> Path:
     return _save(fig, "token-tax", theme)
 
 
+def crossmodel_tokens(theme: Theme) -> Path:
+    """Exploratory: tokens per Dravidian word by tokenizer (crossmodel_tokens.csv, D-025)."""
+    rows = sorted(_csv("crossmodel_tokens.csv"), key=lambda r: float(r["dravidian_mean"]))
+    fig, ax = _setup(theme, 8.0, 4.4)
+    fig.subplots_adjust(left=0.30, right=0.93, top=0.78, bottom=0.10)
+    ax.set_xlim(0, 17.5)
+    ax.set_ylim(len(rows) - 0.4, -0.6)
+    ax.set_yticks(range(len(rows)), [r["tokenizer"] for r in rows])
+    ax.tick_params(axis="y", colors=theme.ink2, labelsize=9.5)
+    ax.set_xticks([0, 4, 8, 12, 16], ["0", "4", "8", "12", "16"])
+    for i, r in enumerate(rows):
+        v = float(r["dravidian_mean"])
+        _hbar(ax, i, 0, v, 0.5, theme.series[0])
+        ax.text(v + 0.2, i, f"{v:.1f}", va="center", ha="left", fontsize=9, color=theme.ink)
+    _title(
+        fig,
+        theme,
+        "One Dravidian word costs 2 tokens or 16, depending on the tokenizer",
+        "Exploratory · tokens per word, mean of Tamil, Telugu, Kannada, Malayalam · "
+        "English is 1.3–1.5 for every tokenizer",
+    )
+    return _save(fig, "crossmodel-tokens", theme)
+
+
 def fragmentation(theme: Theme) -> Path:
     rows = {r["lang"]: r for r in _csv("fragmentation_ref.csv") if r["task"] == "ALL"}
     order = ["en", "hi", "ta", "kn", "ml", "te"]
@@ -729,6 +753,7 @@ def main() -> int:
             confirm_load,
             confirm_tasks,
             confirm_energy,
+            crossmodel_tokens,
         ):
             print(fn(theme).relative_to(REPO))
     return 0
