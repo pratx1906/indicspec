@@ -51,6 +51,7 @@ from indicspec.harness.schema import validate
 from indicspec.harness.server import REPO, Server, build_plan, load_configs
 from indicspec.harness.telemetry import TelemetrySampler
 from indicspec.hub import local_snapshot
+from indicspec.rawio import open_append
 
 
 @dataclass(frozen=True)
@@ -255,7 +256,9 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
             e0, t0 = _energy_mj(), time.time()
             results, wall = asyncio.run(run_load(spec, prompts[cell.language], rng_seed=seed))
             e1, t1 = _energy_mj(), time.time()
-            with open(block_dir / "requests.jsonl", "a", encoding="utf-8") as fh:
+            # compress_raw is opt-in (see indicspec.rawio); the default stays plain JSONL.
+            compress = bool(cfg.get("compress_raw", False))
+            with open_append(block_dir / "requests.jsonl", compress) as fh:
                 for r in results:
                     row = to_log_row(
                         r,

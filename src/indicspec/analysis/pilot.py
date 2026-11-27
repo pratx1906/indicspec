@@ -18,7 +18,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import json
 import math
 from collections import defaultdict
 from pathlib import Path
@@ -28,14 +27,13 @@ import numpy as np
 
 from indicspec.analysis.stats import bootstrap_ci, paired_bootstrap_ci
 from indicspec.harness.telemetry import summarise
+from indicspec.rawio import read_jsonl
 
 REPO = Path(__file__).resolve().parents[3]
 
 
 def _rows(path: Path) -> list[dict[str, Any]]:
-    if not path.exists():
-        return []
-    return [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
+    return read_jsonl(path)
 
 
 def _tau(rs: list[dict[str, Any]]) -> float | None:

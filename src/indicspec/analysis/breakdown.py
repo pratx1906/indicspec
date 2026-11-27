@@ -21,20 +21,19 @@ from __future__ import annotations
 
 import argparse
 import csv
-import json
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
+
+from indicspec.rawio import read_jsonl
 
 REPO = Path(__file__).resolve().parents[3]
 LANGS = ["en", "hi", "ta", "te", "kn", "ml"]
 
 
 def _jsonl(p: Path) -> list[dict[str, Any]]:
-    if not p.exists():
-        return []
-    return [json.loads(x) for x in p.read_text(encoding="utf-8").splitlines() if x.strip()]
+    return read_jsonl(p)
 
 
 def _tps(r: Mapping[str, Any]) -> float | None:

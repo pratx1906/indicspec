@@ -28,6 +28,8 @@ from typing import Any
 
 import yaml
 
+from indicspec.rawio import read_jsonl
+
 REPO = Path(__file__).resolve().parents[3]
 LANGS = ["en", "hi", "ta", "te", "kn", "ml"]
 CONFIRM_CONCURRENCY = {"qwen3-4b": [1, 2, 4, 8, 16, 32], "qwen3-8b": [1, 2, 4, 8]}
@@ -35,7 +37,7 @@ CONFIRM_ARMS = {"qwen3-4b": ["A0", "A1", "A5"], "qwen3-8b": ["A0", "A3", "A4", "
 
 
 def _rows(p: Path) -> list[dict[str, Any]]:
-    return [json.loads(x) for x in p.read_text(encoding="utf-8").splitlines() if x.strip()]
+    return read_jsonl(p)
 
 
 def _tps(r: dict[str, Any]) -> float | None:
@@ -48,7 +50,7 @@ def grid(run_dir: Path) -> list[dict[str, Any]]:
     """Speed-up and tau per (arm label, language) at concurrency 1."""
     by_setting: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for block in sorted(p for p in run_dir.iterdir() if p.is_dir()):
-        for r in _rows(block / "requests.jsonl") if (block / "requests.jsonl").exists() else []:
+        for r in _rows(block / "requests.jsonl"):
             if int(r["concurrency"]) == 1 and r["split"] == "tuning":
                 by_setting[r["arm"]].append(r)
     base: dict[tuple[str, str], float] = {}

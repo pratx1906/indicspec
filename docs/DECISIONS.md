@@ -256,3 +256,23 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   vLLM results (pilot, tuning, confirmatory) are unaffected.
 - **Decision:** the sweep now calls the engine's `flush_cache_endpoint` before every cell (SGLang default, recorded
   per cell as `cache_flushed`). The unflushed A1 numbers are kept as evidence of the pitfall and never used.
+
+### D-024 (2026-11-27) Tooling for reproducibility, raw-log size and the 8B finish
+
+- **Reproduce check:** `scripts/reproduce.sh` rebuilds every table derived from raw logs (pilot, tuning,
+  confirmatory, breakdowns, cross-engine) and compares each with the committed copy via `git diff`. The
+  cross-engine tables, first produced by a one-off script, now come from `indicspec.analysis.xengine`.
+- **Raw-log size:** request logs reach 51–59 MB per block (GitHub warns above 50 MB). Readers now accept
+  `requests.jsonl` and/or `requests.jsonl.gz` (`indicspec.rawio`). Writing gzip is opt-in per sweep
+  (`compress_raw: true`) and is **not** enabled for `confirm_vllm_8b`, so that run stays in one format.
+  `scripts/pack_raw.sh` can compress a finished run losslessly (SHA-256 checked before the plain file is
+  removed); it has not been applied to any committed run.
+- **8B finish:** `scripts/finish_8b.sh` runs the joint confirmatory analysis (4B + 8B), the 8B breakdowns,
+  the figures and a Markdown digest (`indicspec.analysis.digest`, numbers copied from the verdicts, not
+  recomputed). Updating CLAIMS/README and committing stay manual.
+- **New exploratory figures:** `confirm-tasks` and `confirm-energy` (claims C56, C59). C59 also corrects C56's
+  per-word n-gram energy range to 0.72–0.84×.
+- **`run_until.sh` fix:** at the deadline the sweep exits first, and the script then killed its own watchdog
+  while it was still inside `stop_sweeps.sh`, leaving the vLLM server holding 23.7 GB (seen on a 30-minute 8B
+  resume test, 16:30). The script now waits for the watchdog after a deadline stop; verified with a dummy sweep.
+  The test added 7 valid 8B cells (23/288); 1-user cells take 3.5-8.5 min, 8-user cells 0.5-1.5 min.

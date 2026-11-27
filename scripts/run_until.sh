@@ -20,5 +20,7 @@ for c in "$@"; do
   [ "$(date +%s)" -ge "$target" ] && break
   log "START $c"; bash scripts/sweep.sh "$c" >> "$L" 2>&1; log "exit $? $c"
 done
-kill "$watchdog" 2>/dev/null
+# At the deadline the sweep dies first and the loop ends while the watchdog is still inside
+# stop_sweeps.sh; killing it then left the engine server running (2026-11-27). So: wait for it.
+if [ "$(date +%s)" -ge "$target" ]; then wait "$watchdog"; else kill "$watchdog" 2>/dev/null; fi
 log "DONE"

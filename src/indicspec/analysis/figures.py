@@ -529,6 +529,92 @@ def confirm_load(theme: Theme) -> Path:
     return _save(fig, "confirm-load", theme)
 
 
+CAT4 = {  # categorical slots 1-4 (palette reference); validated light + dark, all bars labelled
+    "light": ("#2a78d6", "#eb6834", "#1baf7a", "#eda100"),
+    "dark": ("#3987e5", "#d95926", "#199e70", "#c98500"),
+}
+
+
+def confirm_tasks(theme: Theme) -> Path:
+    """Exploratory: n-gram speed-up at one user, split by task (confirm_vllm_4b_by_task.csv)."""
+    rows = _csv("confirm_vllm_4b_by_task.csv")
+    val = {(r["language"], r["task"]): float(r["speedup"]) for r in rows if r["arm"] == "A1.k8"}
+    order = ["en", "hi", "ta", "te", "kn", "ml"]
+    tasks = [
+        ("qa", "Question answering"),
+        ("summarisation", "Summarisation"),
+        ("chat", "Chat"),
+        ("translation", "Translation"),
+    ]
+    cols = CAT4[theme.name]
+    fig, ax = _setup(theme, 8.0, 6.6)
+    fig.subplots_adjust(left=0.13, right=0.93, top=0.82, bottom=0.07)
+    ax.set_xlim(0, 4.7)
+    ax.set_ylim(len(order) - 0.4, -0.6)
+    ax.set_yticks(range(len(order)), [LANG_NAMES[x] for x in order])
+    ax.tick_params(axis="y", colors=theme.ink2, labelsize=10)
+    ax.set_xticks([0, 1, 2, 3, 4], ["0", "1×", "2×", "3×", "4×"])
+    ax.axvline(1, color=theme.axis, linewidth=1, zorder=0.8)
+    h = 0.19
+    for i, lang in enumerate(order):
+        for k, (task, _) in enumerate(tasks):
+            v = val.get((lang, task))
+            if v is None:
+                continue
+            y = i + (k - 1.5) * (h + 0.02)
+            _hbar(ax, y, 0, v, h, cols[k])
+            ax.text(v + 0.04, y, f"{v:.2f}×", va="center", ha="left", fontsize=8, color=theme.ink)
+    _legend(fig, theme, cols, [n for _, n in tasks], fontsize=9)
+    _title(
+        fig,
+        theme,
+        "The n-gram copier pays off when the answer can copy the prompt",
+        "Exploratory · Qwen3-4B · vLLM 0.34 · n-gram k=8 · one user · vs no speculation · "
+        "1× = no gain",
+    )
+    return _save(fig, "confirm-tasks", theme)
+
+
+def confirm_energy(theme: Theme) -> Path:
+    """Exploratory: GPU energy per output word vs no speculation at 16 users."""
+    rows = _csv("confirm_vllm_4b_energy.csv")
+    conc = "16"
+    per = {
+        (r["arm"], r["language"]): float(r["joules_per_100_words"])
+        for r in rows
+        if r["concurrency"] == conc and r["joules_per_100_words"]
+    }
+    series = [("n-gram copier, k=8", "A1.k8"), ("DFlash, full vocabulary, k=15", "A5.k15")]
+    order = ["en", "hi", "ta", "te", "kn", "ml"]
+    fig, ax = _setup(theme, 8.0, 5.0)
+    fig.subplots_adjust(left=0.13, right=0.93, top=0.78, bottom=0.09)
+    ax.set_xlim(0, 2.2)
+    ax.set_ylim(len(order) - 0.5, -0.6)
+    ax.set_yticks(range(len(order)), [LANG_NAMES[x] for x in order])
+    ax.tick_params(axis="y", colors=theme.ink2, labelsize=10)
+    ax.set_xticks([0, 0.5, 1, 1.5, 2], ["0", "0.5×", "1×", "1.5×", "2×"])
+    ax.axvline(1, color=theme.axis, linewidth=1, zorder=0.8)
+    h = 0.32
+    for i, lang in enumerate(order):
+        base = per.get(("A0", lang))
+        for k, (_, arm) in enumerate(series):
+            if not base or (arm, lang) not in per:
+                continue
+            v = per[(arm, lang)] / base
+            y = i + (k - 0.5) * (h + 0.03)
+            _hbar(ax, y, 0, v, h, theme.series[k])
+            ax.text(v + 0.03, y, f"{v:.2f}×", va="center", ha="left", fontsize=8.5, color=theme.ink)
+    _legend(fig, theme, theme.series[:2], [n for n, _ in series])
+    _title(
+        fig,
+        theme,
+        "Under load, n-gram saves energy on Indic text; DFlash costs extra",
+        "Exploratory · Qwen3-4B · whole-GPU energy (NVML) per output word vs no speculation · "
+        "below 1× = less energy",
+    )
+    return _save(fig, "confirm-energy", theme)
+
+
 # --------------------------------------------------------------------------- banner
 
 BANNER_TOKENS = [  # Qwen3 tokenization of తెలుగు (measured; see README "Findings")
@@ -641,6 +727,8 @@ def main() -> int:
             pilot_load,
             confirm_speedup,
             confirm_load,
+            confirm_tasks,
+            confirm_energy,
         ):
             print(fn(theme).relative_to(REPO))
     return 0

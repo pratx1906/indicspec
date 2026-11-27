@@ -26,6 +26,7 @@ from typing import Any
 import numpy as np
 
 from indicspec.analysis.positions import AlignmentError, evaluated_positions
+from indicspec.rawio import read_jsonl
 
 REPO = Path(__file__).resolve().parents[3]
 DRAVIDIAN = ("ta", "te", "kn", "ml")
@@ -79,9 +80,7 @@ class Data:
 
 
 def _rows(path: Path) -> list[dict[str, Any]]:
-    if not path.exists():
-        return []
-    return [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
+    return read_jsonl(path)
 
 
 def parse_telemetry(path: Path, utc_offset_h: float | None = None) -> list[dict[str, float]]:

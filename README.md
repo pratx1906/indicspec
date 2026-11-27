@@ -48,7 +48,8 @@ under real load, and explains the answer down to the byte.
 </picture>
 
 Pre-registered tests on the held-out report split (100 parallel prompts × 3 repeats per cell, 32,400 requests,
-0 cells excluded; [verdicts](results/tables/confirm_vllm_4b_verdicts.json)):
+0 cells excluded; [verdicts](results/tables/confirm_vllm_4b_verdicts.json); plain-language write-up:
+[interim note](docs/REPORT/interim-qwen3-4b.md)):
 
 - **The ranking of drafters flips with the language.** DFlash, the strongest learned drafter, is best on English
   (2.26×) but keeps only **46–66% of its English acceptance** on Tamil, Telugu, Kannada and Malayalam (H2
@@ -90,13 +91,23 @@ Exploratory (not pre-registered), from the same logs via `python -m indicspec.an
 - **By task:** the n-gram copier's Dravidian gain comes from tasks whose answers copy the prompt: QA 3.8–4.1×,
   summarisation 3.8–4.1×, chat 2.2–2.4×, translation only 1.3–1.6× (English translation 0.97×).
 - **Energy:** at 16 users DFlash spends 1.4–1.9× the GPU energy per Dravidian word of no speculation, while the
-  n-gram copier saves 17–28%. At one user, 100 Malayalam words cost 2,502 J without speculation vs 274 J for English.
+  n-gram copier saves 16–28%. At one user, 100 Malayalam words cost 2,502 J without speculation vs 274 J for English.
 - **Token classes:** DFlash accepts only 15% of whole-character tokens and ~33% of fragments in Malayalam (65% of
   English positions overall); the n-gram copier accepts 64–71% of Dravidian positions of every class.
 
 Sources: [`confirm_vllm_4b_confirm.csv`](results/tables/confirm_vllm_4b_confirm.csv),
 [`_by_task.csv`](results/tables/confirm_vllm_4b_by_task.csv), [`_energy.csv`](results/tables/confirm_vllm_4b_energy.csv),
-[`_class_acceptance.csv`](results/tables/confirm_vllm_4b_class_acceptance.csv) · claims C52–C56
+[`_class_acceptance.csv`](results/tables/confirm_vllm_4b_class_acceptance.csv) · claims C52–C56, C59
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/confirm-tasks-dark.svg">
+  <img alt="Exploratory n-gram speed-up by task at one user. QA: English 1.78, Hindi 2.75, Tamil 3.90, Telugu 3.79, Kannada 4.10, Malayalam 3.94. Summarisation: 1.39, 2.92, 4.10, 3.90, 4.01, 3.78. Chat: 1.26, 1.88, 2.21, 2.17, 2.36, 2.20. Translation: 0.97, 1.27, 1.57, 1.56, 1.29, 1.32" src="docs/assets/confirm-tasks-light.svg" width="100%">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/confirm-energy-dark.svg">
+  <img alt="Exploratory GPU energy per output word vs no speculation at 16 users. n-gram: English 1.32, Hindi 0.91, Tamil 0.72, Telugu 0.76, Kannada 0.84, Malayalam 0.83. DFlash: English 1.05, Hindi 1.32, Tamil 1.39, Telugu 1.38, Kannada 1.70, Malayalam 1.86" src="docs/assets/confirm-energy-light.svg" width="100%">
+</picture>
 </details>
 
 ### 1 · The token tax
