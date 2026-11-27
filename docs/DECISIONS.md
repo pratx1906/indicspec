@@ -241,3 +241,18 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   `scripts/run_until.sh` replaces it with a wall-clock check every 20 s. `confirm_vllm_8b` was stopped after 16
   of its 288 cells and resumes by cell (rows are written only when a cell completes).
 - **Exploratory additions:** `analysis/breakdown.py` (by task, energy, token class; C56) and two README figures.
+
+### D-023 (2026-11-27) Cross-engine check on SGLang; SGLang NGRAM drafts across requests
+- **Evidence:** `results/raw/xengine_sglang_4b` (A0, A1, A5; tuning split, same 50 items per language as
+  `tune_vllm_4b`; concurrency 1 and 16) and `results/raw/xengine_sglang_4b_flush` (A0, A1 with a cache flush
+  before every cell); tables `results/tables/xengine_sglang_4b{,_flush}.csv` (claims C57–C58).
+- **DFlash reproduces across engines:** SGLang acceptance length is within 0.04 of vLLM's in every language
+  (en 2.72 vs 2.76, ml 1.39 vs 1.42), with the same language ordering and the same collapse under load.
+- **Finding (benchmark pitfall):** SGLang's NGRAM drafter keeps one corpus of every earlier request on the server
+  (`speculative/ngram_worker.py`, reset only by `POST /flush_cache`). Without a flush, a cell drafts from an earlier
+  cell's outputs for the same prompts: English n-gram acceptance 4.70 and speed-up 3.80× vs 1.22 / 0.97× after a
+  flush. Tamil, the only language whose 1-user cell ran before its 16-user cell, is unchanged by the flush
+  (1.78× vs 1.77×), which isolates the cause. vLLM's n-gram proposer reads only the current request, so the
+  vLLM results (pilot, tuning, confirmatory) are unaffected.
+- **Decision:** the sweep now calls the engine's `flush_cache_endpoint` before every cell (SGLang default, recorded
+  per cell as `cache_flushed`). The unflushed A1 numbers are kept as evidence of the pitfall and never used.

@@ -29,6 +29,9 @@ sglang:
   # At (max safe - 0.01) peaks reached 24.1 GB of 24.5 GB (D-016), so leave more room.
   mem_fraction_headroom: 0.13   # 0.10 left SGLang DFlash 6 MiB under the guard ceiling
   request_extras: {return_spec_tokens_details: true}
+  # NGRAM drafts from a corpus shared across requests; POST /flush_cache resets it (and the radix
+  # prefix cache). The sweep calls it before every cell (D-023).
+  flush_cache_endpoint: /flush_cache
   serve: ["{venv}/bin/python", "-m", "sglang.launch_server", "--model-path", "{target_path}",
           "--served-model-name", "{model}", "--host", "127.0.0.1", "--port", "{port}",
           "--dtype", "bfloat16", "--context-length", "{max_model_len}",

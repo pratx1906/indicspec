@@ -61,6 +61,11 @@ Pre-registered tests on the held-out report split (100 parallel prompts × 3 rep
   DFlash, re-weighting Dravidian positions to the English token-class mix explains essentially all of the gap;
   for the n-gram copier there is no gap to explain (Dravidian beats English), so the joint rule fails.
 - Hypothesis H1 (pruned EAGLE-3 heads collapse) needs the Qwen3-8B sweep, which is in progress.
+- **Not an engine quirk:** on SGLang 0.5.23, DFlash's acceptance matches vLLM's within 0.04 in every language
+  ([C57](docs/CLAIMS.md)). The n-gram copier also favours Dravidian text there (1.7–1.9× vs 0.97× English),
+  with more overhead than vLLM's. Along the way: **SGLang's n-gram drafter remembers earlier requests**, which
+  inflated a repeated-prompt benchmark from 0.97× to 3.8× on English until the cache was flushed per cell
+  ([D-023](docs/DECISIONS.md)).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/confirm-load-dark.svg">

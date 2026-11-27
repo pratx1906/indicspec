@@ -229,7 +229,16 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
             extra_body=dict(engines[engine].get("request_extras") or {}),
         )
         asyncio.run(run_load(warm, [ps[0] for ps in prompts.values() if ps]))
+        # Engines with cross-request draft state (SGLang NGRAM keeps one corpus of every earlier
+        # request, D-023) are flushed before each cell so a cell never drafts from another
+        # cell's outputs. Run config may override the engine default.
+        flush_path = engines[engine].get("flush_cache_endpoint")
+        flush = bool(cfg.get("flush_cache_between_cells", flush_path is not None)) and flush_path
         for cell in todo:
+            if flush:
+                import httpx
+
+                httpx.post(f"{srv.base_url}{flush_path}", timeout=60).raise_for_status()
             spec = LoadSpec(
                 srv.base_url,
                 model,
@@ -277,6 +286,7 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
                             "total_output_tokens": sum(r.output_tokens for r in results),
                             "enforced_power_limit_w": p0.get("enforced_power_limit_w"),
                             "windows_power_scheme": p0.get("windows_power_scheme"),
+                            "cache_flushed": bool(flush),
                         }
                     )
                     + "\n"

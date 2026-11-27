@@ -1,4 +1,4 @@
-# Cross-engine check (exploratory, D-022): SGLang on the tuning split, same items as tune_vllm_4b.
+# Cross-engine check (exploratory, D-023): SGLang on the tuning split, same items as tune_vllm_4b.
 # SGLang defaults in arms.yaml already equal the tuned settings (NGRAM 8 draft tokens; DFLASH 16 = 15 + 1).
 run_name: xengine_sglang_4b
 engine: sglang
