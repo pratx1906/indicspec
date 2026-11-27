@@ -276,3 +276,7 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   while it was still inside `stop_sweeps.sh`, leaving the vLLM server holding 23.7 GB (seen on a 30-minute 8B
   resume test, 16:30). The script now waits for the watchdog after a deadline stop; verified with a dummy sweep.
   The test added 7 valid 8B cells (23/288); 1-user cells take 3.5-8.5 min, 8-user cells 0.5-1.5 min.
+- **Graceful stop (owner request, 2026-11-27):** a deadline no longer kills the cell in progress. `run_until.sh`
+  now waits for the running cell to finish (new line in any `cells.jsonl`; cap +20 min), then stops;
+  `stop_after_cell.sh` does the same for an already-running sweep. Used at 20:15 (cell finished 29 s later; 69/288
+  cells) and verified with a dummy sweep.
