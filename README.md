@@ -26,9 +26,11 @@ EAGLE-3 · DFlash · n-gram drafters &nbsp;·&nbsp; vLLM · SGLang &nbsp;·&nbsp
 > **Work in progress (November 2026).** Infrastructure, mechanism analysis, engine bring-up and the pilot are
 > done and the [pre-registration is frozen](docs/PREREG.md); draft-length tuning is done, the correctness gate is
 > [explained and amended](docs/PREREG.md#amendment-2-2026-11-26-after-the-correctness-gate-before-any-confirmatory-report-split-sweep),
-> and the **Qwen3-4B confirmatory sweep is done** (results below); the Qwen3-8B sweep is in progress. Every number
-> below says what it is and traces to a raw
-> log or script ([claim ledger](docs/CLAIMS.md)). Speed and acceptance only: **answer quality is not measured.**
+> and the **Qwen3-4B confirmatory sweep is done** (results below). The **Qwen3-8B sweep is running** (288 cells,
+> expected to finish on 28 November 2026); hypothesis H1 waits for it. An exploratory cross-model test adds 17 more
+> open models, including Indian-built ones. Every number below says what it is and traces to a raw log or script
+> ([claim ledger](docs/CLAIMS.md)). The confirmatory tests measure speed and acceptance; answer quality is checked
+> only in the exploratory cross-model test. See [Limitations](#limitations).
 
 ## Why this matters
 
@@ -61,7 +63,8 @@ Pre-registered tests on the held-out report split (100 parallel prompts × 3 rep
 - **Gate G1 (a real language gap): YES.** **Gate G2 (mechanism): NO under the strict pre-registered rule**: for
   DFlash, re-weighting Dravidian positions to the English token-class mix explains essentially all of the gap;
   for the n-gram copier there is no gap to explain (Dravidian beats English), so the joint rule fails.
-- Hypothesis H1 (pruned EAGLE-3 heads collapse) needs the Qwen3-8B sweep, which is in progress.
+- Hypothesis H1 (pruned EAGLE-3 heads collapse) is tested on Qwen3-8B. That sweep is running; its verdicts will
+  be added here when all 288 cells are in.
 - **Not an engine quirk:** on SGLang 0.5.23, DFlash's acceptance matches vLLM's within 0.04 in every language
   ([C57](docs/CLAIMS.md)). The n-gram copier also favours Dravidian text there (1.7–1.9× vs 0.97× English),
   with more overhead than vLLM's. Along the way: **SGLang's n-gram drafter remembers earlier requests**, which
@@ -293,8 +296,9 @@ flowchart LR
   0.5.23 does not implement. Converting it would silently run a different network, so it is measured on vLLM only.
 - **vLLM 0.34's v2 model runner needs `VLLM_WSL2_ENABLE_PIN_MEMORY=1`** under WSL2; SGLang needs its venv on `PATH`
   to JIT-compile kernels with `ninja`.
-- **`nvidia-smi` has no total-energy field on this driver, but NVML's counter works**, and the laptop enforces a
-  150 W cap that every manifest records.
+- **`nvidia-smi` has no total-energy field on this driver, but NVML's counter works.** The GPU's power cap depends on
+  the laptop's power mode (175 W in Turbo, 55 W in Silent). Every manifest records the enforced cap, and sweeps
+  refuse to start below 140 W.
 
 Full record: [`docs/ENGINE_STATUS.md`](docs/ENGINE_STATUS.md) · [`docs/DECISIONS.md`](docs/DECISIONS.md)
 </details>
@@ -356,7 +360,9 @@ indicspec/
 - [x] Greedy-equality gate: failures traced to bf16 near-tie flips (the plain model shows them too under a
       different batch shape); rule amended before any confirmatory data ([D-021](docs/DECISIONS.md))
 - [x] Confirmatory sweep, Qwen3-4B (vLLM): H2, H3, H4, G1, G2 ([verdicts](results/tables/confirm_vllm_4b_verdicts.json))
-- [ ] Confirmatory sweep, Qwen3-8B (vLLM): H1 and the second model size &nbsp;*(in progress)*
+- [ ] Confirmatory sweep, Qwen3-8B (vLLM): H1 and the second model size &nbsp;*(running)*
+- [x] Cross-engine check on SGLang (DFlash acceptance, n-gram) ([C57](docs/CLAIMS.md))
+- [x] Exploratory cross-model test: 17 more open models, tokenizers, n-gram gain, answer quality ([D-025](docs/DECISIONS.md))
 - [ ] SGLang confirmatory sweeps (secondary engine) · Poisson arrivals
 - [ ] Coverage-split and class-level acceptance from engine traces (H1–H3)
 - [ ] Load crossover per language (H4) · Nsight-backed cost model
@@ -375,9 +381,27 @@ with parallel content, and explains the results at the byte level. Search log: [
 
 ## Limitations
 
-One GPU class (a power-capped consumer Blackwell laptop), one model family (Qwen3, two sizes), speed and acceptance
-only, and early findings computed on reference text rather than model generations. Machine-translated chat prompts
-carry translationese risk and await native-speaker review.
+- **Hardware:** one consumer laptop GPU (RTX 5090 Laptop, 24 GB, capped at 175 W) under WSL2, so absolute speeds
+  will differ on data-centre GPUs. Ratios between drafters and languages are the main result, and it is not yet
+  tested whether they transfer.
+- **Models:** the confirmatory tests cover one model family (Qwen3, 4B and 8B). The cross-model test of 17 more open
+  models is exploratory: 10–20 items per language, no confidence intervals. Two FrontiersMind models ran in
+  transformers because vLLM does not support them.
+- **Engines and load:** vLLM is the primary engine. SGLang is only a cross-check, not a confirmatory sweep. Load is
+  closed-loop (each user sends a new request when the last one finishes); Poisson arrivals are not yet tested.
+- **Decoding:** greedy (temperature 0), Qwen3 thinking mode off, at most 256 new tokens per answer. At 256 tokens a
+  Dravidian answer holds roughly a tenth as many words as an English one, so per-language outputs cover different
+  amounts of content. Sampling (temperature above 0) is not tested.
+- **"Lossless" up to bf16 rounding:** speculative outputs can differ from plain decoding where the top two tokens are
+  nearly tied. The plain model differs from itself the same way under a different batch shape
+  ([Amendment 2](docs/PREREG.md#amendment-2-2026-11-26-after-the-correctness-gate-before-any-confirmatory-report-split-sweep)).
+- **Answer quality:** not measured in the confirmatory tests. The cross-model quality check uses automatic proxies
+  (gold answer present, chrF, correct script), not human judgement.
+- **Ceilings on reference text:** the coverage and oracle ceilings in finding 3 are computed on reference text, not
+  on model outputs, so they are upper bounds.
+- **Energy:** GPU board energy only (NVML), not the whole system.
+- **Benchmark:** four tasks, about 100 report prompts per language. The chat prompts are machine-translated, carry
+  translationese risk, and still need native-speaker review.
 
 ## Licence and citation
 
