@@ -346,3 +346,27 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
 - **Reading:** each pruned EAGLE-3 head speeds up only the language its vocabulary was built for (English head:
   en 1.95×; Hindi/Gujarati head: hi 1.75×) and gives ~1.0× on Dravidian text at one user, slower under load.
 - **Next:** exploratory sampled and long-answer runs (D-026), then a combined report replacing the interim 4B note.
+
+### D-028 (2026-11-28) Convergence audit and a sequential thinking-mode study, set before its data
+- **Convergence audit** (`python -m indicspec.analysis.convergence`, `results/tables/convergence*.csv`): for
+  every speed measurement in the repo, the 95% CI half-width relative to the estimate and the drift of the
+  running estimate (50–100% of items). Every Dravidian/English contrast in the confirmatory and D-026 runs
+  has a CI excluding 1, and no running estimate drifts by more than 9%. Per-cell precision of ±5% is not
+  reached for many n-gram cells (task mix makes speed-ups vary by item; it would need 150–350 items), and the
+  cross-model quick test (10 items) is far from it (±25–50% per cell). There, Qwen3 vs Gemma 4 is separated
+  but Qwen3 vs Navarasa is not; a top-up to ~40 items per language for the four reliable models is approved.
+- **Correction (C68):** a paired, item-by-item comparison shows sampling trims the n-gram copier's
+  Dravidian advantage at 8 users to 0.82 [0.79, 0.86] of its greedy size; one-user results are unchanged.
+  The earlier "changes almost nothing" wording is replaced.
+- **Thinking-mode study design:** Qwen3-4B, thinking on (the empty think block removed from the same
+  prompts; `thinking: true` in the sweep), Qwen3's thinking sampling (temperature 0.6, top_p 0.95, top_k 20),
+  up to 2,048 new tokens, arms A0/A1 k8/A5 k15, 1 and 8 users. Items are confirm_vllm_4b's own, in its order
+  (`prompt_pool`), restricted to those that fit 2,048 prompt tokens in every language (97 of 100), so each
+  item is paired with its thinking-off measurements. Stage 1: 16 items. Primary comparison: the paired on/off
+  speed-up ratio per language and the Dravidian/English contrast on vs off; secondary: acceptance length for
+  the reasoning and answer parts (vLLM per-step counts split at `</think>`), reasoning share, finish rate,
+  reasoning language. Stopping rule: a (language, concurrency) group has converged when the on/off ratio's
+  CI half-width ≤ 5% and the speed-up's running drift ≤ 5%; otherwise the next stage adds the next items for
+  the unconverged concurrencies (`indicspec.analysis.thinking --plan`), capped at 40 items per language.
+  A first attempt (`explore_thinking_vllm_4b`, 1 cell) drew items outside confirm_vllm_4b's set and is
+  superseded; its cell stays in the raw logs.

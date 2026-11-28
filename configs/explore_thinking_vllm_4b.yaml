@@ -1,0 +1,46 @@
+# SUPERSEDED after 1 cell by explore_thinking_s1_vllm_4b (its items were not a subset of confirm_vllm_4b's).
+# EXPLORATORY (not pre-registered; D-028). Qwen3 thinking mode ON (the empty think block removed from the
+# same report-split prompts), with Qwen3's recommended thinking-mode sampling (temperature 0.6, top_p 0.95,
+# top_k 20; its model card advises against greedy decoding in thinking mode). Up to 2,048 new tokens, so
+# prompts longer than 4096 - 2048 tokens are excluded (identically for every arm). Output token ids are
+# logged, so reasoning (before </think>) and answer can be analysed separately afterwards.
+run_name: explore_thinking_vllm_4b
+engine: vllm
+model: qwen3-4b
+split: report
+thinking: true
+languages:
+- en
+- hi
+- ta
+- te
+- kn
+- ml
+tasks:
+- chat
+- qa
+- summarisation
+- translation
+arms:
+- arm: A0
+- arm: A1
+  label: k8
+  spec_override:
+    num_speculative_tokens: 8
+- arm: A5
+  label: k15
+  spec_override:
+    num_speculative_tokens: 15
+concurrency:
+- 1
+- 8
+repeats: 1
+load_mode: closed_loop
+max_tokens: 2048
+ignore_eos: false
+max_model_len: 4096
+max_prompts_per_cell: 24
+temperature: 0.6
+request_extras: {top_p: 0.95, top_k: 20}
+seed: 1234
+min_enforced_power_w: 140

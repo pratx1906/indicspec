@@ -150,9 +150,11 @@ Source: [`confirm_vllm_4b+confirm_vllm_8b_confirm.csv`](results/tables/confirm_v
 The confirmatory design is greedy with 256 new tokens. Two smaller runs on Qwen3-4B check both choices
 ([D-026](docs/DECISIONS.md); same report-split prompts and tuned drafters, 1 repeat):
 
-- **Sampling changes almost nothing.** With Qwen3's recommended settings (temperature 0.7, top-p 0.8, top-k 20),
-  acceptance length moves by at most 0.08 in every language at one user, and the n-gram copier still gives
-  Dravidian languages ~3× against 1.45× for English ([C68](docs/CLAIMS.md)).
+- **Sampling leaves one-user results unchanged and trims the copier's lead under load.** With Qwen3's
+  recommended settings (temperature 0.7, top-p 0.8, top-k 20), every speed-up at one user is within 4% of the
+  greedy value on the same items, and acceptance length barely moves. At 8 users the n-gram copier's Dravidian
+  advantage over English shrinks to 0.82× of its greedy size (English gains a little, Hindi loses 20%); DFlash
+  is unaffected ([C68](docs/CLAIMS.md)).
 - **Longer answers widen the gains, and the gap stays.** With up to 1,024 new tokens the n-gram copier reaches
   3.7–4.4× on Dravidian text (English 1.47×), and DFlash 2.58× on English but 1.18× on Malayalam. At 8 users DFlash
   still slows Kannada and Malayalam ([C69](docs/CLAIMS.md)).
@@ -452,7 +454,7 @@ with parallel content, and explains the results at the byte level. Search log: [
 - **Decoding:** greedy (temperature 0), Qwen3 thinking mode off, at most 256 new tokens per answer. At 256 tokens a
   Dravidian answer holds roughly a tenth as many words as an English one, so per-language outputs cover different
   amounts of content. Two smaller exploratory runs suggest neither choice changes the conclusions:
-  sampled decoding barely moves acceptance, and 1,024-token answers raise the gains while keeping the language gap
+  sampled decoding leaves acceptance and one-user speed-ups unchanged (the copier's lead shrinks ~18% at 8 users), and 1,024-token answers raise the gains while keeping the language gap
   (C68–C69; Qwen3-4B only, 1 repeat). The pre-registered sampling-distribution test is still to do.
 - **"Lossless" up to bf16 rounding:** speculative outputs can differ from plain decoding where the top two tokens are
   nearly tied. The plain model differs from itself the same way under a different batch shape

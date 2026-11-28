@@ -1,0 +1,1 @@
+{"cell": "hi|c1|r0", "language": "hi", "concurrency": 1, "repeat": 0, "start_unix": 1795867121.2549155, "end_unix": 1795867537.8411298, "wall_s": 416.574582844, "energy_mj": 71133851, "n_prompts": 24, "n_errors": 0, "total_output_tokens": 34423, "enforced_power_limit_w": 175.0, "windows_power_scheme": "Turbo", "cache_flushed": false}

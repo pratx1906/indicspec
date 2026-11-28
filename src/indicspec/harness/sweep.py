@@ -115,6 +115,35 @@ def load_prompts(
     return out, excluded
 
 
+# Qwen3's chat template with enable_thinking=False ends the prompt with an empty think block
+# (<think>, blank line, </think>, blank line); dropping it gives the thinking-mode prompt for the
+# same messages.
+QWEN3_EMPTY_THINK = [151667, 271, 151668, 271]
+
+
+def select_pool_slice(
+    prompts: dict[str, list[Prompt]], limit: int, offset: int, n: int
+) -> dict[str, list[Prompt]]:
+    """Items (in the given order) whose prompt fits ``limit`` tokens in every language, sliced.
+
+    Languages are parallel: position i is the same item in every language, so an item is kept or
+    dropped for all languages together.
+    """
+    langs = sorted(prompts)
+    m = min(len(prompts[x]) for x in langs)
+    keep = [i for i in range(m) if all(len(prompts[x][i].token_ids) <= limit for x in langs)]
+    keep = keep[offset : offset + n]
+    return {x: [prompts[x][i] for i in keep] for x in langs}
+
+
+def enable_thinking(p: Prompt) -> Prompt:
+    """Same prompt with Qwen3 thinking mode on (the trailing empty think block removed)."""
+    n = len(QWEN3_EMPTY_THINK)
+    if p.token_ids[-n:] != QWEN3_EMPTY_THINK:
+        raise ValueError(f"{p.prompt_id}: prompt does not end with Qwen3's empty think block")
+    return Prompt(p.prompt_id, p.language, p.task, p.token_ids[:-n])
+
+
 def _energy_mj() -> int | None:
     try:
         import pynvml
@@ -143,15 +172,28 @@ def run_block(cfg: dict[str, Any], arm_cfg: dict[str, Any], out_root: Path) -> d
     done = _done_cells(cells_path)
 
     seed = int(cfg.get("seed", 1234))
-    prompts, excluded = load_prompts(
-        REPO / "data/bench",
-        cfg["split"],
-        cfg["languages"],
-        cfg["tasks"],
-        int(cfg.get("max_model_len", 4096)) - int(cfg["max_tokens"]),
-        int(cfg.get("max_prompts_per_cell", 30)),
-        seed,
-    )
+    limit = int(cfg.get("max_model_len", 4096)) - int(cfg["max_tokens"])
+    n_cell = int(cfg.get("max_prompts_per_cell", 30))
+    pool = cfg.get("prompt_pool")
+    if pool:
+        # Reuse another run's item selection (same items, same order), keep the items that fit this
+        # run's length limit in every language, then take a slice: staged runs add the next items.
+        prompts, excluded = load_prompts(
+            REPO / "data/bench",
+            cfg["split"],
+            cfg["languages"],
+            cfg["tasks"],
+            int(pool["max_prompt_tokens"]),
+            int(pool["max_per_cell"]),
+            seed,
+        )
+        prompts = select_pool_slice(prompts, limit, int(cfg.get("prompt_offset", 0)), n_cell)
+    else:
+        prompts, excluded = load_prompts(
+            REPO / "data/bench", cfg["split"], cfg["languages"], cfg["tasks"], limit, n_cell, seed
+        )
+    if cfg.get("thinking"):
+        prompts = {lang: [enable_thinking(p) for p in ps] for lang, ps in prompts.items()}
     cells = [
         Cell(lang, c, rep)
         for rep in range(int(cfg["repeats"]))
