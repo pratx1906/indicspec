@@ -1,0 +1,662 @@
+{
+  "prereg_commit": "6023a78",
+  "interpretations": {
+    "holm_plus_ci": "A per-language confirm/falsify requires BOTH the plain 95% CI condition and rejection under Holm (family-wise alpha 0.05 across ta/te/kn/ml) of the one-sided bootstrap p-value (fraction of resamples on the wrong side of the threshold).",
+    "h1_falsify_tau_en": "H1 falsification compares tau_L's lower CI with 0.9 x the point estimate of tau_en for the same head (as written).",
+    "multi_arm_overall": "For hypotheses covering several (arm, model) pairs, the overall verdict is 'confirmed' only if every pair is confirmed, 'falsified' only if every pair is falsified, otherwise 'inconclusive'.",
+    "h3_pooled": "H3 pools ta/te/kn/ml into one test per (arm, model), so the 3-of-4 language rule does not apply; verdict per pair, overall by the multi-arm rule. CI by cluster bootstrap over requests.",
+    "h4_bonferroni": "H4 crossover uses one-sided speed-up upper bounds at level 0.05/4 (Bonferroni across the four Dravidian languages), stricter than Holm.",
+    "g2b_upper_ci": "G2(b) requires the upper 95% CI of (class-standardised gap / raw gap) to be <= 0.5, and a positive raw gap; classes absent from Dravidian positions are dropped and the English weights renormalised.",
+    "thermal_busy_samples": "Thermal clock rule uses busy samples (utilisation > 50%): the cell's 5th-percentile SM clock vs the block's busy-sample median.",
+    "power_missing": "A cell without a recorded enforced power limit is excluded (power unknown).",
+    "telemetry_time": "nvidia-smi timestamps are local wall time; they are converted with the analysing machine's local time zone (or --telemetry-utc-offset)."
+  },
+  "excluded_cells": [
+    {
+      "block": "confirm_vllm_8b/vllm-A0-default-qwen3-8b",
+      "language": "en",
+      "concurrency": 1,
+      "repeat": 1,
+      "reasons": [
+        "VRAM peak at ceiling"
+      ]
+    },
+    {
+      "block": "confirm_vllm_8b/vllm-A0-default-qwen3-8b",
+      "language": "en",
+      "concurrency": 8,
+      "repeat": 2,
+      "reasons": [
+        "VRAM peak at ceiling"
+      ]
+    },
+    {
+      "block": "confirm_vllm_8b/vllm-A0-default-qwen3-8b",
+      "language": "kn",
+      "concurrency": 4,
+      "repeat": 2,
+      "reasons": [
+        "VRAM peak at ceiling"
+      ]
+    },
+    {
+      "block": "confirm_vllm_8b/vllm-A0-default-qwen3-8b",
+      "language": "ml",
+      "concurrency": 1,
+      "repeat": 1,
+      "reasons": [
+        "VRAM peak at ceiling"
+      ]
+    },
+    {
+      "block": "confirm_vllm_8b/vllm-A0-default-qwen3-8b",
+      "language": "ta",
+      "concurrency": 2,
+      "repeat": 2,
+      "reasons": [
+        "VRAM peak at ceiling"
+      ]
+    },
+    {
+      "block": "confirm_vllm_8b/vllm-A0-default-qwen3-8b",
+      "language": "ta",
+      "concurrency": 4,
+      "repeat": 2,
+      "reasons": [
+        "VRAM peak at ceiling"
+      ]
+    },
+    {
+      "block": "confirm_vllm_8b/vllm-A0-default-qwen3-8b",
+      "language": "te",
+      "concurrency": 4,
+      "repeat": 2,
+      "reasons": [
+        "VRAM peak at ceiling"
+      ]
+    }
+  ],
+  "n_requests_kept": 60500,
+  "H1": {
+    "pairs": {
+      "A3.k3@qwen3-8b": {
+        "tau_en": 2.444905355106497,
+        "languages": {
+          "ta": {
+            "tau": 1.1420454452935318,
+            "ci": [
+              1.1277126216678257,
+              1.1576216610943744
+            ],
+            "n": 100
+          },
+          "te": {
+            "tau": 1.1815591904381326,
+            "ci": [
+              1.1658466911941425,
+              1.197763461780424
+            ],
+            "n": 100
+          },
+          "kn": {
+            "tau": 1.1766385822410714,
+            "ci": [
+              1.1631885777364508,
+              1.1901613612875268
+            ],
+            "n": 100
+          },
+          "ml": {
+            "tau": 1.1568052630861685,
+            "ci": [
+              1.1440327957017122,
+              1.1692724140741837
+            ],
+            "n": 100
+          }
+        },
+        "p_confirm": {
+          "ta": 0.0,
+          "te": 0.0,
+          "kn": 0.0,
+          "ml": 0.0
+        },
+        "p_falsify": {
+          "ta": 1.0,
+          "te": 1.0,
+          "kn": 1.0,
+          "ml": 1.0
+        },
+        "per_language": {
+          "ta": "confirmed",
+          "te": "confirmed",
+          "kn": "confirmed",
+          "ml": "confirmed"
+        },
+        "verdict": "confirmed"
+      },
+      "A4.k3@qwen3-8b": {
+        "tau_en": 1.5257390264438078,
+        "languages": {
+          "ta": {
+            "tau": 1.104856457191972,
+            "ci": [
+              1.0969440636193468,
+              1.1130446154723201
+            ],
+            "n": 100
+          },
+          "te": {
+            "tau": 1.2549689609355097,
+            "ci": [
+              1.2380625135127636,
+              1.2721351207540919
+            ],
+            "n": 100
+          },
+          "kn": {
+            "tau": 1.194576054179882,
+            "ci": [
+              1.1827083761724337,
+              1.2065431368798076
+            ],
+            "n": 100
+          },
+          "ml": {
+            "tau": 1.1023381034101436,
+            "ci": [
+              1.0949147603098532,
+              1.1098568807832763
+            ],
+            "n": 100
+          }
+        },
+        "p_confirm": {
+          "ta": 0.0,
+          "te": 0.0,
+          "kn": 0.0,
+          "ml": 0.0
+        },
+        "p_falsify": {
+          "ta": 1.0,
+          "te": 1.0,
+          "kn": 1.0,
+          "ml": 1.0
+        },
+        "per_language": {
+          "ta": "confirmed",
+          "te": "confirmed",
+          "kn": "confirmed",
+          "ml": "confirmed"
+        },
+        "verdict": "confirmed"
+      }
+    },
+    "verdict": "confirmed"
+  },
+  "H2": {
+    "pairs": {
+      "A1.k8@qwen3-4b": {
+        "languages": {
+          "ta": {
+            "R": 2.520773402088082,
+            "ci": [
+              2.335072979708116,
+              2.7187204957564273
+            ],
+            "n_items": 100
+          },
+          "te": {
+            "R": 2.471730075521742,
+            "ci": [
+              2.265044263101689,
+              2.685615114186008
+            ],
+            "n_items": 100
+          },
+          "kn": {
+            "R": 2.5886709487794066,
+            "ci": [
+              2.3821858071713575,
+              2.8102583270743557
+            ],
+            "n_items": 100
+          },
+          "ml": {
+            "R": 2.4577510021839037,
+            "ci": [
+              2.2819449178794673,
+              2.641607570691134
+            ],
+            "n_items": 100
+          }
+        },
+        "per_language": {
+          "ta": "confirmed",
+          "te": "confirmed",
+          "kn": "confirmed",
+          "ml": "confirmed"
+        },
+        "verdict": "confirmed"
+      },
+      "A5.k15@qwen3-4b": {
+        "languages": {
+          "ta": {
+            "R": 0.6551798289404052,
+            "ci": [
+              0.613046972243097,
+              0.7000268991185301
+            ],
+            "n_items": 100
+          },
+          "te": {
+            "R": 0.6341023582563802,
+            "ci": [
+              0.5932954807299479,
+              0.6772139492370617
+            ],
+            "n_items": 100
+          },
+          "kn": {
+            "R": 0.5436281127554741,
+            "ci": [
+              0.5077276309018073,
+              0.5814575892136307
+            ],
+            "n_items": 100
+          },
+          "ml": {
+            "R": 0.45736935089699055,
+            "ci": [
+              0.42704976406972867,
+              0.48904897236523015
+            ],
+            "n_items": 100
+          }
+        },
+        "per_language": {
+          "ta": "falsified",
+          "te": "falsified",
+          "kn": "falsified",
+          "ml": "falsified"
+        },
+        "verdict": "falsified"
+      },
+      "A5.k15@qwen3-8b": {
+        "languages": {
+          "ta": {
+            "R": 0.5281530891508119,
+            "ci": [
+              0.49726846966374194,
+              0.5592253966681439
+            ],
+            "n_items": 100
+          },
+          "te": {
+            "R": 0.4557250305718581,
+            "ci": [
+              0.42847174427700935,
+              0.4831535068326182
+            ],
+            "n_items": 100
+          },
+          "kn": {
+            "R": 0.5148815122391331,
+            "ci": [
+              0.48485715648658384,
+              0.5447850950089178
+            ],
+            "n_items": 100
+          },
+          "ml": {
+            "R": 0.4014296630579929,
+            "ci": [
+              0.3774532608021011,
+              0.42525200968826277
+            ],
+            "n_items": 100
+          }
+        },
+        "per_language": {
+          "ta": "falsified",
+          "te": "falsified",
+          "kn": "falsified",
+          "ml": "falsified"
+        },
+        "verdict": "falsified"
+      }
+    },
+    "verdict": "inconclusive"
+  },
+  "H4": {
+    "pairs": {
+      "A1.k8@qwen3-4b": {
+        "grid": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32
+        ],
+        "crossover": {
+          "en": 8,
+          "ta": ">32",
+          "te": ">32",
+          "kn": ">32",
+          "ml": ">32"
+        },
+        "per_language": {
+          "ta": "confirmed",
+          "te": "confirmed",
+          "kn": "confirmed",
+          "ml": "confirmed"
+        },
+        "verdict": "confirmed"
+      },
+      "A5.k15@qwen3-4b": {
+        "grid": [
+          1,
+          2,
+          4,
+          8,
+          16,
+          32
+        ],
+        "crossover": {
+          "en": 32,
+          "ta": 16,
+          "te": 8,
+          "kn": 8,
+          "ml": 8
+        },
+        "per_language": {
+          "ta": "falsified",
+          "te": "confirmed",
+          "kn": "confirmed",
+          "ml": "confirmed"
+        },
+        "verdict": "confirmed"
+      },
+      "A5.k15@qwen3-8b": {
+        "grid": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "crossover": {
+          "en": ">8",
+          "ta": 8,
+          "te": 4,
+          "kn": 8,
+          "ml": 1
+        },
+        "per_language": {
+          "ta": "falsified",
+          "te": "confirmed",
+          "kn": "falsified",
+          "ml": "confirmed"
+        },
+        "verdict": "inconclusive"
+      }
+    },
+    "verdict": "inconclusive"
+  },
+  "G1": {
+    "pairs": {
+      "A1.k8@qwen3-4b": {
+        "R": {
+          "ta": 2.520773402088082,
+          "te": 2.471730075521742,
+          "kn": 2.5886709487794066,
+          "ml": 2.4577510021839037
+        },
+        "gap_languages": [],
+        "advantage_languages": [
+          "ta",
+          "te",
+          "kn",
+          "ml"
+        ],
+        "hit": true
+      },
+      "A3.k3@qwen3-8b": {
+        "R": {
+          "ta": 0.4671123333703794,
+          "te": 0.4832739999404458,
+          "kn": 0.48126140334369655,
+          "ml": 0.4731493023523521
+        },
+        "gap_languages": [
+          "ta",
+          "te",
+          "kn",
+          "ml"
+        ],
+        "advantage_languages": [],
+        "hit": true
+      },
+      "A4.k3@qwen3-8b": {
+        "R": {
+          "ta": 0.7241451113478896,
+          "te": 0.8225318610749514,
+          "kn": 0.7829491370907642,
+          "ml": 0.7224945317021043
+        },
+        "gap_languages": [
+          "ta",
+          "ml"
+        ],
+        "advantage_languages": [],
+        "hit": true
+      },
+      "A5.k15@qwen3-4b": {
+        "R": {
+          "ta": 0.6551798289404052,
+          "te": 0.6341023582563802,
+          "kn": 0.5436281127554741,
+          "ml": 0.45736935089699055
+        },
+        "gap_languages": [
+          "ta",
+          "te",
+          "kn",
+          "ml"
+        ],
+        "advantage_languages": [],
+        "hit": true
+      },
+      "A5.k15@qwen3-8b": {
+        "R": {
+          "ta": 0.5281530891508119,
+          "te": 0.4557250305718581,
+          "kn": 0.5148815122391331,
+          "ml": 0.4014296630579929
+        },
+        "gap_languages": [
+          "ta",
+          "te",
+          "kn",
+          "ml"
+        ],
+        "advantage_languages": [],
+        "hit": true
+      }
+    },
+    "gate": "YES"
+  },
+  "G3": "not evaluated (no new drafter yet)",
+  "H3": {
+    "pairs": {
+      "A1.k8@qwen3-4b": {
+        "aligned_fraction": 0.9983333333333333,
+        "n_requests": 1800,
+        "rate_cont_dravidian": 0.6748309671951149,
+        "rate_en_all": 0.21234939759036145,
+        "diff_ci": [
+          0.43187048486965957,
+          0.4909219085973196
+        ],
+        "verdict": "confirmed"
+      },
+      "A5.k15@qwen3-4b": {
+        "aligned_fraction": 1.0,
+        "n_requests": 1800,
+        "rate_cont_dravidian": 0.4147129933987123,
+        "rate_en_all": 0.6469650154490182,
+        "diff_ci": [
+          -0.24907742403437505,
+          -0.21573734602025477
+        ],
+        "verdict": "falsified"
+      },
+      "A5.k15@qwen3-8b": {
+        "aligned_fraction": 1.0,
+        "n_requests": 1800,
+        "rate_cont_dravidian": 0.3255119103094762,
+        "rate_en_all": 0.6512706541694849,
+        "diff_ci": [
+          -0.34068990381640907,
+          -0.3116735543120866
+        ],
+        "verdict": "falsified"
+      }
+    },
+    "verdict": "inconclusive"
+  },
+  "G2": {
+    "pairs": {
+      "A1.k8@qwen3-4b": {
+        "lead_minus_cont_ci": [
+          0.017429155327914413,
+          0.023826047264072763
+        ],
+        "a": true,
+        "standardised_over_raw_gap": null,
+        "ratio_ci": [
+          NaN,
+          NaN
+        ],
+        "b": false
+      },
+      "A5.k15@qwen3-4b": {
+        "lead_minus_cont_ci": [
+          0.09467098574761351,
+          0.11001129728908461
+        ],
+        "a": true,
+        "standardised_over_raw_gap": -0.04103789285617622,
+        "ratio_ci": [
+          -0.13624198860368353,
+          0.05302049038408564
+        ],
+        "b": true
+      },
+      "A5.k15@qwen3-8b": {
+        "lead_minus_cont_ci": [
+          -8.158024890028814e-05,
+          0.019003178370624367
+        ],
+        "a": false,
+        "standardised_over_raw_gap": -0.26978973656152,
+        "ratio_ci": [
+          -0.3293158156287161,
+          -0.21166010516900077
+        ],
+        "b": true
+      }
+    },
+    "coverage_split": {
+      "A3.k3@qwen3-8b": {
+        "en": {
+          "in_vocab_acceptance": 0.6801776158487988,
+          "ci": [
+            0.6679734368665057,
+            0.6927033996698376
+          ]
+        },
+        "hi": {
+          "in_vocab_acceptance": 0.31898263249208536,
+          "ci": [
+            0.3114192510017292,
+            0.32655356495567295
+          ]
+        },
+        "ta": {
+          "in_vocab_acceptance": 0.36903860711582137,
+          "ci": [
+            0.3524085145874899,
+            0.3857235685981517
+          ]
+        },
+        "te": {
+          "in_vocab_acceptance": 0.37919837645865045,
+          "ci": [
+            0.3633545237170664,
+            0.39496623617527093
+          ]
+        },
+        "kn": {
+          "in_vocab_acceptance": 0.4154163326079487,
+          "ci": [
+            0.4005138997788583,
+            0.4305293000129728
+          ]
+        },
+        "ml": {
+          "in_vocab_acceptance": 0.32624685138539045,
+          "ci": [
+            0.3126779071359885,
+            0.3394384986664204
+          ]
+        }
+      },
+      "A4.k3@qwen3-8b": {
+        "en": {
+          "in_vocab_acceptance": 0.3491395793499044,
+          "ci": [
+            0.33590860478535467,
+            0.36264140931631006
+          ]
+        },
+        "hi": {
+          "in_vocab_acceptance": 0.5400812362855408,
+          "ci": [
+            0.5342199472162908,
+            0.5458372709240665
+          ]
+        },
+        "ta": {
+          "in_vocab_acceptance": 0.24156230099766504,
+          "ci": [
+            0.23255151373180458,
+            0.2505482204189427
+          ]
+        },
+        "te": {
+          "in_vocab_acceptance": 0.45839874411302983,
+          "ci": [
+            0.4446261075274524,
+            0.47222149653693457
+          ]
+        },
+        "kn": {
+          "in_vocab_acceptance": 0.41857533095188065,
+          "ci": [
+            0.40680614974410567,
+            0.43071814683540954
+          ]
+        },
+        "ml": {
+          "in_vocab_acceptance": 0.21076066790352505,
+          "ci": [
+            0.20282584440394644,
+            0.21893646281654902
+          ]
+        }
+      }
+    },
+    "gate": "NO"
+  }
+}

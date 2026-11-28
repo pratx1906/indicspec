@@ -330,3 +330,15 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   for top_p/top_k). Analysis: `indicspec.analysis.pilot` (paired bootstrap CIs).
 - **Status:** exploratory; cannot change any PREREG verdict. Queued after the 8B run
   (`scripts/explore_after_8b.sh`, graceful deadline 23:30).
+
+### D-027 (2026-11-28) Qwen3-8B confirmatory sweep complete; final pre-registered verdicts
+- **Run:** `confirm_vllm_8b`, 288/288 cells (4 arms × 6 languages × 4 concurrencies × 3 repeats), run over several
+  sessions with cell-safe graceful stops (D-024); 0 failed cells. The analysis excluded 7 baseline (A0)
+  cells under the pre-registered VRAM rule (§5: peak at total − 512 MiB); every affected cell keeps ≥ 2 of 3
+  repeats, and PREREG requires discarding, not rerunning, for this rule.
+- **Verdicts over both models (C64–C67):** H1 confirmed (both pruned EAGLE-3 heads, all four Dravidian
+  languages). H2, H3 inconclusive (n-gram confirmed, DFlash falsified on both sizes). H4 inconclusive (4B
+  confirmed; 8B DFlash mixed, Malayalam slower than no speculation even at one user). G1 YES, G2 NO.
+- **Reading:** each pruned EAGLE-3 head speeds up only the language its vocabulary was built for (English head:
+  en 1.95×; Hindi/Gujarati head: hi 1.75×) and gives ~1.0× on Dravidian text at one user, slower under load.
+- **Next:** exploratory sampled and long-answer runs (D-026), then a combined report replacing the interim 4B note.

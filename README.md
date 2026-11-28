@@ -26,8 +26,7 @@ EAGLE-3 · DFlash · n-gram drafters &nbsp;·&nbsp; vLLM · SGLang &nbsp;·&nbsp
 > **Work in progress (November 2026).** Infrastructure, mechanism analysis, engine bring-up and the pilot are
 > done and the [pre-registration is frozen](docs/PREREG.md); draft-length tuning is done, the correctness gate is
 > [explained and amended](docs/PREREG.md#amendment-2-2026-11-26-after-the-correctness-gate-before-any-confirmatory-report-split-sweep),
-> and the **Qwen3-4B confirmatory sweep is done** (results below). The **Qwen3-8B sweep is running** (288 cells,
-> expected to finish on 28 November 2026); hypothesis H1 waits for it. An exploratory cross-model test adds 17 more
+> and **both confirmatory sweeps are done** (Qwen3-4B and Qwen3-8B; final verdicts below). An exploratory cross-model test adds 17 more
 > open models, including Indian-built ones. Every number below says what it is and traces to a raw log or script
 > ([claim ledger](docs/CLAIMS.md)). The confirmatory tests measure speed and acceptance; answer quality is checked
 > only in the exploratory cross-model test. See [Limitations](#limitations).
@@ -63,8 +62,7 @@ Pre-registered tests on the held-out report split (100 parallel prompts × 3 rep
 - **Gate G1 (a real language gap): YES.** **Gate G2 (mechanism): NO under the strict pre-registered rule**: for
   DFlash, re-weighting Dravidian positions to the English token-class mix explains essentially all of the gap;
   for the n-gram copier there is no gap to explain (Dravidian beats English), so the joint rule fails.
-- Hypothesis H1 (pruned EAGLE-3 heads collapse) is tested on Qwen3-8B. That sweep is running; its verdicts will
-  be added here when all 288 cells are in.
+- **Pruned-vocabulary EAGLE-3 heads collapse on Dravidian text (H1 confirmed, Qwen3-8B).** See the next section.
 - **Not an engine quirk:** on SGLang 0.5.23, DFlash's acceptance matches vLLM's within 0.04 in every language
   ([C57](docs/CLAIMS.md)). The n-gram copier also favours Dravidian text there (1.7–1.9× vs 0.97× English),
   with more overhead than vLLM's. Along the way: **SGLang's n-gram drafter remembers earlier requests**, which
@@ -111,6 +109,40 @@ Sources: [`confirm_vllm_4b_confirm.csv`](results/tables/confirm_vllm_4b_confirm.
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/confirm-energy-dark.svg">
   <img alt="Exploratory GPU energy per output word vs no speculation at 16 users. n-gram: English 1.32, Hindi 0.91, Tamil 0.72, Telugu 0.76, Kannada 0.84, Malayalam 0.83. DFlash: English 1.05, Hindi 1.32, Tamil 1.39, Telugu 1.38, Kannada 1.70, Malayalam 1.86" src="docs/assets/confirm-energy-light.svg" width="100%">
 </picture>
+</details>
+
+### Confirmatory results, Qwen3-8B: each EAGLE-3 head only speeds up its own language
+
+Same design on Qwen3-8B (4 arms × 6 languages × 1–8 users × 3 repeats, 288 cells; 7 baseline cells excluded by the
+pre-registered VRAM rule, each keeping ≥ 2 repeats; [verdicts](results/tables/confirm_vllm_4b+confirm_vllm_8b_verdicts.json)):
+
+- **H1 confirmed.** Both public EAGLE-3 heads draft from a pruned 32k vocabulary. On Tamil, Telugu, Kannada and
+  Malayalam they get 1.10–1.25 tokens accepted per step (pre-registered collapse threshold: below 1.5), against
+  2.44 for the English head on English. That is under the ceiling predicted from their vocabularies alone
+  (finding 3 below).
+- **The head only helps the language it was built for.** The English head gives English 1.95× and Dravidian
+  languages 0.97–1.03×. The Hindi/Gujarati head gives Hindi 1.75× and English 1.34×, but Dravidian languages
+  still only 0.97–1.12×. At 8 users both heads make every Dravidian language **slower** (0.85–0.96×).
+- **DFlash behaves as on 4B:** English 2.28×, Dravidian 0.96–1.29× at one user, and slower than no speculation
+  at 8 users (Malayalam 0.66×; Malayalam is already slightly slower at one user).
+- **Verdicts over both models:** H1 confirmed · H2 and H3 inconclusive (n-gram confirmed, DFlash falsified on
+  both sizes) · H4 inconclusive (4B confirmed, 8B DFlash mixed) · G1 YES · G2 NO.
+
+<details><summary>Table view</summary>
+
+| Speed-up vs no speculation, Qwen3-8B (95% CI) | en | hi | ta | te | kn | ml |
+|---|---|---|---|---|---|---|
+| English EAGLE-3 head k=3, 1 user | 1.95 [1.90, 2.00] | 1.18 [1.16, 1.19] | 1.00 [0.99, 1.01] | 1.03 [1.02, 1.04] | 1.02 [1.01, 1.03] | 0.97 [0.96, 0.98] |
+| English EAGLE-3 head k=3, 8 users | 1.58 | 1.00 | 0.86 | 0.91 | 0.89 | 0.86 |
+| Hindi/Gujarati EAGLE-3 head k=3, 1 user | 1.34 [1.31, 1.37] | 1.75 [1.73, 1.78] | 0.99 [0.98, 1.00] | 1.12 [1.11, 1.13] | 1.07 [1.06, 1.08] | 0.97 [0.96, 0.97] |
+| Hindi/Gujarati EAGLE-3 head k=3, 8 users | 1.16 | 1.43 | 0.86 | 0.96 | 0.92 | 0.85 |
+| DFlash k=15, 1 user | 2.28 [2.15, 2.42] | 1.70 [1.65, 1.76] | 1.29 [1.26, 1.32] | 1.13 [1.11, 1.15] | 1.24 [1.21, 1.26] | 0.96 [0.95, 0.97] |
+| DFlash k=15, 8 users | 1.37 | 1.09 | 0.83 | 0.76 | 0.82 | 0.66 |
+| Acceptance length, English head | 2.44 | 1.35 | 1.14 | 1.18 | 1.18 | 1.16 |
+| Acceptance length, Hindi/Gujarati head | 1.53 | 2.00 | 1.10 | 1.25 | 1.19 | 1.10 |
+| Acceptance length, DFlash | 3.12 | 2.21 | 1.65 | 1.42 | 1.61 | 1.25 |
+
+Source: [`confirm_vllm_4b+confirm_vllm_8b_confirm.csv`](results/tables/confirm_vllm_4b+confirm_vllm_8b_confirm.csv) · claims C64–C67
 </details>
 
 ### Beyond Qwen: the tokenizer decides (exploratory)
@@ -360,7 +392,8 @@ indicspec/
 - [x] Greedy-equality gate: failures traced to bf16 near-tie flips (the plain model shows them too under a
       different batch shape); rule amended before any confirmatory data ([D-021](docs/DECISIONS.md))
 - [x] Confirmatory sweep, Qwen3-4B (vLLM): H2, H3, H4, G1, G2 ([verdicts](results/tables/confirm_vllm_4b_verdicts.json))
-- [ ] Confirmatory sweep, Qwen3-8B (vLLM): H1 and the second model size &nbsp;*(running)*
+- [x] Confirmatory sweep, Qwen3-8B (vLLM): H1 confirmed; final verdicts over both models ([D-027](docs/DECISIONS.md))
+- [ ] Exploratory sampled-decoding and long-answer runs ([D-026](docs/DECISIONS.md)) &nbsp;*(running)*
 - [x] Cross-engine check on SGLang (DFlash acceptance, n-gram) ([C57](docs/CLAIMS.md))
 - [x] Exploratory cross-model test: 17 more open models, tokenizers, n-gram gain, answer quality ([D-025](docs/DECISIONS.md))
 - [ ] SGLang confirmatory sweeps (secondary engine) · Poisson arrivals
