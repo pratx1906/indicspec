@@ -351,7 +351,7 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
 - **Convergence audit** (`python -m indicspec.analysis.convergence`, `results/tables/convergence*.csv`): for
   every speed measurement in the repo, the 95% CI half-width relative to the estimate and the drift of the
   running estimate (50–100% of items). Every Dravidian/English contrast in the confirmatory and D-026 runs
-  has a CI excluding 1, and no running estimate drifts by more than 9%. Per-cell precision of ±5% is not
+  has a CI excluding 1, and no running estimate drifts by more than 9.2%. Per-cell precision of ±5% is not
   reached for many n-gram cells (task mix makes speed-ups vary by item; it would need 150–350 items), and the
   cross-model quick test (10 items) is far from it (±25–50% per cell). There, Qwen3 vs Gemma 4 is separated
   but Qwen3 vs Navarasa is not; a top-up to ~40 items per language for the four reliable models is approved.
@@ -370,3 +370,10 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   the unconverged concurrencies (`indicspec.analysis.thinking --plan`), capped at 40 items per language.
   A first attempt (`explore_thinking_vllm_4b`, 1 cell) drew items outside confirm_vllm_4b's set and is
   superseded; its cell stays in the raw logs.
+- **Outcome (2026-11-28, C70–C71):** stage 1 (16 items) left every group above the 5% precision target
+  (needing 130–360 items), so stage 2 added 24 items to the 40-item cap; no further stage. All running
+  estimates are stable (drift ≤ 4.9%); per-language on/off ratios are ±5–16%, while the language contrasts are
+  decided (CIs exclude 1; stage-1 direction unchanged). Qwen3 reasons in English for Indian-language prompts,
+  so the reasoning half of the output carries no token tax: the n-gram copier's Dravidian advantage falls by a
+  third and DFlash's Dravidian deficit shrinks. Thinking-off conclusions describe answer text; for reasoning
+  workloads the drafter ranking moves toward the learned drafter.

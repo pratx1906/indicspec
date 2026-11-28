@@ -174,6 +174,35 @@ Sources: [`explore_sampled_vllm_4b_noise.csv`](results/tables/explore_sampled_vl
 [`explore_long_vllm_4b_noise.csv`](results/tables/explore_long_vllm_4b_noise.csv) · claims C68–C69
 </details>
 
+### Thinking mode: Qwen3 reasons in English (exploratory)
+
+With thinking mode on (Qwen3's thinking sampling settings, up to 2,048 tokens), 40 report items per language,
+each paired with its thinking-off measurement ([D-028](docs/DECISIONS.md); run in two stages until the estimates
+stopped moving):
+
+- **Qwen3 thinks in English even when asked in Tamil or Hindi.** Only 5–7% of the reasoning is in the prompt's
+  script, and reasoning is about half of every Indian-language output. That half carries no token tax.
+- **The drafters trade places.** The n-gram copier still gets 3.2–3.8 tokens per step on the Indian-language
+  answer but only 1.6–1.8 on the English reasoning, so its Dravidian speed-up falls from ~3.0× to ~2.0×. DFlash
+  drafts the English reasoning well and gains 8–21% on every Indian language (Malayalam 1.11× → 1.34×).
+- **The language gap narrows.** The copier's Dravidian advantage over English shrinks to 0.65× of its
+  thinking-off size; DFlash's Dravidian deficit shrinks (Dravidian/English 0.61 → 0.79). For reasoning
+  workloads, the confirmatory conclusions apply to the answer text, not to the whole output
+  ([C70–C71](docs/CLAIMS.md)).
+
+<details><summary>Table view</summary>
+
+| Speed-up at 1 user, thinking on (on ÷ off, 95% CI) | en | hi | ta | te | kn | ml |
+|---|---|---|---|---|---|---|
+| n-gram k=8 | 1.42 (1.01 [0.87, 1.17]) | 1.75 (0.78 [0.71, 0.86]) | 1.95 (0.63 [0.56, 0.73]) | 2.06 (0.68 [0.60, 0.79]) | 2.06 (0.65 [0.58, 0.75]) | 2.05 (0.68 [0.59, 0.79]) |
+| DFlash k=15 | 1.95 (0.87 [0.81, 0.94]) | 1.94 (1.10 [1.03, 1.19]) | 1.66 (1.08 [1.00, 1.16]) | 1.71 (1.15 [1.08, 1.23]) | 1.45 (1.11 [1.06, 1.17]) | 1.34 (1.21 [1.14, 1.29]) |
+| Reasoning in the prompt's script | 98% | 7% | 7% | 5% | 6% | 5% |
+| Reasoning share of output tokens | 76% | 54% | 54% | 47% | 49% | 50% |
+
+Sources: [`explore_thinking_vllm_4b.csv`](results/tables/explore_thinking_vllm_4b.csv),
+[`_contrasts.csv`](results/tables/explore_thinking_vllm_4b_contrasts.csv) · claims C70–C71
+</details>
+
 ### Beyond Qwen: the tokenizer decides (exploratory)
 
 <picture>
@@ -423,6 +452,7 @@ indicspec/
 - [x] Confirmatory sweep, Qwen3-4B (vLLM): H2, H3, H4, G1, G2 ([verdicts](results/tables/confirm_vllm_4b_verdicts.json))
 - [x] Confirmatory sweep, Qwen3-8B (vLLM): H1 confirmed; final verdicts over both models ([D-027](docs/DECISIONS.md))
 - [x] Exploratory sampled-decoding and long-answer runs ([D-026](docs/DECISIONS.md))
+- [x] Exploratory thinking-mode study, sequential to convergence ([D-028](docs/DECISIONS.md))
 - [x] Cross-engine check on SGLang (DFlash acceptance, n-gram) ([C57](docs/CLAIMS.md))
 - [x] Exploratory cross-model test: 17 more open models, tokenizers, n-gram gain, answer quality ([D-025](docs/DECISIONS.md))
 - [ ] SGLang confirmatory sweeps (secondary engine) · Poisson arrivals
@@ -451,7 +481,7 @@ with parallel content, and explains the results at the byte level. Search log: [
   transformers because vLLM does not support them.
 - **Engines and load:** vLLM is the primary engine. SGLang is only a cross-check, not a confirmatory sweep. Load is
   closed-loop (each user sends a new request when the last one finishes); Poisson arrivals are not yet tested.
-- **Decoding:** greedy (temperature 0), Qwen3 thinking mode off, at most 256 new tokens per answer. At 256 tokens a
+- **Decoding:** greedy (temperature 0), Qwen3 thinking mode off (thinking on is an exploratory check, C70–C71), at most 256 new tokens per answer. At 256 tokens a
   Dravidian answer holds roughly a tenth as many words as an English one, so per-language outputs cover different
   amounts of content. Two smaller exploratory runs suggest neither choice changes the conclusions:
   sampled decoding leaves acceptance and one-user speed-ups unchanged (the copier's lead shrinks ~18% at 8 users), and 1,024-token answers raise the gains while keeping the language gap

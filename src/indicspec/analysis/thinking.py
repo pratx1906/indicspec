@@ -336,7 +336,8 @@ def main(argv: list[str] | None = None) -> int:
         f"{ {f'{k[0]}|c{k[1]}': v['need'] for k, v in sorted(unconv.items())} }"
     )
     if a.plan:
-        plan(status, REPO / f"configs/{a.runs[0]}.yaml", a.plan, a.max_items)
+        dest = a.plan if a.plan.is_absolute() else REPO / a.plan
+        plan(status, REPO / f"configs/{a.runs[0]}.yaml", dest, a.max_items)
     return 0
 
 
