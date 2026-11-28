@@ -377,3 +377,7 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   so the reasoning half of the output carries no token tax: the n-gram copier's Dravidian advantage falls by a
   third and DFlash's Dravidian deficit shrinks. Thinking-off conclusions describe answer text; for reasoning
   workloads the drafter ranking moves toward the learned drafter.
+- **Cross-model top-up (2026-11-28, C72):** Qwen3-4B, Navarasa, Gemma 4 E4B and Sarvam-1 at 40 items per
+  language (`scripts/quick_topup.sh`, `scripts/crossmodel_topup.py`). The tokenizer ordering is now
+  statistically separated (Dravidian/English n-gram contrast 2.05 > 1.40 > 1.12, CIs disjoint); Navarasa's
+  10-item value (1.67) was high and is superseded.
