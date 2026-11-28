@@ -9,39 +9,65 @@
 EAGLE-3 · DFlash · n-gram drafters &nbsp;·&nbsp; vLLM · SGLang &nbsp;·&nbsp; Tamil · Telugu · Kannada · Malayalam · Hindi · English &nbsp;·&nbsp; one 24 GB laptop GPU
 
 [![CI](https://github.com/pratx1906/indicspec/actions/workflows/ci.yml/badge.svg)](https://github.com/pratx1906/indicspec/actions/workflows/ci.yml)
-![Status](https://img.shields.io/badge/status-work%20in%20progress-eda100)
+![Status](https://img.shields.io/badge/status-experiments%20complete-1baf7a)
 ![Python](https://img.shields.io/badge/python-3.11%2B-2a78d6)
 ![vLLM](https://img.shields.io/badge/vLLM-0.34.0-2a78d6)
 ![SGLang](https://img.shields.io/badge/SGLang-0.5.23-2a78d6)
 ![GPU](https://img.shields.io/badge/GPU-RTX%205090%20Laptop%20%C2%B7%20sm__120-1baf7a)
 [![License](https://img.shields.io/badge/license-Apache--2.0-52514e)](LICENSE)
 
-[Findings](#findings-so-far) · [Engineering](#engineering) · [Status](#engine--drafter-status) · [Reproduce](#quickstart) · [Roadmap](#roadmap) · [Docs](docs/README.md)
+[Short version](#the-short-version) · [Results](#results) · [Why it happens](#why-it-happens) · [Engineering](#engineering) · [Status](#engine--drafter-status) · [Reproduce](#quickstart) · [Roadmap](#roadmap) · [Docs](docs/README.md)
 
 </div>
 
 ---
 
 > [!NOTE]
-> **Work in progress (November 2026).** Infrastructure, mechanism analysis, engine bring-up and the pilot are
-> done and the [pre-registration is frozen](docs/PREREG.md); draft-length tuning is done, the correctness gate is
-> [explained and amended](docs/PREREG.md#amendment-2-2026-11-26-after-the-correctness-gate-before-any-confirmatory-report-split-sweep),
-> and **both confirmatory sweeps are done** (Qwen3-4B and Qwen3-8B; final verdicts below). An exploratory cross-model test adds 17 more
-> open models, including Indian-built ones. Every number below says what it is and traces to a raw log or script
-> ([claim ledger](docs/CLAIMS.md)). The confirmatory tests measure speed and acceptance; answer quality is checked
-> only in the exploratory cross-model test. See [Limitations](#limitations).
+> **Status, 28 November 2026: all experiments are finished.** Two pre-registered (confirmatory) studies on
+> Qwen3-4B and Qwen3-8B, plus four smaller exploratory checks. *Confirmatory* means the test and its pass/fail
+> rule were [written down and frozen](docs/PREREG.md) before the data existed; *exploratory* means they were not,
+> so treat those results as strong hints rather than proof. Every number traces to a raw log through the
+> [claim ledger](docs/CLAIMS.md).
 
-## Why this matters
+## The problem
 
-LLMs write one token at a time, and Indian-language text needs **6–7× more tokens than English** for the same
-content, so Indic users wait and pay several times more per answer. *Speculative decoding* is the standard lossless
-speed-up: a small drafter guesses the next tokens and the big model checks them in one pass. Its benefit depends on
-how many guesses get accepted. IndicSpec measures whether that holds for Indic scripts in real serving engines,
-under real load, and explains the answer down to the byte.
+Chatbots write one token (a word piece) at a time. For the same sentence, Indian languages need **4–7× more
+tokens than English**, so Indian-language users wait longer and pay more for every answer.
 
-## Findings so far
+*Speculative decoding* is the standard fix for slow generation: a small, fast **drafter** guesses the next few
+tokens and the big model checks all of them in one step. When the guesses are right, you get several tokens for
+the price of one, with exactly the same output. IndicSpec asks: **does this trick still work for Tamil, Telugu,
+Kannada, Malayalam and Hindi in real serving engines, and if not, why not?**
 
-### Headline · confirmatory results, Qwen3-4B
+## The short version
+
+| Question | Answer |
+|---|---|
+| Do Indian languages cost more tokens? | Yes. With Qwen3, Hindi needs 4.5× the tokens of English and Malayalam 7.3×. Most Dravidian tokens are not even whole letters, just pieces of one. |
+| Does speculative decoding still help? | It depends entirely on the drafter. |
+| A simple "copy from the prompt" drafter (n-gram) | Works **better** on Dravidian text (~3× faster) than on English (1.4×), because Dravidian tokens are tiny, repetitive pieces that are easy to copy. |
+| The strongest learned drafter (DFlash) | Great on English (2.3×), much weaker on Dravidian languages (1.1–1.6×), and **no faster, often slower, than no drafter at all** once 8 or more users share the GPU. |
+| Popular EAGLE-3 drafters | Give **no speed-up at all** on Dravidian text (0.97–1.03×). Their vocabulary was cut down to English-heavy tokens, so they literally cannot propose the start of a Tamil or Telugu letter. |
+| Does "thinking mode" change things? | Yes. Qwen3 does its reasoning in English even when asked in Tamil or Hindi, so half the output is English. The copier loses some of its edge and DFlash gains. |
+| Is this just a Qwen problem? | Largely. Models with Indian-friendly tokenizers (Gemma 4, Sarvam) need 2.5–3 tokens per Dravidian word instead of 11.7, and the copier's odd advantage almost disappears. |
+
+**Practical takeaway:** before deploying a drafter for Indian languages, check that its vocabulary covers the
+script, measure it per language, and measure it at your real load. An English benchmark number does not carry over.
+
+<details><summary>Words used on this page</summary>
+
+- **Drafter / arm:** the guessing method being tested. *A0* is no drafter (the baseline), *n-gram* copies from the
+  prompt and earlier output, *EAGLE-3* and *DFlash* are small trained networks.
+- **Speed-up:** tokens per second with the drafter ÷ without it, on the same prompts. Below 1× means slower.
+- **Acceptance length (τ):** how many tokens the big model accepts per checking step. 1 means no help.
+- **Users:** how many requests the GPU is serving at once.
+- **Dravidian:** Tamil (ta), Telugu (te), Kannada (kn), Malayalam (ml). Also tested: Hindi (hi), English (en).
+- **H1–H4, G1, G2:** the pre-registered hypotheses and gates in [PREREG](docs/PREREG.md).
+</details>
+
+## Results
+
+### Main result on Qwen3-4B (confirmatory)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/confirm-speedup-dark.svg">
@@ -111,7 +137,7 @@ Sources: [`confirm_vllm_4b_confirm.csv`](results/tables/confirm_vllm_4b_confirm.
 </picture>
 </details>
 
-### Confirmatory results, Qwen3-8B: each EAGLE-3 head only speeds up its own language
+### Qwen3-8B: each EAGLE-3 drafter only speeds up its own language (confirmatory)
 
 Same design on Qwen3-8B (4 arms × 6 languages × 1–8 users × 3 repeats, 288 cells; 7 baseline cells excluded by the
 pre-registered VRAM rule, each keeping ≥ 2 repeats; [verdicts](results/tables/confirm_vllm_4b+confirm_vllm_8b_verdicts.json)):
@@ -119,7 +145,7 @@ pre-registered VRAM rule, each keeping ≥ 2 repeats; [verdicts](results/tables/
 - **H1 confirmed.** Both public EAGLE-3 heads draft from a pruned 32k vocabulary. On Tamil, Telugu, Kannada and
   Malayalam they get 1.10–1.25 tokens accepted per step (pre-registered collapse threshold: below 1.5), against
   2.44 for the English head on English. That is under the ceiling predicted from their vocabularies alone
-  (finding 3 below).
+  (see [pruned-vocabulary ceiling](#3--pruned-vocabulary-drafters-hit-a-hard-ceiling) below).
 - **The head only helps the language it was built for.** The English head gives English 1.95× and Dravidian
   languages 0.97–1.03×. The Hindi/Gujarati head gives Hindi 1.75× and English 1.34×, but Dravidian languages
   still only 0.97–1.12×. At 8 users both heads make every Dravidian language **slower** (0.85–0.96×).
@@ -239,6 +265,11 @@ Sources: [`crossmodel_tokens.csv`](results/tables/crossmodel_tokens.csv),
 [`crossmodel_topup.csv`](results/tables/crossmodel_topup.csv) (40 items per language) · claims C60–C63, C72
 </details>
 
+## Why it happens
+
+The results above come down to how the tokenizer cuts up Indian scripts. These measurements need no GPU; they
+read the tokenizer and the drafters' checkpoints directly.
+
 ### 1 · The token tax
 
 <picture>
@@ -305,7 +336,10 @@ A drafter only counts once it reproduces its authors' English behaviour on this 
 | Red Hat EAGLE-3 head, 3 draft tokens | **2.68** | 2.13–2.48 |
 
 
-### 5 · Pilot: three drafter families, three different behaviours (exploratory)
+## Pilot runs (used to design the study, exploratory)
+
+<details><summary>The small first runs that set the pre-registered thresholds</summary>
+
 
 > [!IMPORTANT]
 > Pilot split only: 12 parallel prompts per language × 3 repeats, used to set the
@@ -351,6 +385,7 @@ Sources: [`pilot_vllm_4b_noise.csv`](results/tables/pilot_vllm_4b_noise.csv),
 [`pilot_vllm_8b_noise.csv`](results/tables/pilot_vllm_8b_noise.csv) (paired bootstrap CIs per cell);
 raw logs under [`results/raw/pilot_vllm_4b`](results/raw/pilot_vllm_4b) and
 [`results/raw/pilot_vllm_8b`](results/raw/pilot_vllm_8b).
+</details>
 </details>
 
 ## Engineering
@@ -478,15 +513,16 @@ with parallel content, and explains the results at the byte level. Search log: [
   will differ on data-centre GPUs. Ratios between drafters and languages are the main result, and it is not yet
   tested whether they transfer.
 - **Models:** the confirmatory tests cover one model family (Qwen3, 4B and 8B). The cross-model test of 17 more open
-  models is exploratory: 10–20 items per language, no confidence intervals. Two FrontiersMind models ran in
-  transformers because vLLM does not support them.
+  models is exploratory: 10–20 items per language, raised to 40 with confidence intervals for the four models
+  that answer reliably. Two FrontiersMind models ran in transformers because vLLM does not support them.
 - **Engines and load:** vLLM is the primary engine. SGLang is only a cross-check, not a confirmatory sweep. Load is
   closed-loop (each user sends a new request when the last one finishes); Poisson arrivals are not yet tested.
-- **Decoding:** greedy (temperature 0), Qwen3 thinking mode off (thinking on is an exploratory check, C70–C71), at most 256 new tokens per answer. At 256 tokens a
-  Dravidian answer holds roughly a tenth as many words as an English one, so per-language outputs cover different
-  amounts of content. Two smaller exploratory runs suggest neither choice changes the conclusions:
-  sampled decoding leaves acceptance and one-user speed-ups unchanged (the copier's lead shrinks ~18% at 8 users), and 1,024-token answers raise the gains while keeping the language gap
-  (C68–C69; Qwen3-4B only, 1 repeat). The pre-registered sampling-distribution test is still to do.
+- **Decoding:** the confirmatory runs use greedy decoding (temperature 0), thinking mode off and at most 256 new
+  tokens per answer. At 256 tokens a Dravidian answer holds roughly a tenth as many words as an English one.
+  Exploratory checks on Qwen3-4B cover the other settings: sampling leaves one-user results unchanged (the
+  copier's lead shrinks ~18% at 8 users), 1,024-token answers raise the gains and keep the gap (C68–C69), and
+  thinking mode changes the picture because the reasoning is in English (C70–C71). The pre-registered
+  sampling-distribution correctness test is still to do.
 - **"Lossless" up to bf16 rounding:** speculative outputs can differ from plain decoding where the top two tokens are
   nearly tied. The plain model differs from itself the same way under a different batch shape
   ([Amendment 2](docs/PREREG.md#amendment-2-2026-11-26-after-the-correctness-gate-before-any-confirmatory-report-split-sweep)).
