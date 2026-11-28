@@ -330,6 +330,10 @@ Short entries: decision · alternatives · reason · evidence. Newest last.
   for top_p/top_k). Analysis: `indicspec.analysis.pilot` (paired bootstrap CIs).
 - **Status:** exploratory; cannot change any PREREG verdict. Queued after the 8B run
   (`scripts/explore_after_8b.sh`, graceful deadline 23:30).
+- **Outcome (2026-11-28, C68–C69):** both runs complete (36/36 cells each, 0 errors). Sampling leaves acceptance
+  and the language pattern essentially unchanged (an early cell-total comparison suggested lower n-gram gains;
+  that compared two different speed estimators and was wrong). Longer answers raise every drafter's gain
+  (n-gram Dravidian 3.7–4.4× at 1 user) and keep the gap: DFlash still slows Kannada and Malayalam at 8 users.
 
 ### D-027 (2026-11-28) Qwen3-8B confirmatory sweep complete; final pre-registered verdicts
 - **Run:** `confirm_vllm_8b`, 288/288 cells (4 arms × 6 languages × 4 concurrencies × 3 repeats), run over several

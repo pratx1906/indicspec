@@ -1,0 +1,42 @@
+# EXPLORATORY (not pre-registered; D-026). Longer answers: up to 1,024 new tokens instead of 256, greedy,
+# same drafters and draft lengths as confirm_vllm_4b. Tests whether the speed-ups measured on the first
+# 256 tokens (about 20 words of a Dravidian answer) hold over whole answers. Prompts longer than
+# 4096 - 1024 tokens are excluded (identically for every arm). 25 prompts per cell, 1 and 8 users, 1 repeat.
+run_name: explore_long_vllm_4b
+engine: vllm
+model: qwen3-4b
+split: report
+languages:
+- en
+- hi
+- ta
+- te
+- kn
+- ml
+tasks:
+- chat
+- qa
+- summarisation
+- translation
+arms:
+- arm: A0
+- arm: A1
+  label: k8
+  spec_override:
+    num_speculative_tokens: 8
+- arm: A5
+  label: k15
+  spec_override:
+    num_speculative_tokens: 15
+concurrency:
+- 1
+- 8
+repeats: 1
+load_mode: closed_loop
+max_tokens: 1024
+ignore_eos: false
+max_model_len: 4096
+max_prompts_per_cell: 25
+temperature: 0.0
+seed: 1234
+min_enforced_power_w: 140

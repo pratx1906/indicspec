@@ -14,6 +14,6 @@ done
 bash scripts/run_until.sh "$1" configs/explore_sampled_vllm_4b.yaml configs/explore_long_vllm_4b.yaml
 export UV_PROJECT_ENVIRONMENT=$HOME/.cache/indicspec/venv-cpu HF_HUB_OFFLINE=1
 for r in explore_sampled_vllm_4b explore_long_vllm_4b; do
-  [ -d "results/raw/$r" ] && uv run python -m indicspec.analysis.pilot --run "results/raw/$r" >> "$L" 2>&1
+  [ -d "results/raw/$r" ] && uv run python -m indicspec.analysis.pilot --run "$r" >> "$L" 2>&1
 done
 echo "=== $(date '+%F %T') explore_after_8b: done" >> "$L"

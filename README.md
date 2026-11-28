@@ -145,6 +145,33 @@ pre-registered VRAM rule, each keeping ≥ 2 repeats; [verdicts](results/tables/
 Source: [`confirm_vllm_4b+confirm_vllm_8b_confirm.csv`](results/tables/confirm_vllm_4b+confirm_vllm_8b_confirm.csv) · claims C64–C67
 </details>
 
+### Robustness: sampling and longer answers (exploratory)
+
+The confirmatory design is greedy with 256 new tokens. Two smaller runs on Qwen3-4B check both choices
+([D-026](docs/DECISIONS.md); same report-split prompts and tuned drafters, 1 repeat):
+
+- **Sampling changes almost nothing.** With Qwen3's recommended settings (temperature 0.7, top-p 0.8, top-k 20),
+  acceptance length moves by at most 0.08 in every language at one user, and the n-gram copier still gives
+  Dravidian languages ~3× against 1.45× for English ([C68](docs/CLAIMS.md)).
+- **Longer answers widen the gains, and the gap stays.** With up to 1,024 new tokens the n-gram copier reaches
+  3.7–4.4× on Dravidian text (English 1.47×), and DFlash 2.58× on English but 1.18× on Malayalam. At 8 users DFlash
+  still slows Kannada and Malayalam ([C69](docs/CLAIMS.md)).
+
+<details><summary>Table view</summary>
+
+| Speed-up at 1 user (95% CI) | en | hi | ta | te | kn | ml |
+|---|---|---|---|---|---|---|
+| n-gram, greedy, 256 tokens (confirmatory) | 1.40 | 2.31 | 3.11 | 3.00 | 3.11 | 2.97 |
+| n-gram, sampled, 256 tokens | 1.45 [1.33, 1.58] | 2.25 [2.02, 2.50] | 3.14 [2.79, 3.51] | 3.03 [2.69, 3.39] | 3.19 [2.82, 3.59] | 2.97 [2.65, 3.30] |
+| n-gram, greedy, 1,024 tokens | 1.47 [1.30, 1.68] | 2.61 [2.24, 3.03] | 3.88 [3.37, 4.42] | 3.84 [3.39, 4.30] | 4.43 [3.90, 4.93] | 3.72 [3.27, 4.19] |
+| DFlash, greedy, 256 tokens (confirmatory) | 2.26 | 1.82 | 1.56 | 1.50 | 1.30 | 1.11 |
+| DFlash, sampled, 256 tokens | 2.13 [1.96, 2.32] | 1.76 | 1.56 | 1.48 | 1.28 | 1.14 [1.10, 1.17] |
+| DFlash, greedy, 1,024 tokens | 2.58 [2.24, 2.96] | 2.01 | 1.86 | 1.72 | 1.48 | 1.18 [1.12, 1.24] |
+
+Sources: [`explore_sampled_vllm_4b_noise.csv`](results/tables/explore_sampled_vllm_4b_noise.csv),
+[`explore_long_vllm_4b_noise.csv`](results/tables/explore_long_vllm_4b_noise.csv) · claims C68–C69
+</details>
+
 ### Beyond Qwen: the tokenizer decides (exploratory)
 
 <picture>
@@ -393,7 +420,7 @@ indicspec/
       different batch shape); rule amended before any confirmatory data ([D-021](docs/DECISIONS.md))
 - [x] Confirmatory sweep, Qwen3-4B (vLLM): H2, H3, H4, G1, G2 ([verdicts](results/tables/confirm_vllm_4b_verdicts.json))
 - [x] Confirmatory sweep, Qwen3-8B (vLLM): H1 confirmed; final verdicts over both models ([D-027](docs/DECISIONS.md))
-- [ ] Exploratory sampled-decoding and long-answer runs ([D-026](docs/DECISIONS.md)) &nbsp;*(running)*
+- [x] Exploratory sampled-decoding and long-answer runs ([D-026](docs/DECISIONS.md))
 - [x] Cross-engine check on SGLang (DFlash acceptance, n-gram) ([C57](docs/CLAIMS.md))
 - [x] Exploratory cross-model test: 17 more open models, tokenizers, n-gram gain, answer quality ([D-025](docs/DECISIONS.md))
 - [ ] SGLang confirmatory sweeps (secondary engine) · Poisson arrivals
@@ -424,7 +451,9 @@ with parallel content, and explains the results at the byte level. Search log: [
   closed-loop (each user sends a new request when the last one finishes); Poisson arrivals are not yet tested.
 - **Decoding:** greedy (temperature 0), Qwen3 thinking mode off, at most 256 new tokens per answer. At 256 tokens a
   Dravidian answer holds roughly a tenth as many words as an English one, so per-language outputs cover different
-  amounts of content. Sampling (temperature above 0) is not tested.
+  amounts of content. Two smaller exploratory runs suggest neither choice changes the conclusions:
+  sampled decoding barely moves acceptance, and 1,024-token answers raise the gains while keeping the language gap
+  (C68–C69; Qwen3-4B only, 1 repeat). The pre-registered sampling-distribution test is still to do.
 - **"Lossless" up to bf16 rounding:** speculative outputs can differ from plain decoding where the top two tokens are
   nearly tied. The plain model differs from itself the same way under a different batch shape
   ([Amendment 2](docs/PREREG.md#amendment-2-2026-11-26-after-the-correctness-gate-before-any-confirmatory-report-split-sweep)).

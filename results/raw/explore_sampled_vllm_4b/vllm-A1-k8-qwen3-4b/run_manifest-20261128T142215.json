@@ -1,0 +1,148 @@
+{
+  "schema_version": "1",
+  "run_id": "explore_sampled_vllm_4b/vllm-A1-k8-qwen3-4b",
+  "git_commit": "c9fa79e01788ed08e99cb33308acad91486d736d",
+  "git_dirty": true,
+  "command": [
+    "/mnt/c/Users/Pratyush Dixit/Desktop/Inference/src/indicspec/harness/sweep.py",
+    "--config",
+    "configs/explore_sampled_vllm_4b.yaml"
+  ],
+  "config_hash": "e8b23b7a7c928f27a1f51c47fb8c3daa8442c304696085a8e48bfdea265a143c",
+  "config": {
+    "run_name": "explore_sampled_vllm_4b",
+    "engine": "vllm",
+    "model": "qwen3-4b",
+    "split": "report",
+    "languages": [
+      "en",
+      "hi",
+      "ta",
+      "te",
+      "kn",
+      "ml"
+    ],
+    "tasks": [
+      "chat",
+      "qa",
+      "summarisation",
+      "translation"
+    ],
+    "arms": [
+      {
+        "arm": "A0"
+      },
+      {
+        "arm": "A1",
+        "label": "k8",
+        "spec_override": {
+          "num_speculative_tokens": 8
+        }
+      },
+      {
+        "arm": "A5",
+        "label": "k15",
+        "spec_override": {
+          "num_speculative_tokens": 15
+        }
+      }
+    ],
+    "concurrency": [
+      1,
+      8
+    ],
+    "repeats": 1,
+    "load_mode": "closed_loop",
+    "max_tokens": 256,
+    "ignore_eos": false,
+    "max_model_len": 4096,
+    "max_prompts_per_cell": 50,
+    "temperature": 0.7,
+    "request_extras": {
+      "top_p": 0.8,
+      "top_k": 20
+    },
+    "seed": 1234,
+    "min_enforced_power_w": 140,
+    "arm_cfg": {
+      "arm": "A1",
+      "label": "k8",
+      "spec_override": {
+        "num_speculative_tokens": 8
+      }
+    },
+    "gpu_mem_util": 0.909
+  },
+  "engine": "vllm",
+  "engine_version": "0.34.0",
+  "engine_launch_cmd": [
+    "/home/pratyush/.cache/indicspec/venv-vllm/bin/vllm",
+    "serve",
+    "/home/pratyush/.cache/huggingface/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c",
+    "--served-model-name",
+    "qwen3-4b",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8100",
+    "--dtype",
+    "bfloat16",
+    "--max-model-len",
+    "4096",
+    "--gpu-memory-utilization",
+    "0.909",
+    "--seed",
+    "1234",
+    "--max-num-seqs",
+    "32",
+    "--speculative-config",
+    "{\"method\": \"ngram\", \"num_speculative_tokens\": 8, \"prompt_lookup_min\": 2, \"prompt_lookup_max\": 5}",
+    "--per-request-spec-decode-metrics",
+    "detailed"
+  ],
+  "target": {
+    "repo": "Qwen/Qwen3-4B",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "dtype": "bfloat16"
+  },
+  "drafter": null,
+  "dataset_manifest_sha256": "f9f075100cf6074c5970a5195261de61a83ee0a9eb3181e87b796f16ce76a3a0",
+  "gpu": {
+    "raw": {
+      "cmd": [
+        "nvidia-smi",
+        "--query-gpu=name,memory.total,driver_version,compute_cap,clocks.max.sm,clocks.max.mem,power.limit,power.max_limit,pcie.link.gen.max,pcie.link.width.max,persistence_mode",
+        "--format=csv,noheader"
+      ],
+      "ok": true,
+      "returncode": 0,
+      "stdout": "NVIDIA GeForce RTX 5090 Laptop GPU, 24463 MiB, 610.88, 12.0, 3090 MHz, 14001 MHz, [N/A], 175.00 W, 5, 16, Enabled",
+      "stderr": ""
+    },
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5090 Laptop GPU",
+        "memory.total": "24463 MiB",
+        "driver_version": "610.88",
+        "compute_cap": "12.0",
+        "clocks.max.sm": "3090 MHz",
+        "clocks.max.mem": "14001 MHz",
+        "power.limit": "[N/A]",
+        "power.max_limit": "175.00 W",
+        "pcie.link.gen.max": "5",
+        "pcie.link.width.max": "16",
+        "persistence_mode": "Enabled"
+      }
+    ]
+  },
+  "telemetry_csv": null,
+  "thermal_summary": null,
+  "seeds": {
+    "engine": 1234,
+    "order": 737236712,
+    "prompt_selection": 1234
+  },
+  "start_utc": "2026-11-28T08:52:11.830073+00:00",
+  "end_utc": "2026-11-28T09:00:50.366158+00:00",
+  "notes": "{\"excluded_long_prompts\": {\"kn\": 5, \"ml\": 5, \"ta\": 4, \"te\": 7, \"hi\": 1}, \"power_state_start\": {\"enforced_power_limit_w\": 175.0, \"default_power_limit_w\": 95.0, \"sm_clock_mhz\": 1650, \"max_sm_clock_mhz\": 3090, \"temperature_c\": 78, \"throttle_reasons_hex\": \"0x0\", \"windows_power_scheme\": \"Turbo\"}}"
+}
